@@ -7,14 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C53F491220D484DA0006EF72 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491120D484DA0006EF72 /* Source.swift */; };
+		C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */; };
+		C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491520D487380006EF72 /* SourcesViewController.swift */; };
 		C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C121120D1EC440013F697 /* AppDelegate.swift */; };
-		C54C121420D1EC440013F697 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C121320D1EC440013F697 /* ViewController.swift */; };
 		C54C121720D1EC440013F697 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121520D1EC440013F697 /* Main.storyboard */; };
 		C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C54C121820D1EC440013F697 /* Attics.xcdatamodeld */; };
 		C54C121C20D1EC460013F697 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C54C121B20D1EC460013F697 /* Assets.xcassets */; };
 		C54C121F20D1EC460013F697 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */; };
-		C54C122A20D1EC460013F697 /* AtticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C122920D1EC460013F697 /* AtticsTests.swift */; };
 		C54C123520D1EC460013F697 /* AtticsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C123420D1EC460013F697 /* AtticsUITests.swift */; };
+		C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */; };
+		C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */; };
+		C5ED3A8220D44D180019F0EF /* Year.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8120D44D180019F0EF /* Year.swift */; };
+		C5ED3A8420D44DCD0019F0EF /* Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8320D44DCD0019F0EF /* Show.swift */; };
+		C5ED3A8620D44E8F0019F0EF /* YearsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8520D44E8F0019F0EF /* YearsViewControllerTests.swift */; };
+		C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8720D452380019F0EF /* ShowsViewController.swift */; };
+		C5ED3A8A20D4531A0019F0EF /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8920D4531A0019F0EF /* DataStore.swift */; };
+		C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */; };
+		C5ED3A8E20D453C10019F0EF /* InMemoryDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8D20D453C10019F0EF /* InMemoryDataStoreTests.swift */; };
+		C5ED3A9020D45B9F0019F0EF /* ShowsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8F20D45B9F0019F0EF /* ShowsViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,20 +46,31 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C53F491120D484DA0006EF72 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
+		C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewControllerTests.swift; sourceTree = "<group>"; };
+		C53F491520D487380006EF72 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
 		C54C120E20D1EC440013F697 /* Attics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Attics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54C121120D1EC440013F697 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C54C121320D1EC440013F697 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C54C121620D1EC440013F697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C54C121920D1EC440013F697 /* Attics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Attics.xcdatamodel; sourceTree = "<group>"; };
 		C54C121B20D1EC460013F697 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C54C121E20D1EC460013F697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C54C122020D1EC460013F697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C54C122520D1EC460013F697 /* AtticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C54C122920D1EC460013F697 /* AtticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtticsTests.swift; sourceTree = "<group>"; };
 		C54C122B20D1EC460013F697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C54C123020D1EC460013F697 /* AtticsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtticsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54C123420D1EC460013F697 /* AtticsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtticsUITests.swift; sourceTree = "<group>"; };
 		C54C123620D1EC460013F697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseNavigationViewController.swift; sourceTree = "<group>"; };
+		C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
+		C5ED3A8120D44D180019F0EF /* Year.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Year.swift; sourceTree = "<group>"; };
+		C5ED3A8320D44DCD0019F0EF /* Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Show.swift; sourceTree = "<group>"; };
+		C5ED3A8520D44E8F0019F0EF /* YearsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearsViewControllerTests.swift; sourceTree = "<group>"; };
+		C5ED3A8720D452380019F0EF /* ShowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewController.swift; sourceTree = "<group>"; };
+		C5ED3A8920D4531A0019F0EF /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryDataStore.swift; sourceTree = "<group>"; };
+		C5ED3A8D20D453C10019F0EF /* InMemoryDataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryDataStoreTests.swift; sourceTree = "<group>"; };
+		C5ED3A8F20D45B9F0019F0EF /* ShowsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,13 +121,11 @@
 		C54C121020D1EC440013F697 /* Attics */ = {
 			isa = PBXGroup;
 			children = (
-				C54C121120D1EC440013F697 /* AppDelegate.swift */,
-				C54C121320D1EC440013F697 /* ViewController.swift */,
-				C54C121520D1EC440013F697 /* Main.storyboard */,
 				C54C121B20D1EC460013F697 /* Assets.xcassets */,
-				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
+				C5ED3A7E20D44CE00019F0EF /* Models */,
+				C5ED3A8020D44D080019F0EF /* Controllers */,
 				C54C122020D1EC460013F697 /* Info.plist */,
-				C54C121820D1EC440013F697 /* Attics.xcdatamodeld */,
+				C5ED3A7F20D44CF50019F0EF /* Supporting Files */,
 			);
 			path = Attics;
 			sourceTree = "<group>";
@@ -113,7 +133,10 @@
 		C54C122820D1EC460013F697 /* AtticsTests */ = {
 			isa = PBXGroup;
 			children = (
-				C54C122920D1EC460013F697 /* AtticsTests.swift */,
+				C5ED3A8520D44E8F0019F0EF /* YearsViewControllerTests.swift */,
+				C5ED3A8F20D45B9F0019F0EF /* ShowsViewControllerTests.swift */,
+				C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */,
+				C5ED3A8D20D453C10019F0EF /* InMemoryDataStoreTests.swift */,
 				C54C122B20D1EC460013F697 /* Info.plist */,
 			);
 			path = AtticsTests;
@@ -126,6 +149,40 @@
 				C54C123620D1EC460013F697 /* Info.plist */,
 			);
 			path = AtticsUITests;
+			sourceTree = "<group>";
+		};
+		C5ED3A7E20D44CE00019F0EF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C5ED3A8120D44D180019F0EF /* Year.swift */,
+				C5ED3A8320D44DCD0019F0EF /* Show.swift */,
+				C53F491120D484DA0006EF72 /* Source.swift */,
+				C5ED3A8920D4531A0019F0EF /* DataStore.swift */,
+				C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C5ED3A7F20D44CF50019F0EF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C54C121120D1EC440013F697 /* AppDelegate.swift */,
+				C54C121520D1EC440013F697 /* Main.storyboard */,
+				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
+				C54C121820D1EC440013F697 /* Attics.xcdatamodeld */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C5ED3A8020D44D080019F0EF /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */,
+				C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */,
+				C5ED3A8720D452380019F0EF /* ShowsViewController.swift */,
+				C53F491520D487380006EF72 /* SourcesViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,8 +316,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C54C121420D1EC440013F697 /* ViewController.swift in Sources */,
+				C5ED3A8420D44DCD0019F0EF /* Show.swift in Sources */,
+				C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */,
+				C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */,
+				C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */,
+				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
+				C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */,
+				C5ED3A8220D44D180019F0EF /* Year.swift in Sources */,
 				C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */,
+				C5ED3A8A20D4531A0019F0EF /* DataStore.swift in Sources */,
+				C53F491220D484DA0006EF72 /* Source.swift in Sources */,
 				C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,7 +334,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C54C122A20D1EC460013F697 /* AtticsTests.swift in Sources */,
+				C5ED3A8620D44E8F0019F0EF /* YearsViewControllerTests.swift in Sources */,
+				C5ED3A9020D45B9F0019F0EF /* ShowsViewControllerTests.swift in Sources */,
+				C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */,
+				C5ED3A8E20D453C10019F0EF /* InMemoryDataStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
