@@ -12,4 +12,5 @@ protocol DataStore {
     func fetchYears() -> [Year]
     func fetchShows(in year: Year) -> [Show]
     func fetchSources(for show: Show) -> [Source]
+    func fetchSongs(for source: Source) -> [Song]
 }

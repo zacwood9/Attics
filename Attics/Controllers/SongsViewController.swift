@@ -1,5 +1,5 @@
 //
-//  SourcesViewController.swift
+//  SongsViewController.swift
 //  Attics
 //
 //  Created by Zachary Wood on 6/15/18.
@@ -7,29 +7,27 @@
 //
 
 import UIKit
+import AVKit
+import LNPopupController
 
-class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    //MARK: Properties
+class SongsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: self.view.bounds)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Source Cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Song Cell")
         return tableView
     }()
     
-    var show: Show
-    var sources: [Source] = []
+    var source: Source
+    var songs: [Song] = []
     
     private var dataStore: DataStore
     
-    // MARK: Initialization
-    
-    init(for show: Show, dataStore: DataStore) {
-        self.show = show
+    init(from source: Source, dataStore: DataStore) {
+        self.source = source
         self.dataStore = dataStore
         super.init(nibName: nil, bundle: nil)
     }
@@ -44,8 +42,9 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
         loadData()
     }
     
+    
     func setupViews() {
-        navigationItem.title = String(describing: show.date)
+        navigationItem.title = String(describing: source.identifier)
         
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -55,30 +54,27 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func loadData() {
-        sources = dataStore.fetchSources(for: show)
+        songs = dataStore.fetchSongs(for: source)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sources.count
+        return songs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Source Cell", for: indexPath)
-        cell.textLabel?.text = sources[indexPath.row].transferer
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Song Cell", for: indexPath)
+        cell.textLabel?.text = songs[indexPath.row].title
         return cell
     }
     
-    // MARK: UITableViewDelegate
+    var player = AVPlayer(playerItem: nil)
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sourceSelected = sources[indexPath.row]
-        let nextVC = configureNextScreen(for: sourceSelected)
-        navigationController?.pushViewController(nextVC, animated: true)
-    }
-    
-    func configureNextScreen(for source: Source) -> SongsViewController {
-        let vc = SongsViewController(from: source, dataStore: dataStore)
-        return vc
+        let selected = songs[indexPath.row]
+        MusicPlayer.instance.play(song: selected)
+        
+        let popupVC = NowPlayingController(songs: songs, selected: indexPath.row)
+        tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)
     }
 
 }

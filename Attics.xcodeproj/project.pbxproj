@@ -16,6 +16,12 @@
 		C54C121C20D1EC460013F697 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C54C121B20D1EC460013F697 /* Assets.xcassets */; };
 		C54C121F20D1EC460013F697 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */; };
 		C54C123520D1EC460013F697 /* AtticsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C123420D1EC460013F697 /* AtticsUITests.swift */; };
+		C55CF9F620D49EDF00A2F780 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF9F520D49EDF00A2F780 /* Song.swift */; };
+		C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF9F720D4A4D100A2F780 /* SongsViewController.swift */; };
+		C55CF9FA20D4A61200A2F780 /* SongsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF9F920D4A61200A2F780 /* SongsViewControllerTests.swift */; };
+		C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */; };
+		C575FFB920D5C1F500DE76BA /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C575FFB820D5C1F400DE76BA /* LNPopupController.framework */; };
+		C575FFBC20D5C89D00DE76BA /* NowPlayingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */; };
 		C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */; };
 		C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */; };
 		C5ED3A8220D44D180019F0EF /* Year.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8120D44D180019F0EF /* Year.swift */; };
@@ -61,6 +67,12 @@
 		C54C123020D1EC460013F697 /* AtticsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtticsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54C123420D1EC460013F697 /* AtticsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtticsUITests.swift; sourceTree = "<group>"; };
 		C54C123620D1EC460013F697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C55CF9F520D49EDF00A2F780 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		C55CF9F720D4A4D100A2F780 /* SongsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsViewController.swift; sourceTree = "<group>"; };
+		C55CF9F920D4A61200A2F780 /* SongsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsViewControllerTests.swift; sourceTree = "<group>"; };
+		C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
+		C575FFB820D5C1F400DE76BA /* LNPopupController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LNPopupController.framework; path = Carthage/Build/iOS/LNPopupController.framework; sourceTree = "<group>"; };
+		C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingController.swift; sourceTree = "<group>"; };
 		C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseNavigationViewController.swift; sourceTree = "<group>"; };
 		C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
 		C5ED3A8120D44D180019F0EF /* Year.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Year.swift; sourceTree = "<group>"; };
@@ -78,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C575FFB920D5C1F500DE76BA /* LNPopupController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +118,7 @@
 				C54C122820D1EC460013F697 /* AtticsTests */,
 				C54C123320D1EC460013F697 /* AtticsUITests */,
 				C54C120F20D1EC440013F697 /* Products */,
+				C575FFB720D5C1F400DE76BA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -136,6 +150,7 @@
 				C5ED3A8520D44E8F0019F0EF /* YearsViewControllerTests.swift */,
 				C5ED3A8F20D45B9F0019F0EF /* ShowsViewControllerTests.swift */,
 				C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */,
+				C55CF9F920D4A61200A2F780 /* SongsViewControllerTests.swift */,
 				C5ED3A8D20D453C10019F0EF /* InMemoryDataStoreTests.swift */,
 				C54C122B20D1EC460013F697 /* Info.plist */,
 			);
@@ -151,14 +166,24 @@
 			path = AtticsUITests;
 			sourceTree = "<group>";
 		};
+		C575FFB720D5C1F400DE76BA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C575FFB820D5C1F400DE76BA /* LNPopupController.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C5ED3A7E20D44CE00019F0EF /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				C5ED3A8120D44D180019F0EF /* Year.swift */,
 				C5ED3A8320D44DCD0019F0EF /* Show.swift */,
 				C53F491120D484DA0006EF72 /* Source.swift */,
+				C55CF9F520D49EDF00A2F780 /* Song.swift */,
 				C5ED3A8920D4531A0019F0EF /* DataStore.swift */,
 				C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */,
+				C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -181,6 +206,8 @@
 				C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */,
 				C5ED3A8720D452380019F0EF /* ShowsViewController.swift */,
 				C53F491520D487380006EF72 /* SourcesViewController.swift */,
+				C55CF9F720D4A4D100A2F780 /* SongsViewController.swift */,
+				C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -195,6 +222,7 @@
 				C54C120A20D1EC440013F697 /* Sources */,
 				C54C120B20D1EC440013F697 /* Frameworks */,
 				C54C120C20D1EC440013F697 /* Resources */,
+				C575FFBA20D5C23100DE76BA /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -311,14 +339,35 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C575FFBA20D5C23100DE76BA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/LNPopupController.framework",
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)$(FRAMEWORKS_FOLDER_PATH)/LNPopupController.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C54C120A20D1EC440013F697 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C55CF9F620D49EDF00A2F780 /* Song.swift in Sources */,
+				C575FFBC20D5C89D00DE76BA /* NowPlayingController.swift in Sources */,
 				C5ED3A8420D44DCD0019F0EF /* Show.swift in Sources */,
 				C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */,
 				C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */,
+				C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */,
 				C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */,
 				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
 				C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */,
@@ -327,6 +376,7 @@
 				C5ED3A8A20D4531A0019F0EF /* DataStore.swift in Sources */,
 				C53F491220D484DA0006EF72 /* Source.swift in Sources */,
 				C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */,
+				C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +385,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5ED3A8620D44E8F0019F0EF /* YearsViewControllerTests.swift in Sources */,
+				C55CF9FA20D4A61200A2F780 /* SongsViewControllerTests.swift in Sources */,
 				C5ED3A9020D45B9F0019F0EF /* ShowsViewControllerTests.swift in Sources */,
 				C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */,
 				C5ED3A8E20D453C10019F0EF /* InMemoryDataStoreTests.swift in Sources */,
@@ -504,6 +555,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W9S2BXPP37;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Attics/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -522,6 +577,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W9S2BXPP37;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Attics/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

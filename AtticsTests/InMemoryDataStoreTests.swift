@@ -49,7 +49,15 @@ class InMemoryDataStoreTests: XCTestCase {
         let otherSources = dataStore.fetchSources(for: otherShows[0])
         XCTAssertEqual(otherSources.count, 2)
         XCTAssertEqual(otherSources[1].transferer, "Bob Marley")
+    }
+    
+    func testFetchSongs() {
+        let years = dataStore.fetchYears()
+        let shows = dataStore.fetchShows(in: years[0])
+        let sources = dataStore.fetchSources(for: shows[1])
+        let songs = dataStore.fetchSongs(for: sources[0])
         
-        
+        XCTAssertEqual(songs.count, 2)
+        XCTAssertEqual(songs[0].title, "Minglewood Blues")
     }
 }

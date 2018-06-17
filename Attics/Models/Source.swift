@@ -11,6 +11,7 @@ import Foundation
 struct Source: Equatable {
     let id: Int
     let transferer: String
+    let identifier: String
     
     let show: Show
 }
