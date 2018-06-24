@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C530254A20E0148200A53880 /* DoublyLinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C530254920E0148200A53880 /* DoublyLinkedList.swift */; };
 		C53F491220D484DA0006EF72 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491120D484DA0006EF72 /* Source.swift */; };
 		C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */; };
 		C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491520D487380006EF72 /* SourcesViewController.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C530254920E0148200A53880 /* DoublyLinkedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoublyLinkedList.swift; sourceTree = "<group>"; };
 		C53F491120D484DA0006EF72 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewControllerTests.swift; sourceTree = "<group>"; };
 		C53F491520D487380006EF72 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				C54C121520D1EC440013F697 /* Main.storyboard */,
 				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
 				C54C121820D1EC440013F697 /* Attics.xcdatamodeld */,
+				C530254920E0148200A53880 /* DoublyLinkedList.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -281,6 +284,11 @@
 				TargetAttributes = {
 					C54C120D20D1EC440013F697 = {
 						CreatedOnToolsVersion = 9.4;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					C54C122420D1EC460013F697 = {
 						CreatedOnToolsVersion = 9.4;
@@ -365,6 +373,7 @@
 				C55CF9F620D49EDF00A2F780 /* Song.swift in Sources */,
 				C575FFBC20D5C89D00DE76BA /* NowPlayingController.swift in Sources */,
 				C5ED3A8420D44DCD0019F0EF /* Show.swift in Sources */,
+				C530254A20E0148200A53880 /* DoublyLinkedList.swift in Sources */,
 				C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */,
 				C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */,
 				C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */,

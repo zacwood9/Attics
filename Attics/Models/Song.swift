@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Song {
+struct Song: Equatable {
     let id: Int
     let title: String
     let fileName: String
@@ -16,6 +16,7 @@ struct Song {
     let source: Source
     
     var downloadURL: URL {
-        return URL(string: "https://archive.org/download/\(self.source.identifier)/\(self.fileName)")!
+        let urlString = "http://archive.org/download/\(self.source.identifier)/\(self.fileName)".addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!
+        return URL(string: urlString)!
     }
 }

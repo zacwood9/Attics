@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 import CoreData
 
 @UIApplicationMain
@@ -14,9 +15,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    
+//    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+//    [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&activationError];
+//    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:&setCategoryError];
+//    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+//    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        try! AVAudioSession.sharedInstance().setActive(true, with: .notifyOthersOnDeactivation)
+        try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         let browse = BrowseNavigationViewController()
         browse.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
