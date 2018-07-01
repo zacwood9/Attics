@@ -10,25 +10,26 @@ import UIKit
 import AVKit
 import LNPopupController
 
-class SongsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SongsViewController: UIViewController, UITableViewDelegate {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: self.view.bounds)
         tableView.delegate = self
-        tableView.dataSource = self
+        tableView.dataSource = dataSource
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Song Cell")
         return tableView
     }()
     
     var source: Source
-    var songs: [Song] = []
     
     private var dataStore: DataStore
+    private var dataSource: SongsDataSource
     
     init(from source: Source, dataStore: DataStore) {
         self.source = source
         self.dataStore = dataStore
+        self.dataSource = SongsDataSource(songs: [])
         super.init(nibName: nil, bundle: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(didReceiveSongPlayed(notification:)), name: .MusicPlayerDidPlay, object: nil)
@@ -64,13 +65,34 @@ class SongsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func loadData() {
-        songs = dataStore.fetchSongs(for: source)
+        dataSource.songs = dataStore.fetchSongs(for: source)
     }
     
     @objc func didReceiveSongPlayed(notification: Notification) {
-        if let song = notification.object as? Song, let indexOfSong = songs.index(of: song) {
+        if let song = notification.object as? Song, let indexOfSong = dataSource.songs.index(of: song) {
             tableView.selectRow(at: IndexPath(row: indexOfSong, section: 0), animated: true, scrollPosition: .none)
         }
+    }
+    
+    var player = AVPlayer(playerItem: nil)
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        MusicPlayer.instance.play(index: indexPath.row, in: dataStore.fetchSongs(for: source))
+        
+        let popupVC = NowPlayingController(selectedIndexPath: indexPath, selectRowCallback: { [weak self] indexPath in
+            self?.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .top)
+        })
+        
+        tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)                
+    }
+
+}
+
+class SongsDataSource: NSObject, UITableViewDataSource {
+    var songs: [Song] = []
+    
+    init(songs: [Song]) {
+        self.songs = songs
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -82,14 +104,4 @@ class SongsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.textLabel?.text = songs[indexPath.row].title
         return cell
     }
-    
-    var player = AVPlayer(playerItem: nil)
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        MusicPlayer.instance.play(index: indexPath.row, in: songs)
-        
-        let popupVC = NowPlayingController()
-        tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)                
-    }
-
 }

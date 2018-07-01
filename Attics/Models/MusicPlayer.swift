@@ -30,7 +30,13 @@ class MusicPlayer {
         return songList[currentSongIndex]
     }
     
-    private var updateTimer: Timer?
+    private var percentageSongFinished: Double {
+        if let currentItem = currentPlayer.currentItem {
+            return currentPlayer.currentTime().seconds / currentItem.duration.seconds
+        } else {
+            return 0.0
+        }
+    }
     
     func play(index: Int, in songList: [Song]) {
         self.currentSongIndex = index
@@ -46,6 +52,7 @@ class MusicPlayer {
         
         currentPlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 2), queue: DispatchQueue.main) { [unowned self] _ in
             self.setupNowPlaying(self.currentSong)
+            NotificationCenter.default.post(name: .MusicPlayerDidChangeTime, object: self.percentageSongFinished)
         }
         
         currentPlayer.play()
@@ -74,6 +81,16 @@ class MusicPlayer {
         if (currentSongIndex - 1 >= 0) {
             currentSongIndex -= 1
             play(index: currentSongIndex, in: songList)
+        }
+    }
+    
+    @objc func seek(to time: Double) {
+        currentPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 100))
+    }
+    
+    @objc func seek(percentage: Double) {
+        if let totalSeconds = currentPlayer.currentItem?.duration.seconds {
+            seek(to: totalSeconds * percentage)
         }
     }
     
@@ -108,7 +125,7 @@ class MusicPlayer {
         
         commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] (event) -> MPRemoteCommandHandlerStatus in
             if let event = event as? MPChangePlaybackPositionCommandEvent {
-                self.currentPlayer.seek(to: CMTime(seconds: event.positionTime, preferredTimescale: 100))
+                self.seek(to: event.positionTime)
                 return .success
             }
             return .commandFailed
@@ -149,4 +166,5 @@ class MusicPlayer {
 extension Notification.Name {
     public static let MusicPlayerDidPlay = Notification.Name("MusicPlayerDidPlay")
     public static let MusicPlayerDidPause = Notification.Name("MusicPlayerDidPause")
+    public static let MusicPlayerDidChangeTime = Notification.Name("MusicPlayerDidChangeTime")
 }
