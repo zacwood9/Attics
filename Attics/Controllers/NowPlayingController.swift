@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FontAwesome
 import MediaPlayer
 
 class NowPlayingController: UIViewController, UITableViewDelegate {
@@ -25,6 +26,15 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         return label
     }()
     
+    private lazy var infoButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont.fontAwesome(ofSize: 25)
+        button.setTitle(String.fontAwesomeIcon(name: .infoCircle), for: .normal)
+        button.setTitleColor(.blue, for: .normal)
+        return button
+    }()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = dataSource
@@ -35,6 +45,21 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     }()
     
     private var timeSlider: UISlider
+    
+    private lazy var currentTimeLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var durationLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private var playPauseButton: UIButton
     private var advanceButton: UIButton
     
@@ -52,7 +77,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         playPauseBarButton = UIBarButtonItem(barButtonSystemItem: .play, target: musicPlayer, action: #selector(musicPlayer.resume))
         playPauseButton.removeTarget(musicPlayer, action: #selector(musicPlayer.pause), for: .touchUpInside)
         playPauseButton.addTarget(musicPlayer, action: #selector(musicPlayer.resume), for: .touchUpInside)
-        playPauseButton.setTitle("Play", for: .normal)
+        playPauseButton.setTitle(String.fontAwesomeIcon(name: .play), for: .normal)
         
         setBarButtons()
     }
@@ -62,7 +87,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         
         playPauseButton.removeTarget(musicPlayer, action: #selector(musicPlayer.resume), for: .touchUpInside)
         playPauseButton.addTarget(musicPlayer, action: #selector(musicPlayer.pause), for: .touchUpInside)
-        playPauseButton.setTitle("Pause", for: .normal)
+        playPauseButton.setTitle(String.fontAwesomeIcon(name: .pause), for: .normal)
         
         setInfo(for: musicPlayer.currentSong)
         tableView.selectRow(at: IndexPath(row: musicPlayer.currentSongIndex, section: 0), animated: false, scrollPosition: .none)
@@ -88,6 +113,8 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     @objc func updateSlider(notification: Notification) {
         if let percentage = notification.object as? Double, isSliderDown == false {
             timeSlider.setValue(Float(percentage), animated: true)
+            currentTimeLabel.text = musicPlayer.currentTimeInSeconds.timeString
+            durationLabel.text = (musicPlayer.currentDurationInSeconds - musicPlayer.currentTimeInSeconds).timeString
         }
     }
     
@@ -113,18 +140,24 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     
     private func configureViews() {
         view.layer.cornerRadius = 16
-//        view.backgroundColor = .white
+        view.backgroundColor = .white
         
         view.addSubview(venueLabel)
         view.addSubview(showDateLabel)
+        view.addSubview(infoButton)
         view.addSubview(tableView)
         view.addSubview(timeSlider)
         view.addSubview(playPauseButton)
         view.addSubview(advanceButton)
+        view.addSubview(currentTimeLabel)
+        view.addSubview(durationLabel)
         
         NSLayoutConstraint.activate([
             showDateLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
             showDateLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16),
+            
+            infoButton.centerYAnchor.constraint(equalTo: showDateLabel.centerYAnchor, constant: 0),
+            infoButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -16),
             
             venueLabel.topAnchor.constraint(equalTo: showDateLabel.bottomAnchor, constant: 4),
             venueLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16),
@@ -132,18 +165,24 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
             tableView.topAnchor.constraint(equalTo: venueLabel.bottomAnchor, constant: 16),
             tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0),
             tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0),
-            tableView.bottomAnchor.constraint(equalTo: timeSlider.topAnchor, constant: 0),
             
+            timeSlider.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -125),
+            timeSlider.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 8),
             timeSlider.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 32),
             timeSlider.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -32),
             
+            currentTimeLabel.leftAnchor.constraint(equalTo: timeSlider.leftAnchor),
+            currentTimeLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 2),
+            
+            durationLabel.rightAnchor.constraint(equalTo: timeSlider.rightAnchor),
+            durationLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 2),
+            
             playPauseButton.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 16),
-            playPauseButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
+            playPauseButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
             playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
-            playPauseButton.heightAnchor.constraint(equalToConstant: 32),
             
             advanceButton.centerYAnchor.constraint(equalTo: playPauseButton.centerYAnchor),
-            advanceButton.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 8)
+            advanceButton.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 32)
             ])
     }
     
@@ -168,11 +207,13 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         self.selectRowCallback = selectRowCallback
         
         playPauseButton = UIButton(type: .system)
-        playPauseButton.setTitle("Pause", for: .normal)
+        playPauseButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 65)
+        playPauseButton.setTitle(String.fontAwesomeIcon(name: .pause), for: .normal)
         playPauseButton.translatesAutoresizingMaskIntoConstraints = false
         
         advanceButton = UIButton(type: .system)
-        advanceButton.setTitle("Advance", for: .normal)
+        advanceButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 40)
+        advanceButton.setTitle(String.fontAwesomeIcon(name: .forward), for: .normal)
         advanceButton.translatesAutoresizingMaskIntoConstraints = false
         
         playPauseBarButton = UIBarButtonItem(barButtonSystemItem: .pause, target: musicPlayer, action: #selector(musicPlayer.pause))

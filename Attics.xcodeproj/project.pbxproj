@@ -10,6 +10,7 @@
 		C53F491220D484DA0006EF72 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491120D484DA0006EF72 /* Source.swift */; };
 		C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */; };
 		C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491520D487380006EF72 /* SourcesViewController.swift */; };
+		C547033020EAD5D200B210D2 /* FontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C547032F20EAD5D200B210D2 /* FontAwesome.framework */; };
 		C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C121120D1EC440013F697 /* AppDelegate.swift */; };
 		C54C121720D1EC440013F697 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121520D1EC440013F697 /* Main.storyboard */; };
 		C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C54C121820D1EC440013F697 /* Attics.xcdatamodeld */; };
@@ -22,7 +23,7 @@
 		C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */; };
 		C575FFB920D5C1F500DE76BA /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C575FFB820D5C1F400DE76BA /* LNPopupController.framework */; };
 		C575FFBC20D5C89D00DE76BA /* NowPlayingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */; };
-		C5C678F020E5A3CE0073B4A5 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C678EF20E5A3CE0073B4A5 /* UIFont+Extensions.swift */; };
+		C5C678F020E5A3CE0073B4A5 /* Swift+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C678EF20E5A3CE0073B4A5 /* Swift+Extensions.swift */; };
 		C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */; };
 		C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */; };
 		C5ED3A8220D44D180019F0EF /* Year.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8120D44D180019F0EF /* Year.swift */; };
@@ -56,6 +57,7 @@
 		C53F491120D484DA0006EF72 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewControllerTests.swift; sourceTree = "<group>"; };
 		C53F491520D487380006EF72 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
+		C547032F20EAD5D200B210D2 /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		C54C120E20D1EC440013F697 /* Attics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Attics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54C121120D1EC440013F697 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C54C121620D1EC440013F697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -74,7 +76,7 @@
 		C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
 		C575FFB820D5C1F400DE76BA /* LNPopupController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LNPopupController.framework; path = Carthage/Build/iOS/LNPopupController.framework; sourceTree = "<group>"; };
 		C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingController.swift; sourceTree = "<group>"; usesTabs = 0; };
-		C5C678EF20E5A3CE0073B4A5 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
+		C5C678EF20E5A3CE0073B4A5 /* Swift+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Extensions.swift"; sourceTree = "<group>"; };
 		C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseNavigationViewController.swift; sourceTree = "<group>"; };
 		C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
 		C5ED3A8120D44D180019F0EF /* Year.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Year.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C575FFB920D5C1F500DE76BA /* LNPopupController.framework in Frameworks */,
+				C547033020EAD5D200B210D2 /* FontAwesome.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +174,7 @@
 		C575FFB720D5C1F400DE76BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C547032F20EAD5D200B210D2 /* FontAwesome.framework */,
 				C575FFB820D5C1F400DE76BA /* LNPopupController.framework */,
 			);
 			name = Frameworks;
@@ -193,7 +197,7 @@
 		C5ED3A7F20D44CF50019F0EF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				C5C678EF20E5A3CE0073B4A5 /* UIFont+Extensions.swift */,
+				C5C678EF20E5A3CE0073B4A5 /* Swift+Extensions.swift */,
 				C54C121120D1EC440013F697 /* AppDelegate.swift */,
 				C54C121520D1EC440013F697 /* Main.storyboard */,
 				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
@@ -358,13 +362,15 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/LNPopupController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FontAwesome.framework",
 			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)$(FRAMEWORKS_FOLDER_PATH)/LNPopupController.framework",
+				"$(BUILT_PRODUCTS_DIR)$(FRAMEWORKS_FOLDER_PATH)/FontAwesome.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -375,7 +381,7 @@
 			files = (
 				C55CF9F620D49EDF00A2F780 /* Song.swift in Sources */,
 				C575FFBC20D5C89D00DE76BA /* NowPlayingController.swift in Sources */,
-				C5C678F020E5A3CE0073B4A5 /* UIFont+Extensions.swift in Sources */,
+				C5C678F020E5A3CE0073B4A5 /* Swift+Extensions.swift in Sources */,
 				C5ED3A8420D44DCD0019F0EF /* Show.swift in Sources */,
 				C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */,
 				C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */,

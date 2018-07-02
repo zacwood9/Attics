@@ -14,3 +14,18 @@ extension UIFont {
         return UIFont(descriptor: fontDescriptor, size: 0)
     }
 }
+
+extension Double {
+    var timeString: String {
+        let roundedDown = Int(self)
+        let minutes = roundedDown / 60
+        let seconds = roundedDown % 60
+        var secondsString: String
+        if seconds / 10 == 0 {
+            secondsString = "0\(seconds)"
+        } else {
+            secondsString = "\(seconds)"
+        }
+        return "\(minutes):\(secondsString)"
+    }
+}

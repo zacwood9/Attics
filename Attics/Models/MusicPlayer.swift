@@ -30,12 +30,20 @@ class MusicPlayer {
         return songList[currentSongIndex]
     }
     
+    var currentTimeInSeconds: Double {
+        return currentPlayer.currentTime().seconds
+    }
+    
+    var currentDurationInSeconds: Double {
+        guard let currentItem = currentPlayer.currentItem, currentItem.duration.isNumeric else { return 0.0 }
+        
+        return currentItem.duration.seconds
+    }
+    
     private var percentageSongFinished: Double {
-        if let currentItem = currentPlayer.currentItem {
-            return currentPlayer.currentTime().seconds / currentItem.duration.seconds
-        } else {
-            return 0.0
-        }
+        guard let currentItem = currentPlayer.currentItem else { return 0.0 }
+        
+        return currentPlayer.currentTime().seconds / currentItem.duration.seconds
     }
     
     func play(index: Int, in songList: [Song]) {
