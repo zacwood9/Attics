@@ -107,7 +107,9 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     }
     
     @objc func silderDidChange(sender: UISlider) {
-        musicPlayer.seek(percentage: Double(exactly: sender.value)!)
+        let timeAtSlider = musicPlayer.currentDurationInSeconds * Double(sender.value)
+        currentTimeLabel.text = timeAtSlider.timeString
+        durationLabel.text = (musicPlayer.currentDurationInSeconds - timeAtSlider).timeString
     }
     
     @objc func updateSlider(notification: Notification) {
@@ -124,6 +126,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     
     @objc func sliderWasUnpressed() {
         isSliderDown = false
+        musicPlayer.seek(percentage: Double(exactly: timeSlider.value)!)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -225,7 +228,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         }()
         
         timeSlider = UISlider()
-        timeSlider.isContinuous = false
+        timeSlider.isContinuous = true
         timeSlider.translatesAutoresizingMaskIntoConstraints = false
         
         super.init(nibName: nil, bundle: nil)
