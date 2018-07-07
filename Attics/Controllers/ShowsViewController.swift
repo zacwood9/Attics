@@ -35,7 +35,7 @@ class ShowsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func setupViews() {
-        navigationItem.title = String(describing: year.year)
+        navigationItem.title = year.year
         
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([tableView.topAnchor.constraint(equalTo: view.topAnchor),

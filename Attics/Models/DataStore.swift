@@ -9,7 +9,7 @@
 import Foundation
 
 protocol DataStore {
-    func fetchYears() -> [Year]
+    func fetchYears() -> Result<[Year]>
     func fetchShows(in year: Year) -> [Show]
     func fetchSources(for show: Show) -> [Source]
     func fetchSongs(for source: Source) -> [Song]

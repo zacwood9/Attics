@@ -40,6 +40,7 @@ class YearsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         setupViews()
         loadData()
+        
     }
     
     func setupViews() {
@@ -53,7 +54,15 @@ class YearsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func loadData() {
-        years = dataStore.fetchYears()
+        WebApiService().load(Year.all) { [weak self] result in
+            switch result {
+            case .success(let years):
+                self?.years = years
+                self?.tableView.reloadData()
+            case .failure(let error):
+                print(error.message)
+            }
+        }
     }
     
     //MARK: UITableViewDataSource
@@ -64,7 +73,7 @@ class YearsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Year Cell", for: indexPath)
-        cell.textLabel?.text = String(describing: years[indexPath.row].year)
+        cell.textLabel?.text = years[indexPath.row].year
         return cell
     }
     

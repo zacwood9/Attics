@@ -14,8 +14,8 @@ class InMemoryDataStore: DataStore {
     let sources: [Source]
     let songs: [Song]
     
-    func fetchYears() -> [Year] {
-        return years
+    func fetchYears() -> Result<[Year]> {
+        return .success(years)
     }
     
     func fetchShows(in year: Year) -> [Show] {
@@ -31,7 +31,7 @@ class InMemoryDataStore: DataStore {
     }
     
     init() {
-        years = [Year(id: 1, year: 1977), Year(id: 2, year: 1978)]
+        years = [Year(id: 1, year: "1977"), Year(id: 2, year: "1978")]
         shows = [
             Show.init(id: 1, date: "1977-05-07", venue: "Boston", year: years[0]),
             Show.init(id: 2, date: "1977-05-08", venue: "Barton Hall", year: years[0]),

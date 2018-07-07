@@ -17,7 +17,7 @@ class YearsViewControllerTests: XCTestCase {
         super.setUp()
         dataStore = InMemoryDataStore()
         yearsVC = YearsViewController(dataStore: dataStore)
-        yearsVC.years.append(Year(id: 1, year: 1977))
+        yearsVC.years.append(Year(id: 1, year: "1977"))
     }
     
     override func tearDown() {

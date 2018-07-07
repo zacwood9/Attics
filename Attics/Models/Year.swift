@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Year: Equatable {
+struct Year: Equatable, Codable {
     let id: Int
-    let year: Int
+    let year: String
 }
