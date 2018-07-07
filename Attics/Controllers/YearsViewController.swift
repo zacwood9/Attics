@@ -40,7 +40,6 @@ class YearsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         setupViews()
         loadData()
-        
     }
     
     func setupViews() {
@@ -54,11 +53,11 @@ class YearsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func loadData() {
-        WebApiService().load(Year.all) { [weak self] result in
+        dataStore.fetchYears { [weak self] result in
             switch result {
             case .success(let years):
                 self?.years = years
-                self?.tableView.reloadData()
+                DispatchQueue.main.async { self?.tableView.reloadData() }
             case .failure(let error):
                 print(error.message)
             }

@@ -159,7 +159,7 @@ class MusicPlayer {
 
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.currentPlayer.rate
         nowPlayingInfo[MPMediaItemPropertyArtist] = "Grateful Dead"
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "\(song.source.show.date) - \(song.source.show.venue)"
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "TODO - DATA"
         
         // Set the metadata
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo

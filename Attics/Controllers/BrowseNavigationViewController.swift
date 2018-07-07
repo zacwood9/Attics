@@ -16,7 +16,7 @@ class BrowseNavigationViewController: UINavigationController {
     }
     
     convenience init() {
-        let dataStore = InMemoryDataStore()
+        let dataStore = NetworkDataStore()
         let yearsViewController = YearsViewController(dataStore: dataStore)
 
         self.init(rootViewController: yearsViewController)

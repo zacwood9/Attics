@@ -55,7 +55,18 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func loadData() {
-        sources = dataStore.fetchSources(for: show)
+        dataStore.fetchSources(for: show) { [weak self] result in
+            switch result {
+            case .success(let sources):
+                self?.sources = sources
+            case .failure(let error):
+                print(error)
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

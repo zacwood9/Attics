@@ -8,10 +8,9 @@
 
 import Foundation
 
-struct Source: Equatable {
+struct Source: Equatable, Codable {
     let id: Int
-    let transferer: String
+    let transferer: String?
     let identifier: String
-    
-    let show: Show
+    let showId: Int
 }

@@ -9,8 +9,8 @@
 import Foundation
 
 protocol DataStore {
-    func fetchYears() -> Result<[Year]>
-    func fetchShows(in year: Year) -> [Show]
-    func fetchSources(for show: Show) -> [Source]
-    func fetchSongs(for source: Source) -> [Song]
+    func fetchYears(then completion: @escaping (Result<[Year]>) -> ())
+    func fetchShows(in year: Year, then completion: @escaping (Result<[Show]>) -> ())
+    func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ())
+    func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ())
 }

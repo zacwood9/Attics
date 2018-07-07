@@ -96,10 +96,10 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     
     private func setInfo(for song: Song) {
         popupItem.title = song.title
-        popupItem.subtitle = "\(song.source.show.date) - \(song.source.show.venue)"
+        popupItem.subtitle = "TODO - SUBTITLE"
         
-        showDateLabel.text = song.source.show.date
-        venueLabel.text = song.source.show.venue
+        showDateLabel.text = "TODO - DATE"
+        venueLabel.text = "TODO - VENUE"
     }
     
     private func setBarButtons() {

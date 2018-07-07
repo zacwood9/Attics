@@ -65,7 +65,7 @@ class SongsViewController: UIViewController, UITableViewDelegate {
     }
     
     func loadData() {
-        dataSource.songs = dataStore.fetchSongs(for: source)
+//        dataSource.songs = dataStore.fetchSongs(for: source)
     }
     
     @objc func didReceiveSongPlayed(notification: Notification) {
@@ -77,7 +77,7 @@ class SongsViewController: UIViewController, UITableViewDelegate {
     var player = AVPlayer(playerItem: nil)
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        MusicPlayer.instance.play(index: indexPath.row, in: dataStore.fetchSongs(for: source))
+//        MusicPlayer.instance.play(index: indexPath.row, in: dataStore.fetchSongs(for: source))
         
         let popupVC = NowPlayingController(selectedIndexPath: indexPath, selectRowCallback: { [weak self] indexPath in
             self?.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .top)

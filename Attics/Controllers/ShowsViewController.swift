@@ -45,7 +45,18 @@ class ShowsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func loadData() {
-        shows = dataStore.fetchShows(in: year)
+        dataStore.fetchShows(in: year) { [weak self] result in
+            switch result {
+            case .success(let shows):
+                self?.shows = shows
+            case .failure(let error):
+                print(error)
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     //MARK: UITableViewDataSource
