@@ -43,8 +43,8 @@ class InMemoryDataStore: DataStore {
             Source(id: 3, transferer: "Bob Marley", identifier: "gd3", showId: shows[2].id)
         ]
         songs = [
-            Song(id: 1, title: "Minglewood Blues", fileName: "gd77-05-08eaton-d1t01.mp3", source: sources[0]),
-            Song(id: 2, title: "Loser", fileName: "gd77-05-08eaton-d1t02.mp3", source: sources[0])
+//            Song(title: "Minglewood Blues", fileName: "gd77-05-08eaton-d1t01.mp3"),
+//            Song(title: "Loser", fileName: "gd77-05-08eaton-d1t02.mp3")
         ]
     }
 }

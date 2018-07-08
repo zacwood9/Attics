@@ -8,15 +8,18 @@
 
 import Foundation
 
-struct Song: Equatable {
-    let id: Int
+struct Song: Equatable, Codable {
     let title: String
     let fileName: String
+    let album: String
     
-    let source: Source
-    
-    var downloadURL: URL {
-        let urlString = "http://archive.org/download/\(self.source.identifier)/\(self.fileName)".addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!
-        return URL(string: urlString)!
+    enum CodingKeys: String, CodingKey {
+        case title, album
+        case fileName = "name"
     }
+    
+//    var downloadURL: URL {
+//        let urlString = "http://archive.org/download/\(self.source.identifier)/\(self.fileName)".addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!
+//        return URL(string: urlString)!
+//    }
 }

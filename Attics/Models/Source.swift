@@ -13,4 +13,8 @@ struct Source: Equatable, Codable {
     let transferer: String?
     let identifier: String
     let showId: Int
+    
+    var metadataUrl: URL {
+        return URL(string: "https://archive.org/metadata/\(identifier)")!
+    }
 }

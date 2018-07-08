@@ -21,13 +21,15 @@ class SongsViewController: UIViewController, UITableViewDelegate {
         return tableView
     }()
     
+    var show: Show
     var source: Source
     
     private var dataStore: DataStore
     private var dataSource: SongsDataSource
     
-    init(from source: Source, dataStore: DataStore) {
+    init(from source: Source, in show: Show, dataStore: DataStore) {
         self.source = source
+        self.show = show
         self.dataStore = dataStore
         self.dataSource = SongsDataSource(songs: [])
         super.init(nibName: nil, bundle: nil)
@@ -65,7 +67,18 @@ class SongsViewController: UIViewController, UITableViewDelegate {
     }
     
     func loadData() {
-//        dataSource.songs = dataStore.fetchSongs(for: source)
+        dataStore.fetchSongs(in: source) { [weak self] result in
+            switch result {
+            case .success(let songs):
+                self?.dataSource.songs = songs
+            case .failure(let error):
+                print(error)
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     @objc func didReceiveSongPlayed(notification: Notification) {
@@ -77,7 +90,8 @@ class SongsViewController: UIViewController, UITableViewDelegate {
     var player = AVPlayer(playerItem: nil)
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        MusicPlayer.instance.play(index: indexPath.row, in: dataStore.fetchSongs(for: source))
+        MusicPlayer.instance.playerState = PlayerState(show: show, source: source, songs: dataSource.songs)
+        MusicPlayer.instance.play(index: indexPath.row, in: dataSource.songs)
         
         let popupVC = NowPlayingController(selectedIndexPath: indexPath, selectRowCallback: { [weak self] indexPath in
             self?.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .top)

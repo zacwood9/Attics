@@ -14,6 +14,12 @@ enum PlayerStatus {
     case paused
 }
 
+struct PlayerState {
+    let show: Show
+    let source: Source
+    let songs: [Song]
+}
+
 class MusicPlayer {
     static var instance = MusicPlayer()
     
@@ -22,6 +28,8 @@ class MusicPlayer {
     }
     
     private var currentPlayer = AVPlayer(playerItem: nil)
+    
+    var playerState: PlayerState!
     
     var songList: [Song] = []
     var currentSongIndex = 0
@@ -50,8 +58,8 @@ class MusicPlayer {
         self.currentSongIndex = index
         self.songList = songList
         
-        let song = songList[index]
-        let asset = AVURLAsset(url: song.downloadURL)
+        let song = playerState.songs[index]
+        let asset = AVURLAsset(url: downloadUrl(source: playerState.source, song: song))
         let item = AVPlayerItem(asset: asset)
         currentPlayer = AVPlayer(playerItem: item)
         currentPlayer.automaticallyWaitsToMinimizeStalling = false

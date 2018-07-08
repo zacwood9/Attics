@@ -33,6 +33,6 @@ final class NetworkDataStore: DataStore {
     }
     
     func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ()) {
-        completion(.success([]))
+        WebApiService().load(source.songs, then: completion)
     }
 }

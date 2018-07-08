@@ -88,7 +88,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func configureNextScreen(for source: Source) -> SongsViewController {
-        let vc = SongsViewController(from: source, dataStore: dataStore)
+        let vc = SongsViewController(from: source, in: show, dataStore: dataStore)
         return vc
     }
 
