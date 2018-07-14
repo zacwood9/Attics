@@ -14,21 +14,15 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var app: App?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        try! AVAudioSession.sharedInstance().setActive(true, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
-        try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode.default)
-        UIApplication.shared.beginReceivingRemoteControlEvents()
-        
         window = UIWindow(frame: UIScreen.main.bounds)
-        let browse = BrowseNavigationViewController()
-        browse.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
-        let tabBarController = UITabBarController()
-        tabBarController.setViewControllers([browse], animated: true)
-        window?.rootViewController = tabBarController
+        if let window = window {
+            app = App(window: window)
+        }
         return true
     }
 

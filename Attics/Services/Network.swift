@@ -38,6 +38,7 @@ final class WebApiService: ApiService {
             }
             completion(resource.parse(data))
         }.resume()
+        
     }
     
     init(urlSession: URLSession = URLSession.shared) {
@@ -73,7 +74,7 @@ extension Source {
     }
 }
 
-fileprivate func parseJson<T: Decodable>(from data: Data) -> Result<T> {
+func parseJson<T: Decodable>(from data: Data) -> Result<T> {
     do {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

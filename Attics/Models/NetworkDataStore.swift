@@ -11,17 +11,17 @@ import Foundation
 final class NetworkDataStore: DataStore {
     var years: [Year] = []
     
-    func fetchYears(then completion: @escaping (Result<[Year]>) -> ()) {
-//        WebApiService().load(Year.all) { [unowned self] result in
+    func fetchYears(then completion: @escaping (Result<[NetworkYear]>) -> ()) {
+//        WebApiService().load(NetworkYear.allWithTopShows) { result in
 //            switch result {
-//            case .success(let years):
-//                self.years = years
-//                fallthrough
-//            default:
-//                completion(result)
+//            case .success(let networkYears):
+//                print(networkYears)
+//            case .failure(let error):
+//                completion(.failure(error))
 //            }
 //        }
-        WebApiService().load(Year.all, then: completion)
+        
+        WebApiService().load(NetworkYear.allWithTopShows, then: completion)
     }
     
     func fetchShows(in year: Year, then completion: @escaping (Result<[Show]>) -> ()) {
@@ -36,3 +36,27 @@ final class NetworkDataStore: DataStore {
         WebApiService().load(source.songs, then: completion)
     }
 }
+
+struct NetworkYear: Codable {
+    let id: Int
+    let year: String
+    let topShows: [NetworkShow]
+}
+
+extension NetworkYear {
+    static var allWithTopShows: Resource<[NetworkYear]> {
+        return Resource(url: URL(string: "http://localhost:3000/api/years")!, parse: parseJson)
+    }
+}
+
+struct NetworkShow: Codable {
+    let date: String
+    let venue: String
+    let city: String
+    let state: String
+    let stars: Double
+    let sources: Int
+    let avgRating: Double
+}
+
+

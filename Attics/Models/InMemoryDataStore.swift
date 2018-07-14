@@ -14,7 +14,7 @@ class InMemoryDataStore: DataStore {
     let sources: [Source]
     let songs: [Song]
     
-    func fetchYears(then completion: @escaping (Result<[Year]>) -> ()) {
+    func fetchYears(then completion: @escaping (Result<[NetworkYear]>) -> ()) {
         completion(.success([]))
     }
     

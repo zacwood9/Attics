@@ -17,7 +17,11 @@ class BrowseNavigationViewController: UINavigationController {
     
     convenience init() {
         let dataStore = NetworkDataStore()
-        let yearsViewController = YearsViewController(dataStore: dataStore)
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        
+        let yearsViewController = storyboard.instantiateViewController(withIdentifier: "YearsTopShows") as! YearsViewController
+        
+        yearsViewController.dataStore = NetworkDataStore()
 
         self.init(rootViewController: yearsViewController)
         

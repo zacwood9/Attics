@@ -75,7 +75,7 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Source Cell", for: indexPath)
-        cell.textLabel?.text = sources[indexPath.row].transferer
+        cell.textLabel?.text = sources[indexPath.row].transferer ?? "Unknown"
         return cell
     }
     

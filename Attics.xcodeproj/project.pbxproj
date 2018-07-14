@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C529DC0020F9807B009F399A /* TopShowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DBFF20F9807B009F399A /* TopShowsViewController.swift */; };
+		C529DC0220FA8E98009F399A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DC0120FA8E98009F399A /* App.swift */; };
 		C53F491220D484DA0006EF72 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491120D484DA0006EF72 /* Source.swift */; };
 		C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */; };
 		C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491520D487380006EF72 /* SourcesViewController.swift */; };
@@ -26,6 +28,7 @@
 		C58DCE3420F03B3100F0B289 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3320F03B3100F0B289 /* Network.swift */; };
 		C58DCE3620F0425200F0B289 /* FontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C58DCE3520F0425200F0B289 /* FontAwesome.framework */; };
 		C58DCE3820F04D1C00F0B289 /* NetworkDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */; };
+		C5D0C27720F2A0E90057FE89 /* Cosmos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D0C27620F2A0E80057FE89 /* Cosmos.framework */; };
 		C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */; };
 		C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */; };
 		C5ED3A8220D44D180019F0EF /* Year.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8120D44D180019F0EF /* Year.swift */; };
@@ -56,6 +59,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C529DBFF20F9807B009F399A /* TopShowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopShowsViewController.swift; sourceTree = "<group>"; };
+		C529DC0120FA8E98009F399A /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C53F491120D484DA0006EF72 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewControllerTests.swift; sourceTree = "<group>"; };
 		C53F491520D487380006EF72 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +86,7 @@
 		C58DCE3320F03B3100F0B289 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		C58DCE3520F0425200F0B289 /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataStore.swift; sourceTree = "<group>"; };
+		C5D0C27620F2A0E80057FE89 /* Cosmos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cosmos.framework; path = Carthage/Build/iOS/Cosmos.framework; sourceTree = "<group>"; };
 		C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseNavigationViewController.swift; sourceTree = "<group>"; };
 		C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
 		C5ED3A8120D44D180019F0EF /* Year.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Year.swift; sourceTree = "<group>"; };
@@ -100,6 +106,7 @@
 			files = (
 				C575FFB920D5C1F500DE76BA /* LNPopupController.framework in Frameworks */,
 				C58DCE3620F0425200F0B289 /* FontAwesome.framework in Frameworks */,
+				C5D0C27720F2A0E90057FE89 /* Cosmos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +186,7 @@
 		C575FFB720D5C1F400DE76BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5D0C27620F2A0E80057FE89 /* Cosmos.framework */,
 				C58DCE3520F0425200F0B289 /* FontAwesome.framework */,
 				C575FFB820D5C1F400DE76BA /* LNPopupController.framework */,
 			);
@@ -225,10 +233,12 @@
 			children = (
 				C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */,
 				C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */,
+				C529DC0120FA8E98009F399A /* App.swift */,
 				C5ED3A8720D452380019F0EF /* ShowsViewController.swift */,
 				C53F491520D487380006EF72 /* SourcesViewController.swift */,
 				C55CF9F720D4A4D100A2F780 /* SongsViewController.swift */,
 				C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */,
+				C529DBFF20F9807B009F399A /* TopShowsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -377,10 +387,12 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/LNPopupController.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/FontAwesome.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Cosmos.framework",
 			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)$(FRAMEWORKS_FOLDER_PATH)/LNPopupController.framework",
 				"$(BUILT_PRODUCTS_DIR)$(FRAMEWORKS_FOLDER_PATH)/FontAwesome.framework",
+				"$(BUILT_PRODUCTS_DIR)$(FRAMEWORKS_FOLDER_PATH)/Cosmos.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -406,8 +418,10 @@
 				C58DCE3120F038AD00F0B289 /* Swift+Extensions.swift in Sources */,
 				C5ED3A8220D44D180019F0EF /* Year.swift in Sources */,
 				C58DCE3420F03B3100F0B289 /* Network.swift in Sources */,
+				C529DC0220FA8E98009F399A /* App.swift in Sources */,
 				C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */,
 				C5ED3A8A20D4531A0019F0EF /* DataStore.swift in Sources */,
+				C529DC0020F9807B009F399A /* TopShowsViewController.swift in Sources */,
 				C53F491220D484DA0006EF72 /* Source.swift in Sources */,
 				C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */,
 				C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */,

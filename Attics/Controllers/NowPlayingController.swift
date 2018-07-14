@@ -180,12 +180,12 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
             durationLabel.rightAnchor.constraint(equalTo: timeSlider.rightAnchor),
             durationLabel.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 2),
             
-            playPauseButton.topAnchor.constraint(equalTo: timeSlider.bottomAnchor, constant: 16),
+            playPauseButton.topAnchor.constraint(equalTo: currentTimeLabel.bottomAnchor, constant: 16),
             playPauseButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8),
             playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
             
             advanceButton.centerYAnchor.constraint(equalTo: playPauseButton.centerYAnchor),
-            advanceButton.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 32)
+            advanceButton.leftAnchor.constraint(equalTo: playPauseButton.rightAnchor, constant: 58)
             ])
     }
     
@@ -210,7 +210,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         self.selectRowCallback = selectRowCallback
         
         playPauseButton = UIButton(type: .system)
-        playPauseButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 65)
+        playPauseButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 40)
         playPauseButton.setTitle(String.fontAwesomeIcon(name: .pause), for: .normal)
         playPauseButton.translatesAutoresizingMaskIntoConstraints = false
         
