@@ -12,6 +12,9 @@
 		C53F491220D484DA0006EF72 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491120D484DA0006EF72 /* Source.swift */; };
 		C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */; };
 		C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491520D487380006EF72 /* SourcesViewController.swift */; };
+		C54A165C20FAAB0100A6EF95 /* YearsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54A165B20FAAB0100A6EF95 /* YearsTableViewCell.swift */; };
+		C54A165E20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54A165D20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift */; };
+		C54A166120FAB86700A6EF95 /* ShowCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54A166020FAB86700A6EF95 /* ShowCollectionViewCell.swift */; };
 		C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C121120D1EC440013F697 /* AppDelegate.swift */; };
 		C54C121720D1EC440013F697 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121520D1EC440013F697 /* Main.storyboard */; };
 		C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C54C121820D1EC440013F697 /* Attics.xcdatamodeld */; };
@@ -64,6 +67,9 @@
 		C53F491120D484DA0006EF72 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewControllerTests.swift; sourceTree = "<group>"; };
 		C53F491520D487380006EF72 /* SourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewController.swift; sourceTree = "<group>"; };
+		C54A165B20FAAB0100A6EF95 /* YearsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsTableViewCell.swift; sourceTree = "<group>"; };
+		C54A165D20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopShowsCollectionViewCell.swift; sourceTree = "<group>"; };
+		C54A166020FAB86700A6EF95 /* ShowCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCollectionViewCell.swift; sourceTree = "<group>"; };
 		C54C120E20D1EC440013F697 /* Attics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Attics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54C121120D1EC440013F697 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C54C121620D1EC440013F697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -127,6 +133,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C54A165F20FAAB3F00A6EF95 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C54C121520D1EC440013F697 /* Main.storyboard */,
+				C54A165B20FAAB0100A6EF95 /* YearsTableViewCell.swift */,
+				C54A165D20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift */,
+				C54A166020FAB86700A6EF95 /* ShowCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		C54C120520D1EC430013F697 = {
 			isa = PBXGroup;
 			children = (
@@ -151,12 +168,13 @@
 		C54C121020D1EC440013F697 /* Attics */ = {
 			isa = PBXGroup;
 			children = (
-				C54C121B20D1EC460013F697 /* Assets.xcassets */,
 				C5ED3A7E20D44CE00019F0EF /* Models */,
+				C54A165F20FAAB3F00A6EF95 /* Views */,
 				C5ED3A8020D44D080019F0EF /* Controllers */,
 				C58DCE3220F03B1A00F0B289 /* Services */,
-				C54C122020D1EC460013F697 /* Info.plist */,
 				C5ED3A7F20D44CF50019F0EF /* Supporting Files */,
+				C54C122020D1EC460013F697 /* Info.plist */,
+				C54C121B20D1EC460013F697 /* Assets.xcassets */,
 			);
 			path = Attics;
 			sourceTree = "<group>";
@@ -221,7 +239,6 @@
 			children = (
 				C58DCE3020F038AD00F0B289 /* Swift+Extensions.swift */,
 				C54C121120D1EC440013F697 /* AppDelegate.swift */,
-				C54C121520D1EC440013F697 /* Main.storyboard */,
 				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
 				C54C121820D1EC440013F697 /* Attics.xcdatamodeld */,
 			);
@@ -412,6 +429,7 @@
 				C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */,
 				C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */,
 				C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */,
+				C54A166120FAB86700A6EF95 /* ShowCollectionViewCell.swift in Sources */,
 				C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */,
 				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
 				C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */,
@@ -424,6 +442,8 @@
 				C529DC0020F9807B009F399A /* TopShowsViewController.swift in Sources */,
 				C53F491220D484DA0006EF72 /* Source.swift in Sources */,
 				C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */,
+				C54A165C20FAAB0100A6EF95 /* YearsTableViewCell.swift in Sources */,
+				C54A165E20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift in Sources */,
 				C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

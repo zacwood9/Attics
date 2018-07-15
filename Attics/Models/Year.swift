@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Year: Equatable, Codable {
+struct Year: Equatable {
     let id: Int
     let year: String
 }

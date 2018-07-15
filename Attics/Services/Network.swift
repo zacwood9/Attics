@@ -48,32 +48,6 @@ final class WebApiService: ApiService {
 
 fileprivate let apiRoot = "https://stunning-yellowstone-51900.herokuapp.com/api"
 
-extension Year {
-    static var all: Resource<[Year]> {
-        guard let url = URL(string: apiRoot + "/years") else { fatalError("failed to create URL") }
-        return Resource<[Year]>(url: url, parse: parseJson)
-    }
-    
-    var shows: Resource<[Show]> {
-        guard let url = URL(string: apiRoot + "/years/\(id)/shows") else { fatalError("failed to create URL")}
-        return Resource(url: url, parse: parseJson)
-    }
-}
-
-extension Show {
-    var sources: Resource<[Source]> {
-        guard let url = URL(string: apiRoot + "/shows/\(id)/sources") else { fatalError("failed to create url") }
-        return Resource(url: url, parse: parseJson)
-    }
-}
-
-extension Source {
-    var songs: Resource<[Song]> {
-        guard let url = URL(string: apiRoot + "/sources/\(id)/songs") else { fatalError("failed to create url") }
-        return Resource(url: url, parse: parseJson)
-    }
-}
-
 func parseJson<T: Decodable>(from data: Data) -> Result<T> {
     do {
         let decoder = JSONDecoder()

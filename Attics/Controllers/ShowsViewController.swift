@@ -8,40 +8,23 @@
 
 import UIKit
 
-class ShowsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ShowsViewController: UIViewController {
     
-    //MARK: Properties
+    @IBOutlet weak var collectionView: UICollectionView!
     
-    lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: self.view.bounds)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Show Cell")
-        return tableView
-    }()
-    
-    var year: Year
+    var year: Year!
     var shows: [Show] = []
     
-    private let dataStore: DataStore
-    
-    // MARK: View Controller Lifecycle
+    var dataStore: DataStore!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
-        loadData()
-    }
-    
-    func setupViews() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
         navigationItem.title = year.year
         
-        self.view.addSubview(tableView)
-        NSLayoutConstraint.activate([tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                                     tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                                     tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-                                     tableView.rightAnchor.constraint(equalTo: view.rightAnchor)])
+        loadData()
     }
     
     func loadData() {
@@ -49,53 +32,36 @@ class ShowsViewController: UIViewController, UITableViewDelegate, UITableViewDat
             switch result {
             case .success(let shows):
                 self?.shows = shows
+                DispatchQueue.main.async { self?.collectionView.reloadData() }
             case .failure(let error):
                 print(error)
-            }
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.tableView.reloadData()
             }
         }
     }
     
-    //MARK: UITableViewDataSource
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Show Cell", for: indexPath)
-        cell.textLabel?.text = String(describing: shows[indexPath.row].date)
-        cell.detailTextLabel?.text = String(describing: shows[indexPath.row].venue)
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+}
+
+extension ShowsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return shows.count
     }
     
-    // MARK: UITableViewDelegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let showSelected = shows[indexPath.row]
-        let nextVC = configureNextScreen(for: showSelected)
-        navigationController?.pushViewController(nextVC, animated: true)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Show Cell", for: indexPath) as? ShowCollectionViewCell else { fatalError() }
+        let show = shows[indexPath.item]
+        
+        cell.dateLabel.text = show.date
+        cell.venueLabel.text = show.venue
+        cell.locationLabel.text = "\(show.city), \(show.state)"
+        cell.sourcesLabel.text = "\(show.sources) sources"
+        cell.recordingTypesLabel.text = "SBD"
+        cell.stars.rating = show.avgRating
+        
+        cell.view.roundCorners()
+        cell.view.setShadow()
+        
+        return cell
     }
     
-    func configureNextScreen(for show: Show) -> SourcesViewController {
-        let vc = SourcesViewController(for: show, dataStore: dataStore)
-        return vc
-    }
     
-    init(withShowsIn year: Year, dataStore: DataStore) {
-        self.year = year
-        self.dataStore = dataStore
-        super.init(nibName: nil, bundle: nil)        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) not implemented")
-    }
 }

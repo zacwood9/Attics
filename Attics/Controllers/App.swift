@@ -13,6 +13,7 @@ final class App {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let browseController: UINavigationController
     let tabBarController: UITabBarController
+    let dataStore: NetworkDataStore
     
     private func configureAudio() {
         try! AVAudioSession.sharedInstance().setActive(true, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
@@ -22,19 +23,32 @@ final class App {
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
     
-    func pushYearController() {
+    func pushShowsController(year: Year) {
+        let showsVC = storyboard.instantiateViewController(withIdentifier: "ShowsController") as! ShowsViewController
+        showsVC.year = year
+        showsVC.dataStore = dataStore
+        browseController.pushViewController(showsVC, animated: true)
+    }
+    
+    func pushSourcesController(show: Show) {
         
     }
     
     init(window: UIWindow) {
-        browseController = BrowseNavigationViewController()
-        browseController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
+        let yearsViewController = storyboard.instantiateViewController(withIdentifier: "YearsTopShows") as! YearsViewController
+        browseController = UINavigationController(rootViewController: yearsViewController)
         
         tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
         tabBarController.setViewControllers([browseController], animated: true)
         window.rootViewController = tabBarController
+        
+        dataStore = NetworkDataStore()
+        
+        yearsViewController.dataStore = dataStore
+        yearsViewController.onYearTapped = pushShowsController
+        browseController.navigationBar.prefersLargeTitles = true
+        browseController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 1)
 
         configureAudio()
-        pushYearController()
     }
 }

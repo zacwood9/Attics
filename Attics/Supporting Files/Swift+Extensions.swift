@@ -29,3 +29,22 @@ extension Double {
         return "\(minutes):\(secondsString)"
     }
 }
+
+extension UIView {
+    func setShadow() {
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowRadius = 2.0
+        layer.shadowOpacity = 1.0
+        layer.masksToBounds = false;
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
+        
+    }
+    
+    func roundCorners() {
+        layer.cornerRadius = 8.0
+        layer.borderWidth = 1.0
+        layer.borderColor = UIColor.clear.cgColor
+        layer.masksToBounds = false;
+    }
+}

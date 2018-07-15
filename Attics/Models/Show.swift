@@ -8,9 +8,14 @@
 
 import Foundation
 
-struct Show: Equatable, Codable {
+struct Show: Equatable {
     let id: Int
     let date: String
     let venue: String
-    let yearId: Int
+    let city: String
+    let state: String
+    let stars: Double
+    let sources: Int
+    let avgRating: Double
+    let year: Year
 }
