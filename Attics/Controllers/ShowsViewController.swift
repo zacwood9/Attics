@@ -8,22 +8,21 @@
 
 import UIKit
 
-class ShowsViewController: UIViewController {
-    
-    @IBOutlet weak var collectionView: UICollectionView!
-    
+class ShowsViewController: UICollectionViewController {
     var year: Year!
     var shows: [Show] = []
     
     var dataStore: DataStore!
     
+    var onShowTapped: (Show) -> () = { _ in }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.dataSource = self
-        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.delegate = self
         
         navigationItem.title = year.year
-        
+        extendedLayoutIncludesOpaqueBars = true
         loadData()
     }
     
@@ -32,7 +31,11 @@ class ShowsViewController: UIViewController {
             switch result {
             case .success(let shows):
                 self?.shows = shows
-                DispatchQueue.main.async { self?.collectionView.reloadData() }
+                DispatchQueue.main.async {
+//                    self?.collectionView.reloadData()
+                    let indexPaths = (0..<shows.count).map { IndexPath(item: $0, section: 0) }
+                    self?.collectionView?.insertItems(at: indexPaths)
+                }
             case .failure(let error):
                 print(error)
             }
@@ -41,16 +44,17 @@ class ShowsViewController: UIViewController {
     
 }
 
-extension ShowsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension ShowsViewController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return shows.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Show Cell", for: indexPath) as? ShowCollectionViewCell else { fatalError() }
         let show = shows[indexPath.item]
         
         cell.dateLabel.text = show.date
+        cell.dateLabel.font = UIFont.preferredFont(forTextStyle: .title1, withSymbolicTraits: .traitBold)
         cell.venueLabel.text = show.venue
         cell.locationLabel.text = "\(show.city), \(show.state)"
         cell.sourcesLabel.text = "\(show.sources) sources"
@@ -63,5 +67,17 @@ extension ShowsViewController: UICollectionViewDataSource, UICollectionViewDeleg
         return cell
     }
     
-    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        onShowTapped(shows[indexPath.item])
+    }
+}
+
+extension ShowsViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.frame.size.width
+        if collectionView.traitCollection.horizontalSizeClass == .regular { // iPad
+            return CGSize(width: width/2 - 24, height: 110)
+        }
+        return CGSize(width: width-24, height: 110)
+    }
 }

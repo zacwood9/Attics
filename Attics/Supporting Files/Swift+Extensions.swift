@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FontAwesome
+import SafariServices
 
 extension UIFont {
     class func preferredFont(forTextStyle style: UIFont.TextStyle, withSymbolicTraits traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
@@ -47,4 +49,19 @@ extension UIView {
         layer.borderColor = UIColor.clear.cgColor
         layer.masksToBounds = false;
     }
+}
+
+extension UIButton {
+    func setTitle(fontAwesome icon: String, ofSize size: CGFloat) {
+        titleLabel?.font = UIFont.fontAwesome(ofSize: size, style: .solid)
+        setTitle(icon, for: .normal)
+    }
+}
+
+extension UIViewController {
+    func presentSafariViewController(at url: URL) {
+        let safari = SFSafariViewController(url: url)
+        present(safari, animated: true, completion: nil)
+    }
+    
 }

@@ -8,13 +8,20 @@
 
 import Foundation
 
-struct Source: Equatable, Codable {
+struct Source: Equatable {
     let id: Int
-    let transferer: String?
     let identifier: String
-    let showId: Int
+    let transferer: String
+    let source: String
+    let avgRating: Double
+    let downloads: Int
+    let numReviews: Int
+    let description: String
+    let lineage: String
     
-    var metadataUrl: URL {
-        return URL(string: "https://archive.org/metadata/\(identifier)")!
-    }
+    let show: Show
+    
+//    var metadataUrl: URL {
+//        return URL(string: "https://archive.org/metadata/\(identifier)")!
+//    }
 }

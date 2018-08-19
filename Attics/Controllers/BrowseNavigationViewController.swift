@@ -15,18 +15,18 @@ class BrowseNavigationViewController: UINavigationController {
         super.viewDidLoad()
     }
     
-    convenience init() {
-        let dataStore = NetworkDataStore()
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        
-        let yearsViewController = storyboard.instantiateViewController(withIdentifier: "YearsTopShows") as! YearsViewController
-        
-        yearsViewController.dataStore = NetworkDataStore()
-
-        self.init(rootViewController: yearsViewController)
-        
-        navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .automatic
-    }
-    
+//    convenience init() {
+//        let dataStore = NetworkDataStore()
+//        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+//        
+//        let yearsViewController = storyboard.instantiateViewController(withIdentifier: "YearsTopShows") as! YearsViewController
+//        
+//        yearsViewController.dataStore = NetworkDataStore()
+//
+//        self.init(rootViewController: yearsViewController)
+//        
+//        navigationBar.prefersLargeTitles = true
+//        navigationItem.largeTitleDisplayMode = .automatic
+//    }
+//    
 }

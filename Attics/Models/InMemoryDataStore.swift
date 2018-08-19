@@ -34,6 +34,10 @@ class InMemoryDataStore: DataStore {
         completion(.success([]))
     }
     
+    func fetchReviews(for source: Source, then completion: @escaping (Result<[Review]>) -> ()) {
+        completion(.success([]))
+    }
+    
     init() {
         years = [Year(id: 1, year: "1977"), Year(id: 2, year: "1978")]
         shows = [

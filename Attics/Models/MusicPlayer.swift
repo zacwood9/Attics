@@ -20,9 +20,11 @@ struct PlayerState {
     let songs: [Song]
 }
 
+typealias playerChangeHandler = (PlayerStatus, Song, Double, Double) -> ()
+
 class MusicPlayer {
     static var instance = MusicPlayer()
-    
+
     var status: PlayerStatus {
         return currentPlayer.timeControlStatus == .playing ? .playing : .paused
     }

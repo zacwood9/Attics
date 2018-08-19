@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C529DC0020F9807B009F399A /* TopShowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DBFF20F9807B009F399A /* TopShowsViewController.swift */; };
+		C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */; };
+		C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */; };
 		C529DC0220FA8E98009F399A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DC0120FA8E98009F399A /* App.swift */; };
 		C53F491220D484DA0006EF72 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491120D484DA0006EF72 /* Source.swift */; };
 		C53F491420D486D80006EF72 /* SourcesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */; };
@@ -31,6 +32,13 @@
 		C58DCE3420F03B3100F0B289 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3320F03B3100F0B289 /* Network.swift */; };
 		C58DCE3620F0425200F0B289 /* FontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C58DCE3520F0425200F0B289 /* FontAwesome.framework */; };
 		C58DCE3820F04D1C00F0B289 /* NetworkDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */; };
+		C5ADA8A020FE3B550096318E /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADA89F20FE3B550096318E /* LoadingViewController.swift */; };
+		C5ADA8A220FE3D2C0096318E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADA8A120FE3D2C0096318E /* Constants.swift */; };
+		C5BE2FA62106D96700E8E18E /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BE2FA52106D96700E8E18E /* Review.swift */; };
+		C5BE2FA82107AEAA00E8E18E /* SourceInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */; };
+		C5C5EEE621082B9E00E5449F /* BrowseNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */; };
+		C5C5EEE821082DC300E5449F /* SettingsNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C5EEE721082DC300E5449F /* SettingsNavigator.swift */; };
+		C5C5EEEA210849BC00E5449F /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C5EEE9210849BC00E5449F /* SettingsTableViewController.swift */; };
 		C5D0C27720F2A0E90057FE89 /* Cosmos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D0C27620F2A0E80057FE89 /* Cosmos.framework */; };
 		C5ED3A7B20D44CC10019F0EF /* BrowseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */; };
 		C5ED3A7D20D44CC80019F0EF /* YearsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */; };
@@ -62,7 +70,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C529DBFF20F9807B009F399A /* TopShowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopShowsViewController.swift; sourceTree = "<group>"; };
+		C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCollectionViewCell.swift; sourceTree = "<group>"; };
+		C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewCell.swift; sourceTree = "<group>"; };
 		C529DC0120FA8E98009F399A /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C53F491120D484DA0006EF72 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		C53F491320D486D80006EF72 /* SourcesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesViewControllerTests.swift; sourceTree = "<group>"; };
@@ -92,6 +101,13 @@
 		C58DCE3320F03B3100F0B289 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		C58DCE3520F0425200F0B289 /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataStore.swift; sourceTree = "<group>"; };
+		C5ADA89F20FE3B550096318E /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		C5ADA8A120FE3D2C0096318E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C5BE2FA52106D96700E8E18E /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
+		C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceInfoTableViewCell.swift; sourceTree = "<group>"; };
+		C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseNavigator.swift; sourceTree = "<group>"; };
+		C5C5EEE721082DC300E5449F /* SettingsNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNavigator.swift; sourceTree = "<group>"; };
+		C5C5EEE9210849BC00E5449F /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		C5D0C27620F2A0E80057FE89 /* Cosmos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cosmos.framework; path = Carthage/Build/iOS/Cosmos.framework; sourceTree = "<group>"; };
 		C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseNavigationViewController.swift; sourceTree = "<group>"; };
 		C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YearsViewController.swift; sourceTree = "<group>"; };
@@ -136,10 +152,13 @@
 		C54A165F20FAAB3F00A6EF95 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */,
+				C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */,
 				C54C121520D1EC440013F697 /* Main.storyboard */,
 				C54A165B20FAAB0100A6EF95 /* YearsTableViewCell.swift */,
 				C54A165D20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift */,
 				C54A166020FAB86700A6EF95 /* ShowCollectionViewCell.swift */,
+				C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -214,7 +233,10 @@
 		C58DCE3220F03B1A00F0B289 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				C529DC0120FA8E98009F399A /* App.swift */,
 				C58DCE3320F03B3100F0B289 /* Network.swift */,
+				C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */,
+				C5C5EEE721082DC300E5449F /* SettingsNavigator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -226,6 +248,7 @@
 				C5ED3A8320D44DCD0019F0EF /* Show.swift */,
 				C53F491120D484DA0006EF72 /* Source.swift */,
 				C55CF9F520D49EDF00A2F780 /* Song.swift */,
+				C5BE2FA52106D96700E8E18E /* Review.swift */,
 				C5ED3A8920D4531A0019F0EF /* DataStore.swift */,
 				C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */,
 				C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */,
@@ -241,6 +264,7 @@
 				C54C121120D1EC440013F697 /* AppDelegate.swift */,
 				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
 				C54C121820D1EC440013F697 /* Attics.xcdatamodeld */,
+				C5ADA8A120FE3D2C0096318E /* Constants.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -248,14 +272,14 @@
 		C5ED3A8020D44D080019F0EF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				C5ADA89F20FE3B550096318E /* LoadingViewController.swift */,
 				C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */,
 				C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */,
-				C529DC0120FA8E98009F399A /* App.swift */,
 				C5ED3A8720D452380019F0EF /* ShowsViewController.swift */,
 				C53F491520D487380006EF72 /* SourcesViewController.swift */,
 				C55CF9F720D4A4D100A2F780 /* SongsViewController.swift */,
 				C575FFBB20D5C89D00DE76BA /* NowPlayingController.swift */,
-				C529DBFF20F9807B009F399A /* TopShowsViewController.swift */,
+				C5C5EEE9210849BC00E5449F /* SettingsTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -431,20 +455,28 @@
 				C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */,
 				C54A166120FAB86700A6EF95 /* ShowCollectionViewCell.swift in Sources */,
 				C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */,
+				C5BE2FA62106D96700E8E18E /* Review.swift in Sources */,
+				C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */,
 				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
+				C5ADA8A020FE3B550096318E /* LoadingViewController.swift in Sources */,
 				C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */,
+				C5C5EEE821082DC300E5449F /* SettingsNavigator.swift in Sources */,
 				C58DCE3120F038AD00F0B289 /* Swift+Extensions.swift in Sources */,
+				C5C5EEE621082B9E00E5449F /* BrowseNavigator.swift in Sources */,
+				C5C5EEEA210849BC00E5449F /* SettingsTableViewController.swift in Sources */,
 				C5ED3A8220D44D180019F0EF /* Year.swift in Sources */,
 				C58DCE3420F03B3100F0B289 /* Network.swift in Sources */,
 				C529DC0220FA8E98009F399A /* App.swift in Sources */,
+				C5BE2FA82107AEAA00E8E18E /* SourceInfoTableViewCell.swift in Sources */,
 				C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */,
 				C5ED3A8A20D4531A0019F0EF /* DataStore.swift in Sources */,
-				C529DC0020F9807B009F399A /* TopShowsViewController.swift in Sources */,
 				C53F491220D484DA0006EF72 /* Source.swift in Sources */,
+				C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */,
 				C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */,
 				C54A165C20FAAB0100A6EF95 /* YearsTableViewCell.swift in Sources */,
 				C54A165E20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift in Sources */,
 				C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */,
+				C5ADA8A220FE3D2C0096318E /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +660,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -650,6 +683,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

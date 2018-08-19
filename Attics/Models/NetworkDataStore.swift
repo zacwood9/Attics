@@ -10,13 +10,15 @@ import Foundation
 
 final class NetworkDataStore: DataStore {
     var years: [Year] = []
+    var shows: [Show] = []
+    var sources: [Source] = []
     
     func fetchYears(then completion: @escaping (Result<[NetworkYear]>) -> ()) {
 
     }
     
     func fetchTopShows(then completion: @escaping (Result<[YearWithTopShows]>) -> ()) {
-        WebApiService().load(NetworkYear.allWithTopShows) { result in
+        WebApiService().load(Year.allWithTopShows) { result in
             switch result {
             case .success(let networkYears):
                 let result: [YearWithTopShows] = networkYears.map { networkYear in
@@ -44,13 +46,11 @@ final class NetworkDataStore: DataStore {
         WebApiService().load(year.shows) { result in
             switch result {
             case .success(let networkShows):
-                print(networkShows)
                 let shows: [Show] = networkShows.map { show in
-                    let yearWithId = self.years.filter { year in
-                        year.id == show.yearId
-                    }
-                    guard let first = yearWithId.first else { fatalError() }
-                    return Show(year: first, networkShow: show)
+                    let show = Show(year: year, networkShow: show)
+                    if !self.shows.contains(show) { self.shows.append(show) }
+                    
+                    return show
                 }
                 
                 completion(.success(shows))
@@ -63,13 +63,58 @@ final class NetworkDataStore: DataStore {
     }
     
     func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ()) {
-//        WebApiService().load(show.sources, then: completion)
+        WebApiService().load(show.sourcesResource) { result in
+            switch result {
+            case .success(let networkSources):
+                let sources: [Source] = networkSources.map { networkSource in
+                    let source = Source(show: show, networkSource: networkSource)
+                    if !self.sources.contains(source) { self.sources.append(source) }
+                    
+                    return source
+                }
+                
+                completion(.success(sources))
+                
+            case .failure(let error):
+                completion(.failure(error))
+                
+            }
+        }
     }
     
     func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ()) {
-//        WebApiService().load(source.songs, then: completion)
+        WebApiService().load(source.songs) { result in
+            switch result {
+            case .success(let networkSongs):
+                let songs: [Song] = networkSongs.map { networkSong in
+                    let song = Song(source: source, networkSong: networkSong)
+                    return song
+                }
+                
+                completion(.success(songs))
+                
+            case .failure(let error):
+                completion(.failure(error))
+                
+            }
+        }
+    }
+    
+    func fetchReviews(for source: Source, then completion: @escaping ((Result<[Review]>) -> ())) {
+        WebApiService().load(source.reviews) { result in
+            switch result {
+            case .success(let networkReviews):
+                let reviews: [Review] = networkReviews.map(Review.init)
+                completion(.success(reviews))
+                
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }
+
+fileprivate let apiUrl = "http://localhost:3000/api"
 
 struct NetworkYear: Codable {
     let id: Int
@@ -77,9 +122,18 @@ struct NetworkYear: Codable {
     let topShows: [NetworkShow]
 }
 
-extension NetworkYear {
+fileprivate extension Year {
+    init(from networkYear: NetworkYear) {
+        id = networkYear.id
+        year = networkYear.year
+    }
+    
+    var shows: Resource<[NetworkShow]> {
+        return Resource(url: URL(string: "\(apiUrl)/years/\(id)/shows")!, parse: parseJson)
+    }
+    
     static var allWithTopShows: Resource<[NetworkYear]> {
-        return Resource(url: URL(string: "http://localhost:3000/api/years")!, parse: parseJson)
+        return Resource(url: URL(string: "\(apiUrl)/years")!, parse: parseJson)
     }
 }
 
@@ -95,16 +149,6 @@ struct NetworkShow: Codable {
     let yearId: Int
 }
 
-fileprivate extension Year {
-    init(from networkYear: NetworkYear) {
-        id = networkYear.id
-        year = networkYear.year
-    }
-    
-    var shows: Resource<[NetworkShow]> {
-        return Resource(url: URL(string: "http://localhost:3000/api/years/\(id)/shows")!, parse: parseJson)
-    }
-}
 
 fileprivate extension Show {
     init(year: Year, networkShow: NetworkShow) {
@@ -117,6 +161,89 @@ fileprivate extension Show {
         self.stars = networkShow.stars
         self.sources = networkShow.sources
         self.avgRating = networkShow.avgRating ?? 0
+    }
+    
+    var sourcesResource: Resource<[NetworkSource]> {
+        return Resource(url: URL(string: "\(apiUrl)/shows/\(id)/sources")!, parse: parseJson)
+    }
+}
+
+struct NetworkSource: Codable {
+    let id: Int
+    let identifier: String
+    let transferer: String?
+    let source: String?
+    let avgRating: Double
+    let downloads: Int
+    let numReviews: Int
+    let description: String?
+    let lineage: String?
+    let showId: Int
+}
+
+fileprivate extension Source {
+    init(show: Show, networkSource: NetworkSource) {
+        id = networkSource.id
+        identifier = networkSource.identifier
+        transferer = networkSource.transferer ?? "Unknown"
+        source = networkSource.source ?? "Unknown"
+        avgRating = networkSource.avgRating
+        downloads = networkSource.downloads
+        numReviews = networkSource.numReviews
+        description = networkSource.description ?? "Unknown"
+        lineage = networkSource.lineage ?? "Unknown Lineage"
+        self.show = show
+    }
+    
+    var songs: Resource<[NetworkSong]> {
+        return Resource(url: URL(string: "\(apiUrl)/sources/\(id)/songs")!, parse: parseJson)
+    }
+    
+    var reviews: Resource<[NetworkReview]> {
+        return Resource(url: URL(string: "\(apiUrl)/sources/\(id)/reviews")!, parse: parseJson)
+    }
+}
+
+struct NetworkSong: Codable {
+    let title: String?
+    let fileName: String
+    let album: String?
+    let track: String
+    let length: String
+    
+    enum CodingKeys: String, CodingKey {
+        case title, album, length, track
+        case fileName = "name"
+    }
+}
+
+fileprivate extension Song {
+    init(source: Source, networkSong: NetworkSong) {
+        self.source = source
+        
+        title = networkSong.title ?? networkSong.fileName
+        fileName = networkSong.fileName
+        album = networkSong.album ?? "\(source.show.date) - \(source.show.venue)" 
+        track = Int(networkSong.track) ?? 0
+        length = networkSong.length
+    }
+}
+
+struct NetworkReview: Codable {
+    let reviewbody: String
+    let reviewtitle: String
+    let reviewer: String
+    let reviewdate: Date
+    let stars: String
+}
+
+fileprivate extension Review {
+    init(from networkReview: NetworkReview) {
+        self.title = networkReview.reviewtitle
+        self.author = networkReview.reviewer
+        self.body = networkReview.reviewbody
+        self.stars = Int(networkReview.stars) ?? 0
+        self.date = networkReview.reviewdate
     }
 }
 

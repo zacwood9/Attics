@@ -16,4 +16,5 @@ protocol DataStore {
     func fetchShows(in year: Year, then completion: @escaping (Result<[Show]>) -> ())
     func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ())
     func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ())
+    func fetchReviews(for source: Source, then completion: @escaping (Result<[Review]>) -> ())
 }

@@ -8,50 +8,23 @@
 
 import UIKit
 
-class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SourcesViewController: UICollectionViewController {
     
-    //MARK: Properties
-    
-    lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: self.view.bounds)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Source Cell")
-        return tableView
-    }()
-    
-    var show: Show
+    var show: Show!
     var sources: [Source] = []
     
-    private var dataStore: DataStore
+    var dataStore: DataStore!
     
-    // MARK: Initialization
-    
-    init(for show: Show, dataStore: DataStore) {
-        self.show = show
-        self.dataStore = dataStore
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) not implemented")
-    }
+    var onSourceTap: (Source) -> () = { _ in }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
-        loadData()
-    }
-    
-    func setupViews() {
-        navigationItem.title = String(describing: show.date)
         
-        self.view.addSubview(tableView)
-        NSLayoutConstraint.activate([tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                                     tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                                     tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-                                     tableView.rightAnchor.constraint(equalTo: view.rightAnchor)])
+        navigationItem.title = "\(show.date) sources"
+        let backItem = UIBarButtonItem(title: "Sources", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = backItem
+        extendedLayoutIncludesOpaqueBars = true
+        loadData()
     }
     
     func loadData() {
@@ -59,37 +32,50 @@ class SourcesViewController: UIViewController, UITableViewDelegate, UITableViewD
             switch result {
             case .success(let sources):
                 self?.sources = sources
+                DispatchQueue.main.async {
+                    let indexPaths = (0..<sources.count).map { IndexPath(item: $0, section: 0) }
+                    self?.collectionView.insertItems(at: indexPaths)
+                }
             case .failure(let error):
                 print(error)
             }
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.tableView.reloadData()
-            }
         }
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+}
+
+extension SourcesViewController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sources.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Source Cell", for: indexPath)
-        cell.textLabel?.text = sources[indexPath.row].transferer ?? "Unknown"
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Source Cell", for: indexPath) as? SourceCollectionViewCell else { fatalError("Incorrect Cell type") }
+        let source = sources[indexPath.item]
+        
+        cell.lineageLabel.text = source.lineage
+        cell.downloadsLabel.text = "\(source.downloads) downloads"
+        cell.reviewsLabel.text = "\(source.numReviews) reviews"
+        cell.transfererLabel.text = source.transferer
+        cell.transfererLabel.font = UIFont.preferredFont(forTextStyle: .title2, withSymbolicTraits: .traitBold)
+        cell.stars.rating = source.avgRating
+        cell.recordingTypeLabel.text = "SBD"
+        
+        cell.view.roundCorners()
+        cell.view.setShadow()
         return cell
     }
     
-    // MARK: UITableViewDelegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sourceSelected = sources[indexPath.row]
-        let nextVC = configureNextScreen(for: sourceSelected)
-        navigationController?.pushViewController(nextVC, animated: true)
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        onSourceTap(sources[indexPath.item])
     }
-    
-    func configureNextScreen(for source: Source) -> SongsViewController {
-        let vc = SongsViewController(from: source, in: show, dataStore: dataStore)
-        return vc
-    }
+}
 
+extension SourcesViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.frame.size.width
+        if collectionView.traitCollection.horizontalSizeClass == .regular { // iPad
+            return CGSize(width: width/2 - 24, height: 110)
+        }
+        return CGSize(width: width-24, height: 110)
+    }
 }

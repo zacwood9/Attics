@@ -6,7 +6,7 @@
 //  Copyright © 2018 Zachary Wood. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct NetworkError: Error {
     let message: String
@@ -30,13 +30,17 @@ final class WebApiService: ApiService {
     let urlSession: URLSession
     
     func load<T>(_ resource: Resource<T>, then completion: @escaping (Result<T>) -> ()) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        print(resource.url)
         urlSession.dataTask(with: resource.url) { (data, _, _) in
-            print(resource.url)
             guard let data = data else {
                 completion(.failure(NetworkError(message: "Failed to load data.")))
                 return
             }
             completion(resource.parse(data))
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
         }.resume()
         
     }
@@ -46,16 +50,16 @@ final class WebApiService: ApiService {
     }
 }
 
-fileprivate let apiRoot = "https://stunning-yellowstone-51900.herokuapp.com/api"
+fileprivate let apiRoot = "http://localhost:3000/api"
 
 func parseJson<T: Decodable>(from data: Data) -> Result<T> {
     do {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
         let decodedItem = try decoder.decode(T.self, from: data)
         return .success(decodedItem)
     } catch {
-        print(error)
         return .failure(NetworkError(message: error.localizedDescription))
     }
 }

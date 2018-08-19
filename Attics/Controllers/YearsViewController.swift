@@ -22,6 +22,8 @@ class YearsViewController: UIViewController {
     var onYearTapped: (Year) -> () = { _ in }
     var onShowTapped: (Show) -> () = { _ in }
     
+    // used to store how far each collection view has been scrolled
+    // so it can be restored to that point when dequeued
     var offsets: [Int:CGFloat] = [:]
     
     // MARK: View Controller Lifecycle
@@ -36,6 +38,7 @@ class YearsViewController: UIViewController {
         navigationItem.title = "Attics"
         tableView.dataSource = self
         tableView.delegate = self
+        extendedLayoutIncludesOpaqueBars = true
     }
     
     func loadData() {
@@ -43,7 +46,11 @@ class YearsViewController: UIViewController {
             switch result {
             case .success(let years):
                 self?.years = years
-                DispatchQueue.main.async { self?.tableView.reloadData() }
+                DispatchQueue.main.async {
+//                    self?.tableView.reloadData()
+                    let indexPaths = (0..<years.count).map { IndexPath(row: $0, section: 0) }
+                    self?.tableView.insertRows(at: indexPaths, with: .automatic)
+                }
             case .failure(let error):
                 print(error.message)
             }
@@ -96,7 +103,7 @@ extension YearsViewController: UICollectionViewDelegate, UICollectionViewDataSou
         let year = years[collectionView.tag]
         let show = year.shows[indexPath.item]
         cell.showLabel.text = show.date
-        cell.numSourcesLabel.text = "\(show.sources) sources"
+        cell.numSourcesLabel.text = "\(show.venue)"
         cell.stars.settings.fillMode = .precise
         cell.stars.rating = show.avgRating
         cell.roundCorners()
