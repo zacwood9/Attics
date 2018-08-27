@@ -8,7 +8,8 @@
 
 import UIKit
 
-class SourcesViewController: UICollectionViewController {
+class SourcesViewController: UICollectionViewController, Refreshable {
+    var refreshControl = UIRefreshControl()
     
     var show: Show!
     var sources: [Source] = []
@@ -19,22 +20,29 @@ class SourcesViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupViews()
+        refresh()
+    }
+    
+    func setupViews() {
         navigationItem.title = "\(show.date) sources"
         let backItem = UIBarButtonItem(title: "Sources", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
         extendedLayoutIncludesOpaqueBars = true
-        loadData()
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
     
-    func loadData() {
+    func refresh() {
         dataStore.fetchSources(for: show) { [weak self] result in
             switch result {
             case .success(let sources):
                 self?.sources = sources
                 DispatchQueue.main.async {
-                    let indexPaths = (0..<sources.count).map { IndexPath(item: $0, section: 0) }
-                    self?.collectionView.insertItems(at: indexPaths)
+                    self?.collectionView.reloadData()
+                    self?.refreshControl.endRefreshing()
+//                    let indexPaths = (0..<sources.count).map { IndexPath(item: $0, section: 0) }
+//                    self?.collectionView.insertItems(at: indexPaths)
                 }
             case .failure(let error):
                 print(error)

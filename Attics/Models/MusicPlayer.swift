@@ -61,7 +61,7 @@ class MusicPlayer {
         self.songList = songList
         
         let song = playerState.songs[index]
-        let asset = AVURLAsset(url: downloadUrl(source: playerState.source, song: song))
+        let asset = AVURLAsset(url: song.downloadUrl)
         let item = AVPlayerItem(asset: asset)
         currentPlayer = AVPlayer(playerItem: item)
         currentPlayer.automaticallyWaitsToMinimizeStalling = false
@@ -92,7 +92,6 @@ class MusicPlayer {
             currentSongIndex += 1
             play(index: currentSongIndex, in: songList)
         }
-
     }
     
     @objc func playPreviousTrack() {
@@ -169,7 +168,7 @@ class MusicPlayer {
 
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.currentPlayer.rate
         nowPlayingInfo[MPMediaItemPropertyArtist] = "Grateful Dead"
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "TODO - DATA"
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "\(song.album)"
         
         // Set the metadata
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo

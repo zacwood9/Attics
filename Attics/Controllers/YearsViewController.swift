@@ -10,11 +10,11 @@ import UIKit
 import Cosmos
 import FontAwesome
 
-class YearsViewController: UIViewController {
-    
+class YearsViewController: UIViewController, Refreshable {
     //MARK: Properties
     
     @IBOutlet weak var tableView: UITableView!
+    var refreshControl = UIRefreshControl()
     
     var years: [YearWithTopShows] = []
     
@@ -31,25 +31,29 @@ class YearsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        loadData()
+        refresh()
     }
     
     func setupViews() {
         navigationItem.title = "Attics"
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.refreshControl = refreshControl
         extendedLayoutIncludesOpaqueBars = true
+        
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
     
-    func loadData() {
+    @objc func refresh() {
         dataStore.fetchTopShows { [weak self] result in
             switch result {
             case .success(let years):
                 self?.years = years
                 DispatchQueue.main.async {
-//                    self?.tableView.reloadData()
-                    let indexPaths = (0..<years.count).map { IndexPath(row: $0, section: 0) }
-                    self?.tableView.insertRows(at: indexPaths, with: .automatic)
+                    self?.tableView.reloadData()
+                    self?.refreshControl.endRefreshing()
+//                    let indexPaths = (0..<years.count).map { IndexPath(row: $0, section: 0) }
+//                    self?.tableView.insertRows(at: indexPaths, with: .automatic)
                 }
             case .failure(let error):
                 print(error.message)

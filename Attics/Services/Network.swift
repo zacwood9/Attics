@@ -42,15 +42,12 @@ final class WebApiService: ApiService {
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }.resume()
-        
     }
     
     init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession
     }
 }
-
-fileprivate let apiRoot = "http://localhost:3000/api"
 
 func parseJson<T: Decodable>(from data: Data) -> Result<T> {
     do {
@@ -64,6 +61,8 @@ func parseJson<T: Decodable>(from data: Data) -> Result<T> {
     }
 }
 
-func downloadUrl(source: Source, song: Song) -> URL {
-    return URL(string: "https://archive.org/download/\(source.identifier)/\(song.fileName)")!
+extension Song {
+    var downloadUrl: URL {
+        return URL(string: "https://archive.org/download/\(source.identifier)/\(fileName)")!
+    }
 }

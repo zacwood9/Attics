@@ -16,7 +16,6 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var venueLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
-//    @IBOutlet weak var downloadButton: UIButton!
     @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var timeSlider: UISlider!
     @IBOutlet weak var currentTimeLabel: UILabel!
@@ -58,7 +57,6 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         
         playPauseButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .pause), ofSize: 46)
         advanceButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .forward), ofSize: 46)
-//        downloadButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .cloudDownloadAlt), ofSize: 26)
         infoButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .ellipsisH), ofSize: 26)
         
         configureLabels()
@@ -66,7 +64,6 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     
     
     private func setupObservers() {
-        
         NotificationCenter.default.addObserver(self, selector: #selector(updateSlider(notification:)), name: .MusicPlayerDidChangeTime, object: nil)
         
         timeSlider.addTarget(self, action: #selector(silderDidChange(sender:)), for: .valueChanged)

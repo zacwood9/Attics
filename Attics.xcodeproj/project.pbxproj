@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11AAFFE621344B810059FD49 /* Refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AAFFE521344B810059FD49 /* Refreshable.swift */; };
 		C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */; };
 		C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */; };
 		C529DC0220FA8E98009F399A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DC0120FA8E98009F399A /* App.swift */; };
@@ -32,7 +33,6 @@
 		C58DCE3420F03B3100F0B289 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3320F03B3100F0B289 /* Network.swift */; };
 		C58DCE3620F0425200F0B289 /* FontAwesome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C58DCE3520F0425200F0B289 /* FontAwesome.framework */; };
 		C58DCE3820F04D1C00F0B289 /* NetworkDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */; };
-		C5ADA8A020FE3B550096318E /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADA89F20FE3B550096318E /* LoadingViewController.swift */; };
 		C5ADA8A220FE3D2C0096318E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADA8A120FE3D2C0096318E /* Constants.swift */; };
 		C5BE2FA62106D96700E8E18E /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BE2FA52106D96700E8E18E /* Review.swift */; };
 		C5BE2FA82107AEAA00E8E18E /* SourceInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */; };
@@ -70,6 +70,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		11AAFFE521344B810059FD49 /* Refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refreshable.swift; sourceTree = "<group>"; };
 		C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCollectionViewCell.swift; sourceTree = "<group>"; };
 		C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewCell.swift; sourceTree = "<group>"; };
 		C529DC0120FA8E98009F399A /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -101,7 +102,6 @@
 		C58DCE3320F03B3100F0B289 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		C58DCE3520F0425200F0B289 /* FontAwesome.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FontAwesome.framework; path = Carthage/Build/iOS/FontAwesome.framework; sourceTree = "<group>"; };
 		C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataStore.swift; sourceTree = "<group>"; };
-		C5ADA89F20FE3B550096318E /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		C5ADA8A120FE3D2C0096318E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5BE2FA52106D96700E8E18E /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
 		C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceInfoTableViewCell.swift; sourceTree = "<group>"; };
@@ -237,6 +237,7 @@
 				C58DCE3320F03B3100F0B289 /* Network.swift */,
 				C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */,
 				C5C5EEE721082DC300E5449F /* SettingsNavigator.swift */,
+				11AAFFE521344B810059FD49 /* Refreshable.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -272,7 +273,6 @@
 		C5ED3A8020D44D080019F0EF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				C5ADA89F20FE3B550096318E /* LoadingViewController.swift */,
 				C5ED3A7A20D44CC10019F0EF /* BrowseNavigationViewController.swift */,
 				C5ED3A7C20D44CC70019F0EF /* YearsViewController.swift */,
 				C5ED3A8720D452380019F0EF /* ShowsViewController.swift */,
@@ -458,7 +458,6 @@
 				C5BE2FA62106D96700E8E18E /* Review.swift in Sources */,
 				C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */,
 				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
-				C5ADA8A020FE3B550096318E /* LoadingViewController.swift in Sources */,
 				C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */,
 				C5C5EEE821082DC300E5449F /* SettingsNavigator.swift in Sources */,
 				C58DCE3120F038AD00F0B289 /* Swift+Extensions.swift in Sources */,
@@ -474,6 +473,7 @@
 				C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */,
 				C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */,
 				C54A165C20FAAB0100A6EF95 /* YearsTableViewCell.swift in Sources */,
+				11AAFFE621344B810059FD49 /* Refreshable.swift in Sources */,
 				C54A165E20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift in Sources */,
 				C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */,
 				C5ADA8A220FE3D2C0096318E /* Constants.swift in Sources */,

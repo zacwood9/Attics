@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ShowsViewController: UICollectionViewController {
+class ShowsViewController: UICollectionViewController, Refreshable {
+    var refreshControl = UIRefreshControl()
+    
     var year: Year!
     var shows: [Show] = []
     
@@ -18,23 +20,25 @@ class ShowsViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        collectionView.dataSource = self
-//        collectionView.delegate = self
         
         navigationItem.title = year.year
         extendedLayoutIncludesOpaqueBars = true
-        loadData()
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
+        refresh()
     }
     
-    func loadData() {
+    @objc func refresh() {
         dataStore.fetchShows(in: year) { [weak self] result in
             switch result {
             case .success(let shows):
                 self?.shows = shows
                 DispatchQueue.main.async {
-//                    self?.collectionView.reloadData()
-                    let indexPaths = (0..<shows.count).map { IndexPath(item: $0, section: 0) }
-                    self?.collectionView?.insertItems(at: indexPaths)
+                    self?.collectionView.reloadData()
+                    self?.refreshControl.endRefreshing()
+//                    let indexPaths = (0..<shows.count).map { IndexPath(item: $0, section: 0) }
+//                    self?.collectionView?.insertItems(at: indexPaths)
                 }
             case .failure(let error):
                 print(error)

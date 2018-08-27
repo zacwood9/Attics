@@ -93,8 +93,11 @@ extension SongsViewController {
         }
     }
     
-    @objc func moreInfoTapped(_ sender: UIView) {
-        onMoreInfoTapped(source, sender)
+    @objc func moreInfoTapped(_ sender: UITapGestureRecognizer) {
+        guard let view = sender.view else {
+            fatalError()
+        }
+        onMoreInfoTapped(source, view)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

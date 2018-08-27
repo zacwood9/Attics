@@ -48,7 +48,7 @@ final class BrowseNavigator {
         
         alertVC.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        if let popoverController = alertVC.popoverPresentationController {
+        if let popoverController = alertVC.popoverPresentationController { // handle iPads
             popoverController.sourceView = sender
         }
         
@@ -64,7 +64,7 @@ final class BrowseNavigator {
         let popupVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.nowPlaying) as! NowPlayingController
         let dataSource = SongsDataSource(songs: songs)
         popupVC.dataSource = dataSource
-//        popupVC.onMoreInfoTapped = presentSourceInfoAlert;
+        popupVC.onMoreInfoTapped = presentSourceInfoAlert;
         
         navigationController.tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)
     }

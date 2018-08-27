@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        
         if let window = window {
             app = App(window: window)
         }
