@@ -22,6 +22,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var advanceButton: UIButton!
+    @IBOutlet weak var previousButton: UIButton!
     
     var dataSource: SongsDataSource!
     private var playPauseBarButton: UIBarButtonItem!
@@ -57,6 +58,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         
         playPauseButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .pause), ofSize: 46)
         advanceButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .forward), ofSize: 46)
+        previousButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .backward), ofSize: 46)
         infoButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .ellipsisH), ofSize: 26)
         
         configureLabels()
@@ -74,6 +76,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         
         playPauseButton.addTarget(musicPlayer, action: #selector(musicPlayer.pause), for: .touchUpInside)
         advanceButton.addTarget(musicPlayer, action: #selector(musicPlayer.playNextTrack), for: .touchUpInside)
+        previousButton.addTarget(musicPlayer, action: #selector(musicPlayer.playPreviousTrack), for: .touchUpInside)
         infoButton.addTarget(self, action: #selector(showMoreInfoAlert(_:)), for: .touchUpInside)
         
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidPlay(notification:)), name: .MusicPlayerDidPlay, object: nil)

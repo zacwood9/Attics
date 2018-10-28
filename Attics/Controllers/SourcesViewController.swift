@@ -66,7 +66,7 @@ extension SourcesViewController {
         cell.transfererLabel.text = source.transferer
         cell.transfererLabel.font = UIFont.preferredFont(forTextStyle: .title2, withSymbolicTraits: .traitBold)
         cell.stars.rating = source.avgRating
-        cell.recordingTypeLabel.text = "SBD"
+        cell.recordingTypeLabel.text = ""
         
         cell.view.roundCorners()
         cell.view.setShadow()

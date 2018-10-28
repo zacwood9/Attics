@@ -62,7 +62,7 @@ extension ShowsViewController {
         cell.venueLabel.text = show.venue
         cell.locationLabel.text = "\(show.city), \(show.state)"
         cell.sourcesLabel.text = "\(show.sources) sources"
-        cell.recordingTypesLabel.text = "SBD"
+        cell.recordingTypesLabel.text = ""
         cell.stars.rating = show.avgRating
         
         cell.view.roundCorners()

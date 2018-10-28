@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		115247CB2185429600BDF490 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 115247C92185411600BDF490 /* Assets.xcassets */; };
 		11AAFFE621344B810059FD49 /* Refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AAFFE521344B810059FD49 /* Refreshable.swift */; };
 		C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */; };
 		C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */; };
@@ -19,7 +20,6 @@
 		C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C121120D1EC440013F697 /* AppDelegate.swift */; };
 		C54C121720D1EC440013F697 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121520D1EC440013F697 /* Main.storyboard */; };
 		C54C121A20D1EC440013F697 /* Attics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C54C121820D1EC440013F697 /* Attics.xcdatamodeld */; };
-		C54C121C20D1EC460013F697 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C54C121B20D1EC460013F697 /* Assets.xcassets */; };
 		C54C121F20D1EC460013F697 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */; };
 		C55CF9F620D49EDF00A2F780 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF9F520D49EDF00A2F780 /* Song.swift */; };
 		C55CF9F820D4A4D100A2F780 /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF9F720D4A4D100A2F780 /* SongsViewController.swift */; };
@@ -63,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		115247C92185411600BDF490 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11AAFFE521344B810059FD49 /* Refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refreshable.swift; sourceTree = "<group>"; };
 		C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCollectionViewCell.swift; sourceTree = "<group>"; };
 		C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewCell.swift; sourceTree = "<group>"; };
@@ -76,7 +77,6 @@
 		C54C121120D1EC440013F697 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C54C121620D1EC440013F697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C54C121920D1EC440013F697 /* Attics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Attics.xcdatamodel; sourceTree = "<group>"; };
-		C54C121B20D1EC460013F697 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C54C121E20D1EC460013F697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C54C122020D1EC460013F697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C54C122520D1EC460013F697 /* AtticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +152,7 @@
 		C54C120520D1EC430013F697 = {
 			isa = PBXGroup;
 			children = (
+				115247C92185411600BDF490 /* Assets.xcassets */,
 				C54C121020D1EC440013F697 /* Attics */,
 				C54C122820D1EC460013F697 /* AtticsTests */,
 				C54C123320D1EC460013F697 /* AtticsUITests */,
@@ -179,7 +180,6 @@
 				C58DCE3220F03B1A00F0B289 /* Services */,
 				C5ED3A7F20D44CF50019F0EF /* Supporting Files */,
 				C54C122020D1EC460013F697 /* Info.plist */,
-				C54C121B20D1EC460013F697 /* Assets.xcassets */,
 			);
 			path = Attics;
 			sourceTree = "<group>";
@@ -377,7 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C54C121F20D1EC460013F697 /* LaunchScreen.storyboard in Resources */,
-				C54C121C20D1EC460013F697 /* Assets.xcassets in Resources */,
+				115247CB2185429600BDF490 /* Assets.xcassets in Resources */,
 				C54C121720D1EC440013F697 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

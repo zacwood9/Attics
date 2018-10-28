@@ -88,16 +88,22 @@ class MusicPlayer {
     }
     
     @objc func playNextTrack() {
-        if (currentSongIndex + 1 < songList.count) {
+        if currentSongIndex + 1 < songList.count {
             currentSongIndex += 1
             play(index: currentSongIndex, in: songList)
         }
     }
     
     @objc func playPreviousTrack() {
-        if (currentSongIndex - 1 >= 0) {
-            currentSongIndex -= 1
-            play(index: currentSongIndex, in: songList)
+        if currentPlayer.currentTime().seconds < 2 {
+            currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 2))
+        } else {
+            if (currentSongIndex - 1 >= 0) {
+                currentSongIndex -= 1
+                play(index: currentSongIndex, in: songList)
+            } else {
+                currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 2))
+            }
         }
     }
     

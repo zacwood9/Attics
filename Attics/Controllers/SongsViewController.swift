@@ -54,15 +54,6 @@ class SongsViewController: UITableViewController {
                 print(error)
             }            
         }
-        
-//        dataStore.fetchReviews(for: source) { result in
-//            switch result {
-//            case .success(let reviews):
-//                print(reviews)
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
     }
     
     @objc func didReceiveSongPlayed(notification: Notification) {

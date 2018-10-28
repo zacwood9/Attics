@@ -30,17 +30,12 @@ final class WebApiService: ApiService {
     let urlSession: URLSession
     
     func load<T>(_ resource: Resource<T>, then completion: @escaping (Result<T>) -> ()) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        print(resource.url)
         urlSession.dataTask(with: resource.url) { (data, _, _) in
             guard let data = data else {
                 completion(.failure(NetworkError(message: "Failed to load data.")))
                 return
             }
             completion(resource.parse(data))
-            DispatchQueue.main.async {
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-            }
         }.resume()
     }
     
