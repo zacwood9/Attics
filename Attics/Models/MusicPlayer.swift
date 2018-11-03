@@ -20,8 +20,6 @@ struct PlayerState {
     let songs: [Song]
 }
 
-typealias playerChangeHandler = (PlayerStatus, Song, Double, Double) -> ()
-
 class MusicPlayer {
     static var instance = MusicPlayer()
 
@@ -30,30 +28,28 @@ class MusicPlayer {
     }
     
     private var currentPlayer = AVPlayer(playerItem: nil)
-    
     var playerState: PlayerState!
-    
     var songList: [Song] = []
     var currentSongIndex = 0
-    
     var currentSong: Song {
         return songList[currentSongIndex]
     }
-    
     var currentTimeInSeconds: Double {
         return currentPlayer.currentTime().seconds
     }
-    
     var currentDurationInSeconds: Double {
         guard let currentItem = currentPlayer.currentItem, currentItem.duration.isNumeric else { return 0.0 }
-        
         return currentItem.duration.seconds
     }
-    
     private var percentageSongFinished: Double {
         guard let currentItem = currentPlayer.currentItem else { return 0.0 }
         
         return currentPlayer.currentTime().seconds / currentItem.duration.seconds
+    }
+
+    init() {
+        setupRemoteControls()
+        NotificationCenter.default.addObserver(self, selector: #selector(playNextTrack), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     func play(index: Int, in songList: [Song]) {
@@ -68,7 +64,8 @@ class MusicPlayer {
             
         setupNowPlaying(song)
         
-        currentPlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 2), queue: DispatchQueue.main) { [unowned self] _ in
+        currentPlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 2),
+                                              queue: DispatchQueue.main) { [unowned self] _ in
             self.setupNowPlaying(self.currentSong)
             NotificationCenter.default.post(name: .MusicPlayerDidChangeTime, object: self.percentageSongFinished)
         }
@@ -95,14 +92,14 @@ class MusicPlayer {
     }
     
     @objc func playPreviousTrack() {
-        if currentPlayer.currentTime().seconds < 2 {
-            currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 2))
+        if currentPlayer.currentTime().seconds > 2 {
+            currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 100))
         } else {
             if (currentSongIndex - 1 >= 0) {
                 currentSongIndex -= 1
                 play(index: currentSongIndex, in: songList)
             } else {
-                currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 2))
+                currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 100))
             }
         }
     }
@@ -117,10 +114,10 @@ class MusicPlayer {
         }
     }
     
-    func setupRemoteControls() {
+    private func setupRemoteControls() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
-        commandCenter.playCommand.addTarget { [unowned self] event in
+        commandCenter.playCommand.addTarget { [unowned self] _ in
             if self.status == .paused {
                 self.resume()
                 return .success
@@ -128,7 +125,7 @@ class MusicPlayer {
             return .commandFailed
         }
         
-        commandCenter.pauseCommand.addTarget { [unowned self] event in
+        commandCenter.pauseCommand.addTarget { [unowned self] _ in
             if self.status == .playing {
                 self.pause()
                 return .success
@@ -136,12 +133,12 @@ class MusicPlayer {
             return .commandFailed
         }
         
-        commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+        commandCenter.nextTrackCommand.addTarget { [unowned self] _ in
             self.playNextTrack()
             return .success
         }
         
-        commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+        commandCenter.previousTrackCommand.addTarget { [unowned self] _ in
             self.playPreviousTrack()
             return .success
         }
@@ -156,8 +153,36 @@ class MusicPlayer {
     }
     
     func setupNowPlaying(_ song: Song) {
+        let info = Info(title: song.title,
+                        currentTime: currentPlayer.currentTime().seconds,
+                        duration: currentPlayer.currentItem?.duration.seconds ?? 0.0,
+                        rate: currentPlayer.rate,
+                        artist: "Grateful Dead",
+                        album: song.album)
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info.toNowPlayingInfo()
+    }
+}
+
+extension Notification.Name {
+    public static let MusicPlayerDidPlay = Notification.Name("MusicPlayerDidPlay")
+    public static let MusicPlayerDidPause = Notification.Name("MusicPlayerDidPause")
+    public static let MusicPlayerDidChangeTime = Notification.Name("MusicPlayerDidChangeTime")
+}
+
+struct Info {
+    let title: String
+    let currentTime: Double
+    let duration: Double
+    let rate: Float
+    let artist: String
+    let album: String
+}
+
+extension Info {
+    func toNowPlayingInfo() -> [String : Any] {
         var nowPlayingInfo = [String : Any]()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = song.title
+        nowPlayingInfo[MPMediaItemPropertyTitle] = title
         
         if let image = UIImage(named: "lockscreen") {
             nowPlayingInfo[MPMediaItemPropertyArtwork] =
@@ -166,28 +191,12 @@ class MusicPlayer {
             }
         }
         
-        if let item = self.currentPlayer.currentItem {
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentPlayer.currentTime().seconds
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = item.duration.seconds
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
-        }
-
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = self.currentPlayer.rate
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "Grateful Dead"
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "\(song.album)"
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = rate
+        nowPlayingInfo[MPMediaItemPropertyArtist] = artist
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
         
-        // Set the metadata
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        return nowPlayingInfo
     }
-    
-    init() {
-        setupRemoteControls()
-        NotificationCenter.default.addObserver(self, selector: #selector(playNextTrack), name: .AVPlayerItemDidPlayToEndTime, object: nil)
-    }
-}
-
-extension Notification.Name {
-    public static let MusicPlayerDidPlay = Notification.Name("MusicPlayerDidPlay")
-    public static let MusicPlayerDidPause = Notification.Name("MusicPlayerDidPause")
-    public static let MusicPlayerDidChangeTime = Notification.Name("MusicPlayerDidChangeTime")
 }

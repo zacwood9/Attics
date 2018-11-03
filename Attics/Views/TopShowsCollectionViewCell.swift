@@ -13,5 +13,4 @@ class TopShowsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var stars: CosmosView!
     @IBOutlet weak var showLabel: UILabel!
     @IBOutlet weak var numSourcesLabel: UILabel!
-    
 }

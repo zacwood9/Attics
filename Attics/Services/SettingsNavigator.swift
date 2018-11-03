@@ -12,15 +12,15 @@ final class SettingsNavigator {
     let navigationController: UINavigationController
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     
-    func openSafari(in url: String) {
-        navigationController.viewControllers.last?.presentSafariViewController(at: URL(string: url)!)
-    }
-    
     init() {
         let settingsVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.settings) as! SettingsTableViewController
         navigationController = UINavigationController(rootViewController: settingsVC)
         navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .more, tag: 1)
         settingsVC.navigationItem.title = "Settings"
         settingsVC.openSafari = openSafari
+    }
+    
+    func openSafari(in url: String) {
+        navigationController.viewControllers.last?.presentSafariViewController(at: URL(string: url)!)
     }
 }

@@ -10,7 +10,6 @@ import UIKit
 import Cosmos
 
 class ShowCollectionViewCell: UICollectionViewCell {
-    
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var stars: CosmosView!
     @IBOutlet weak var venueLabel: UILabel!

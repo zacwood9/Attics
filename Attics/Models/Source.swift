@@ -20,8 +20,4 @@ struct Source: Equatable {
     let lineage: String
     
     let show: Show
-    
-//    var metadataUrl: URL {
-//        return URL(string: "https://archive.org/metadata/\(identifier)")!
-//    }
 }

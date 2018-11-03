@@ -42,7 +42,6 @@
 		C5ED3A8420D44DCD0019F0EF /* Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8320D44DCD0019F0EF /* Show.swift */; };
 		C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8720D452380019F0EF /* ShowsViewController.swift */; };
 		C5ED3A8A20D4531A0019F0EF /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8920D4531A0019F0EF /* DataStore.swift */; };
-		C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,7 +103,6 @@
 		C5ED3A8320D44DCD0019F0EF /* Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Show.swift; sourceTree = "<group>"; };
 		C5ED3A8720D452380019F0EF /* ShowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewController.swift; sourceTree = "<group>"; };
 		C5ED3A8920D4531A0019F0EF /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
-		C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryDataStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,7 +230,6 @@
 				C5BE2FA52106D96700E8E18E /* Review.swift */,
 				C5ED3A8920D4531A0019F0EF /* DataStore.swift */,
 				C58DCE3720F04D1C00F0B289 /* NetworkDataStore.swift */,
-				C5ED3A8B20D453850019F0EF /* InMemoryDataStore.swift */,
 				C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */,
 			);
 			path = Models;
@@ -436,7 +433,6 @@
 				C5BE2FA62106D96700E8E18E /* Review.swift in Sources */,
 				C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */,
 				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
-				C5ED3A8C20D453850019F0EF /* InMemoryDataStore.swift in Sources */,
 				C5C5EEE821082DC300E5449F /* SettingsNavigator.swift in Sources */,
 				C58DCE3120F038AD00F0B289 /* Swift+Extensions.swift in Sources */,
 				C5C5EEE621082B9E00E5449F /* BrowseNavigator.swift in Sources */,

@@ -9,9 +9,7 @@
 import UIKit
 
 class SourceInfoTableViewCell: UITableViewCell {
-
     @IBOutlet weak var venueLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var infoButton: UIButton!
-    
 }

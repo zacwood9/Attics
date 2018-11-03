@@ -16,9 +16,8 @@ class SettingsTableViewController: UITableViewController {
         switch (indexPath.section, indexPath.row) {
         case (0, 0): openSafari("https://archive.org/about/faqs.php#1177")
         case (1, 0): openSafari("https://twitter.com/_zacwood")
-        case (1, 1): openSafari("https://github.com/zacwood9")
-        default: fatalError()
+        case (1, 1): openSafari("https://github.com/zacwood9/attics")
+        default: fatalError("row not implemented")
         }
     }
-
 }

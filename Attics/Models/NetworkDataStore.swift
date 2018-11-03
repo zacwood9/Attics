@@ -13,10 +13,6 @@ final class NetworkDataStore: DataStore {
     var shows: [Show] = []
     var sources: [Source] = []
     
-    func fetchYears(then completion: @escaping (Result<[NetworkYear]>) -> ()) {
-
-    }
-    
     func fetchTopShows(then completion: @escaping (Result<[YearWithTopShows]>) -> ()) {
         WebApiService().load(Year.allWithTopShows) { result in
             switch result {
