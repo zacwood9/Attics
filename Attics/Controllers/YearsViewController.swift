@@ -52,8 +52,6 @@ class YearsViewController: UIViewController, Refreshable {
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                     self?.refreshControl.endRefreshing()
-//                    let indexPaths = (0..<years.count).map { IndexPath(row: $0, section: 0) }
-//                    self?.tableView.insertRows(at: indexPaths, with: .automatic)
                 }
             case .failure(let error):
                 print(error.message)

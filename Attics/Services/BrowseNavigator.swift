@@ -64,7 +64,7 @@ final class BrowseNavigator {
         let popupVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.nowPlaying) as! NowPlayingController
         let dataSource = SongsDataSource(songs: songs)
         popupVC.dataSource = dataSource
-        popupVC.onMoreInfoTapped = presentSourceInfoAlert;
+        popupVC.onMoreInfoTapped = presentSourceInfoAlert
         
         navigationController.tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)
     }
@@ -85,8 +85,8 @@ final class BrowseNavigator {
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.navigationBar.barTintColor = #colorLiteral(red: 0.1997258663, green: 0.2665995359, blue: 0.5491077304, alpha: 1)
         navigationController.navigationBar.isTranslucent = false
-        navigationController.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        navigationController.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        navigationController.navigationBar.largeTitleTextAttributes = [.foregroundColor : UIColor.white]
+        navigationController.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
         navigationController.navigationBar.tintColor = .white
         navigationController.tabBarItem = UITabBarItem(title: "Browse", image: UIImage.fontAwesomeIcon(name: .thList, style: .solid, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), tag: 1)
     }
