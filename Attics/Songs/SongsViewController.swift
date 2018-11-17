@@ -61,7 +61,6 @@ class SongsViewController: UITableViewController {
             tableView.selectRow(at: IndexPath(row: indexOfSong, section: 1), animated: true, scrollPosition: .none)
         }
     }
-
 }
 
 extension SongsViewController {

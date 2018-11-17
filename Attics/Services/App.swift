@@ -22,7 +22,10 @@ final class App {
     
     init(window: UIWindow) {
         tabBarController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.mainTabBar) as! UITabBarController
-        tabBarController.setViewControllers([browseNavigator.navigationController, downloadsController, settingsNavigator.navigationController], animated: true)
+        tabBarController.setViewControllers([
+            browseNavigator.navigationController,
+            downloadsController,
+            settingsNavigator.navigationController], animated: true)
         window.rootViewController = tabBarController
         
         let downloadsVC = storyboard.instantiateViewController(withIdentifier: "DownloadsViewController")
