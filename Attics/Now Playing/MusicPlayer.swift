@@ -18,6 +18,7 @@ struct PlayerState {
     let show: Show
     let source: Source
     let songs: [Song]
+    let status: PlayerStatus
 }
 
 class MusicPlayer {
