@@ -13,8 +13,8 @@ final class NetworkDataStore: DataStore {
     var shows: [Show] = []
     var sources: [Source] = []
     
-    func fetchTopShows(then completion: @escaping (Result<[YearWithTopShows]>) -> ()) {
-        WebApiService().load(Year.allWithTopShows) { result in
+    func fetchTopShows(numShows: Int = 5, then completion: @escaping (Result<[YearWithTopShows]>) -> ()) {
+        WebApiService().load(Year.allWithTopShows(numShows: numShows)) { result in
             switch result {
             case .success(let networkYears):
                 let result: [YearWithTopShows] = networkYears.map { networkYear in
@@ -32,7 +32,6 @@ final class NetworkDataStore: DataStore {
                 
             case .failure(let error):
                 completion(.failure(error))
-                
             }
             
         }
@@ -82,8 +81,7 @@ final class NetworkDataStore: DataStore {
             switch result {
             case .success(let networkSongs):
                 let songs: [Song] = networkSongs.map { networkSong in
-                    let song = Song(source: source, networkSong: networkSong)
-                    return song
+                    return Song(source: source, networkSong: networkSong)                    
                 }
                 
                 completion(.success(songs))
@@ -108,7 +106,7 @@ final class NetworkDataStore: DataStore {
     }
 }
 
-fileprivate let apiUrl = "https://gdapi.zacwood.me/api"
+fileprivate let apiUrl = "http://localhost:3000/api"
 
 struct NetworkYear: Codable {
     let id: Int
@@ -126,8 +124,8 @@ fileprivate extension Year {
         return Resource(url: URL(string: "\(apiUrl)/years/\(id)/shows")!, parse: parseJson)
     }
     
-    static var allWithTopShows: Resource<[NetworkYear]> {
-        return Resource(url: URL(string: "\(apiUrl)/years")!, parse: parseJson)
+    static func allWithTopShows(numShows: Int = 5) -> Resource<[NetworkYear]> {
+        return Resource(url: URL(string: "\(apiUrl)/years?shows_per_year=\(numShows)")!, parse: parseJson)
     }
 }
 

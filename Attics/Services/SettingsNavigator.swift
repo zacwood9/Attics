@@ -16,7 +16,7 @@ final class SettingsNavigator {
         let settingsVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.settings) as! SettingsTableViewController
         navigationController = UINavigationController(rootViewController: settingsVC)
         navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .more, tag: 1)
-        settingsVC.navigationItem.title = "Settings"
+        settingsVC.navigationItem.title = "More"
         settingsVC.openSafari = openSafari
     }
     

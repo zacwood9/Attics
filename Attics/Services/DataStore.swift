@@ -11,7 +11,7 @@ import Foundation
 typealias YearWithTopShows = (year: Year, shows: [Show])
 
 protocol DataStore {
-    func fetchTopShows(then completion: @escaping (Result<[YearWithTopShows]>) -> ())
+    func fetchTopShows(numShows: Int, then completion: @escaping (Result<[YearWithTopShows]>) -> ())
     func fetchShows(in year: Year, then completion: @escaping (Result<[Show]>) -> ())
     func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ())
     func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ())

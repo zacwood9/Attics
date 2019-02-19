@@ -45,7 +45,12 @@ class YearsViewController: UIViewController, Refreshable {
     }
     
     @objc func refresh() {
-        dataStore.fetchTopShows { [weak self] result in
+        var numShows = 5
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            numShows = 10
+        }
+        
+        dataStore.fetchTopShows(numShows: numShows) { [weak self] result in
             switch result {
             case .success(let years):
                 self?.years = years

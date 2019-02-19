@@ -41,8 +41,6 @@ class SourcesViewController: UICollectionViewController, Refreshable {
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
                     self?.refreshControl.endRefreshing()
-//                    let indexPaths = (0..<sources.count).map { IndexPath(item: $0, section: 0) }
-//                    self?.collectionView.insertItems(at: indexPaths)
                 }
             case .failure(let error):
                 print(error)

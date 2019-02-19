@@ -42,6 +42,9 @@ class SongsViewController: UITableViewController {
     }
     
     func loadData() {
+        let loadingViewController = LoadingViewController()
+        add(loadingViewController)
+        
         dataStore.fetchSongs(in: source) { [weak self] result in
             switch result {
             case .success(let songs):
@@ -49,6 +52,7 @@ class SongsViewController: UITableViewController {
                 DispatchQueue.main.async { [weak self] in
                     let indexPaths = (0..<songs.count).map { IndexPath(row: $0, section: 1) }
                     self?.tableView.insertRows(at: indexPaths, with: .automatic)
+                    loadingViewController.remove()
                 }
             case .failure(let error):
                 print(error)

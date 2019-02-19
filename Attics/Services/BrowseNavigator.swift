@@ -58,7 +58,7 @@ final class BrowseNavigator {
     func presentNowPlayingController(playing index: Int, in songs: [Song]) {
         let song = songs[index]
         
-        MusicPlayer.instance.playerState = PlayerState(show: song.source.show, source: song.source, songs: songs)
+        MusicPlayer.instance.playerState = PlayerState(show: song.source.show, source: song.source, songs: songs, status: .paused)
         MusicPlayer.instance.play(index: index, in: songs)
         
         let popupVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.nowPlaying) as! NowPlayingController
