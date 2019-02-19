@@ -159,7 +159,7 @@ class MusicPlayer {
                         duration: currentPlayer.currentItem?.duration.seconds ?? 0.0,
                         rate: currentPlayer.rate,
                         artist: "Grateful Dead",
-                        album: song.album)
+                        album: song.album ?? "Grateful Dead")
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info.toNowPlayingInfo()
     }

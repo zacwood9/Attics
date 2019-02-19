@@ -11,7 +11,7 @@ import Foundation
 struct Song: Equatable {
     let title: String
     let fileName: String
-    let album: String
+    let album: String?
     let track: Int
     let length: String
     let source: Source
