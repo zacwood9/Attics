@@ -52,6 +52,7 @@ func parseJson<T: Decodable>(from data: Data) -> Result<T> {
         let decodedItem = try decoder.decode(T.self, from: data)
         return .success(decodedItem)
     } catch {
+        print(error)
         return .failure(NetworkError(message: error.localizedDescription))
     }
 }

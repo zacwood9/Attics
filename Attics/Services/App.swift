@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import FontAwesome
 import MediaPlayer
+import CoreData
 
 final class App {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -35,8 +36,8 @@ final class App {
     }
     
     private func configureAudio() {
-        try! AVAudioSession.sharedInstance().setActive(true, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
-        try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+//        try! AVAudioSession.sharedInstance().setActive(true, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
+//        try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }

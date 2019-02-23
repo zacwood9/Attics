@@ -135,8 +135,8 @@ struct NetworkShow: Codable {
     let venue: String?
     let city: String?
     let state: String?
-    let stars: Double
-    let sources: Int
+    let stars: Double?
+    let sources: Int?
     let avgRating: Double?
     let yearId: Int
 }
@@ -150,8 +150,8 @@ fileprivate extension Show {
         self.venue = networkShow.venue ?? "Unknown"
         self.city = networkShow.city ?? "Unknown"
         self.state = networkShow.state ?? "Unknown"
-        self.stars = networkShow.stars
-        self.sources = networkShow.sources
+        self.stars = networkShow.stars ?? 0
+        self.sources = networkShow.sources ?? 0
         self.avgRating = networkShow.avgRating ?? 0
     }
     
@@ -165,9 +165,9 @@ struct NetworkSource: Codable {
     let identifier: String
     let transferer: String?
     let source: String?
-    let avgRating: Double
-    let downloads: Int
-    let numReviews: Int
+    let avgRating: Double?
+    let downloads: Int?
+    let numReviews: Int?
     let description: String?
     let lineage: String?
     let showId: Int
@@ -179,9 +179,9 @@ fileprivate extension Source {
         identifier = networkSource.identifier
         transferer = networkSource.transferer ?? "Unknown"
         source = networkSource.source ?? "Unknown"
-        avgRating = networkSource.avgRating
-        downloads = networkSource.downloads
-        numReviews = networkSource.numReviews
+        avgRating = networkSource.avgRating ?? 0
+        downloads = networkSource.downloads ?? 0
+        numReviews = networkSource.numReviews ?? 0
         description = networkSource.description ?? "Unknown"
         lineage = networkSource.lineage ?? "Unknown Lineage"
         self.show = show
@@ -198,10 +198,10 @@ fileprivate extension Source {
 
 struct NetworkSong: Codable {
     let title: String?
-    let fileName: String
+    let fileName: String?
     let album: String?
     let track: String
-    let length: String
+    let length: String?
     
     enum CodingKeys: String, CodingKey {
         case title, album, length, track
@@ -213,11 +213,11 @@ fileprivate extension Song {
     init(source: Source, networkSong: NetworkSong) {
         self.source = source
         
-        title = networkSong.title ?? networkSong.fileName
-        fileName = networkSong.fileName
+        title = networkSong.title ?? networkSong.fileName ?? "unknown file name"
+        fileName = networkSong.fileName ?? "unknown file name"
         album = networkSong.album ?? "\(source.show.date) - \(source.show.venue)" 
         track = Int(networkSong.track) ?? 0
-        length = networkSong.length
+        length = networkSong.length ?? "0:00"
     }
 }
 

@@ -9,6 +9,8 @@
 import UIKit
 import AVKit
 import CoreData
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let window = window {
             app = App(window: window)
         }
+        
+        Fabric.with([Crashlytics.self])
         return true
     }
 

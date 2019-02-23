@@ -15,8 +15,9 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch (indexPath.section, indexPath.row) {
         case (0, 0): openSafari("https://archive.org/about/faqs.php#1177")
-        case (1, 0): openSafari("https://twitter.com/_zacwood")
-        case (1, 1): openSafari("https://github.com/zacwood9/attics")
+        case (1, 0): break;
+        case (1, 1): openSafari("https://twitter.com/_zacwood")
+        case (1, 2): openSafari("https://github.com/zacwood9/attics")
         default: fatalError("row not implemented")
         }
     }

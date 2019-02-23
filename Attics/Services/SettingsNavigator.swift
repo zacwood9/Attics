@@ -18,6 +18,13 @@ final class SettingsNavigator {
         navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .more, tag: 1)
         settingsVC.navigationItem.title = "More"
         settingsVC.openSafari = openSafari
+        
+        navigationController.navigationBar.prefersLargeTitles = false
+        navigationController.navigationBar.barTintColor = #colorLiteral(red: 0.1997258663, green: 0.2665995359, blue: 0.5491077304, alpha: 1)
+        navigationController.navigationBar.isTranslucent = false
+        navigationController.navigationBar.largeTitleTextAttributes = [.foregroundColor : UIColor.white]
+        navigationController.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
+        navigationController.navigationBar.tintColor = .white
     }
     
     func openSafari(in url: String) {

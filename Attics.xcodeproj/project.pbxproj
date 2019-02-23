@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		110862DE2220455C001DFE15 /* CacheDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110862DD2220455C001DFE15 /* CacheDataStore.swift */; };
 		11389B36221B9E2E0088B834 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11389B35221B9E2E0088B834 /* LoadingViewController.swift */; };
 		115247CB2185429600BDF490 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 115247C92185411600BDF490 /* Assets.xcassets */; };
 		11AAFFE621344B810059FD49 /* Refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AAFFE521344B810059FD49 /* Refreshable.swift */; };
+		11C2A62F2220E0A000E78CCB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C2A62D2220E09E00E78CCB /* Crashlytics.framework */; };
+		11C2A6302220E0A000E78CCB /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C2A62E2220E0A000E78CCB /* Fabric.framework */; };
 		C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */; };
 		C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */; };
 		C529DC0220FA8E98009F399A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DC0120FA8E98009F399A /* App.swift */; };
@@ -63,9 +66,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		11389B35221B9E2E0088B834 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoadingViewController.swift; path = Controllers/LoadingViewController.swift; sourceTree = "<group>"; };
+		110862DD2220455C001DFE15 /* CacheDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheDataStore.swift; sourceTree = "<group>"; };
+		11389B35221B9E2E0088B834 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		115247C92185411600BDF490 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11AAFFE521344B810059FD49 /* Refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refreshable.swift; sourceTree = "<group>"; };
+		11C2A62D2220E09E00E78CCB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		11C2A62E2220E0A000E78CCB /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCollectionViewCell.swift; sourceTree = "<group>"; };
 		C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewCell.swift; sourceTree = "<group>"; };
 		C529DC0120FA8E98009F399A /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -113,7 +119,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C575FFB920D5C1F500DE76BA /* LNPopupController.framework in Frameworks */,
+				11C2A6302220E0A000E78CCB /* Fabric.framework in Frameworks */,
 				C58DCE3620F0425200F0B289 /* FontAwesome.framework in Frameworks */,
+				11C2A62F2220E0A000E78CCB /* Crashlytics.framework in Frameworks */,
 				C5D0C27720F2A0E90057FE89 /* Cosmos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				C54C121520D1EC440013F697 /* Main.storyboard */,
-				11389B35221B9E2E0088B834 /* LoadingViewController.swift */,
 				116402D321A0C0F200D46880 /* Years */,
 				116402D421A0C11900D46880 /* Shows */,
 				116402D521A0C13500D46880 /* Sources */,
@@ -262,6 +269,8 @@
 		C575FFB720D5C1F400DE76BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				11C2A62D2220E09E00E78CCB /* Crashlytics.framework */,
+				11C2A62E2220E0A000E78CCB /* Fabric.framework */,
 				C5D0C27620F2A0E80057FE89 /* Cosmos.framework */,
 				C58DCE3520F0425200F0B289 /* FontAwesome.framework */,
 				C575FFB820D5C1F400DE76BA /* LNPopupController.framework */,
@@ -279,6 +288,7 @@
 				C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */,
 				C5C5EEE721082DC300E5449F /* SettingsNavigator.swift */,
 				11AAFFE521344B810059FD49 /* Refreshable.swift */,
+				110862DD2220455C001DFE15 /* CacheDataStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -286,6 +296,7 @@
 		C5ED3A7F20D44CF50019F0EF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				11389B35221B9E2E0088B834 /* LoadingViewController.swift */,
 				C58DCE3020F038AD00F0B289 /* Swift+Extensions.swift */,
 				C54C121120D1EC440013F697 /* AppDelegate.swift */,
 				C54C121D20D1EC460013F697 /* LaunchScreen.storyboard */,
@@ -306,6 +317,7 @@
 				C54C120B20D1EC440013F697 /* Frameworks */,
 				C54C120C20D1EC440013F697 /* Resources */,
 				C575FFBA20D5C23100DE76BA /* ShellScript */,
+				11C2A6312220EB9700E78CCB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -431,6 +443,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		11C2A6312220EB9700E78CCB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PROJECT_DIR}/Fabric.framework/run\" 2868b00ae4e136f06b6d386eca1b910ba1dd398d 8dcf1b9cab2a06d6c9e489f17d47345be85ae8e64c0fac102d03dfbc4306e20a\n";
+		};
 		C575FFBA20D5C23100DE76BA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -467,6 +497,7 @@
 				C5ED3A8820D452380019F0EF /* ShowsViewController.swift in Sources */,
 				C5BE2FA62106D96700E8E18E /* Review.swift in Sources */,
 				C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */,
+				110862DE2220455C001DFE15 /* CacheDataStore.swift in Sources */,
 				C53F491620D487380006EF72 /* SourcesViewController.swift in Sources */,
 				C5C5EEE821082DC300E5449F /* SettingsNavigator.swift in Sources */,
 				C58DCE3120F038AD00F0B289 /* Swift+Extensions.swift in Sources */,
@@ -662,6 +693,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
@@ -685,6 +717,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;

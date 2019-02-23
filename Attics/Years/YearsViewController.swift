@@ -9,6 +9,7 @@
 import UIKit
 import Cosmos
 import FontAwesome
+import CoreData
 
 class YearsViewController: UIViewController, Refreshable {
     //MARK: Properties
@@ -19,12 +20,16 @@ class YearsViewController: UIViewController, Refreshable {
     var years: [YearWithTopShows] = []
     
     var dataStore: DataStore!
+    var cache: DataStore!
+    
     var onYearTapped: (Year) -> () = { _ in }
     var onShowTapped: (Show) -> () = { _ in }
     
     // used to store how far each collection view has been scrolled
     // so it can be restored to that point when dequeued
     var offsets: [Int:CGFloat] = [:]
+    
+    var context: NSManagedObjectContext!
     
     // MARK: View Controller Lifecycle
     
@@ -45,6 +50,8 @@ class YearsViewController: UIViewController, Refreshable {
     }
     
     @objc func refresh() {
+        //let store: DataStore = cacheStatus == .empty ? dataStore : cache
+        
         var numShows = 5
         if UIDevice.current.userInterfaceIdiom == .pad {
             numShows = 10
@@ -57,10 +64,42 @@ class YearsViewController: UIViewController, Refreshable {
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                     self?.refreshControl.endRefreshing()
+                    //if self?.cacheStatus == .empty {
+                      //  self?.updateCache()
+                    //}
                 }
             case .failure(let error):
                 print(error.message)
             }
+        }
+    }
+    
+    enum CacheStatus {
+        case full
+        case empty
+    }
+    
+    var cacheStatus: CacheStatus {
+        let fr = YearMO.fetchRequest() as NSFetchRequest<YearMO>
+        let yearMOs = try! context.fetch(fr)
+        if yearMOs.isEmpty {
+            return .empty
+        }
+        return .full
+    }
+    
+    func updateCache() {
+        for pair in years {
+            let yearMO = YearMO(pair.year, into: context)
+            for show in pair.shows {
+                let _ = ShowMO(show, for: yearMO, into: context)
+            }
+        }
+        
+        do {
+            try context.save()
+        } catch(let error) {
+            print(error)
         }
     }
 }

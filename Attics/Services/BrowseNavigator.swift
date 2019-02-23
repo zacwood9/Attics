@@ -7,11 +7,17 @@
 //
 
 import UIKit
+import CoreData
 
 final class BrowseNavigator {
     let navigationController: UINavigationController
     let dataStore = NetworkDataStore()
+    let cache = CacheDataStore(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+    
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    var context: NSManagedObjectContext {
+        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    }
     
     func pushShowsController(year: Year) {
         let showsVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.shows) as! ShowsViewController
@@ -71,6 +77,8 @@ final class BrowseNavigator {
     
     init() {
         let yearsViewController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.yearsWithTopShows) as! YearsViewController
+        yearsViewController.cache = cache
+        yearsViewController.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         
         navigationController = UINavigationController(rootViewController: yearsViewController)
         
