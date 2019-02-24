@@ -64,6 +64,14 @@ extension UIViewController {
         present(safari, animated: true, completion: nil)
     }
     
+    func presentAlert(with message: String) {
+        let alertVC = UIAlertController(title: "An error has occured.", message: message + "\n Please try again later.", preferredStyle: .alert)
+        
+        present(alertVC, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            alertVC.dismiss(animated: true, completion: nil)
+        }
+    }
 }
 
 extension UIViewController {

@@ -25,8 +25,8 @@ final class App {
         tabBarController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.mainTabBar) as! UITabBarController
         tabBarController.setViewControllers([
             browseNavigator.navigationController,
-            downloadsController,
-            settingsNavigator.navigationController], animated: true)
+//            downloadsController,
+            settingsNavigator.navigationController],  animated: true)
         window.rootViewController = tabBarController
         
         let downloadsVC = storyboard.instantiateViewController(withIdentifier: "DownloadsViewController")
@@ -36,9 +36,7 @@ final class App {
     }
     
     private func configureAudio() {
-//        try! AVAudioSession.sharedInstance().setActive(true, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
-//        try! AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-        
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         UIApplication.shared.beginReceivingRemoteControlEvents()
     }
 }

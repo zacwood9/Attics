@@ -50,8 +50,6 @@ class YearsViewController: UIViewController, Refreshable {
     }
     
     @objc func refresh() {
-        //let store: DataStore = cacheStatus == .empty ? dataStore : cache
-        
         var numShows = 5
         if UIDevice.current.userInterfaceIdiom == .pad {
             numShows = 10
@@ -61,45 +59,15 @@ class YearsViewController: UIViewController, Refreshable {
             switch result {
             case .success(let years):
                 self?.years = years
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                    self?.refreshControl.endRefreshing()
-                    //if self?.cacheStatus == .empty {
-                      //  self?.updateCache()
-                    //}
-                }
             case .failure(let error):
                 print(error.message)
+                self?.presentAlert(with: error.message)
             }
-        }
-    }
-    
-    enum CacheStatus {
-        case full
-        case empty
-    }
-    
-    var cacheStatus: CacheStatus {
-        let fr = YearMO.fetchRequest() as NSFetchRequest<YearMO>
-        let yearMOs = try! context.fetch(fr)
-        if yearMOs.isEmpty {
-            return .empty
-        }
-        return .full
-    }
-    
-    func updateCache() {
-        for pair in years {
-            let yearMO = YearMO(pair.year, into: context)
-            for show in pair.shows {
-                let _ = ShowMO(show, for: yearMO, into: context)
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+                self?.refreshControl.endRefreshing()
             }
-        }
-        
-        do {
-            try context.save()
-        } catch(let error) {
-            print(error)
         }
     }
 }

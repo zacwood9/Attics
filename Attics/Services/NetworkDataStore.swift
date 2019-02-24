@@ -27,13 +27,11 @@ final class NetworkDataStore: DataStore {
                     
                     return (year, shows)
                 }
-                
                 completion(.success(result))
                 
             case .failure(let error):
                 completion(.failure(error))
             }
-            
         }
     }
     
@@ -80,7 +78,7 @@ final class NetworkDataStore: DataStore {
         WebApiService().load(source.songs) { result in
             switch result {
             case .success(let networkSongs):
-                let songs: [Song] = networkSongs.map { networkSong in
+                let songs = networkSongs.map { networkSong in
                     return Song(source: source, networkSong: networkSong)                    
                 }
                 
@@ -96,7 +94,7 @@ final class NetworkDataStore: DataStore {
         WebApiService().load(source.reviews) { result in
             switch result {
             case .success(let networkReviews):
-                let reviews: [Review] = networkReviews.map(Review.init)
+                let reviews = networkReviews.map(Review.init)
                 completion(.success(reviews))
                 
             case .failure(let error):
@@ -238,5 +236,3 @@ fileprivate extension Review {
         self.date = networkReview.reviewdate
     }
 }
-
-

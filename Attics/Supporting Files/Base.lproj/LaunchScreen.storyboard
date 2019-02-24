@@ -21,7 +21,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="iaM-kL-qMU" kind="relationship" relationship="viewControllers" id="MQr-lf-qaY"/>
-                        <segue destination="Qs7-RF-D9e" kind="relationship" relationship="viewControllers" id="81K-bu-RWa"/>
                         <segue destination="ww0-eW-4wm" kind="relationship" relationship="viewControllers" id="Roc-wv-BWU"/>
                     </connections>
                 </tabBarController>
@@ -60,22 +59,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jfn-X2-y8I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-138" y="1003"/>
-        </scene>
-        <!--Downloads-->
-        <scene sceneID="leb-ic-b9q">
-            <objects>
-                <viewController id="Qs7-RF-D9e" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="F0o-5x-DpY">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="0Bq-pf-YYE"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Downloads" id="HZS-ND-djo"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uYA-VA-Vzl" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-137" y="236"/>
         </scene>
     </scenes>
 </document>

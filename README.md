@@ -3,7 +3,7 @@
 
 Attics is an open source iOS app that lets you stream thousands of live Grateful Dead concerts from your mobile device. 
 
-Live now on the App Store! https://itunes.apple.com/us/app/attics/id1434981632?ls=1&mt=8
+Live now on the App Store! https://itunes.apple.com/us/app/attics/id1434981632
 
 ## Browse by year
 <img src="https://etc.zacwood.me/attics/main.png" width="300">

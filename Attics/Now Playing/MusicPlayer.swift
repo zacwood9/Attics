@@ -51,6 +51,11 @@ class MusicPlayer {
     init() {
         setupRemoteControls()
         NotificationCenter.default.addObserver(self, selector: #selector(playNextTrack), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        try? AVAudioSession.sharedInstance().setActive(true, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
+    }
+    
+    deinit {
+        try? AVAudioSession.sharedInstance().setActive(false, options: AVAudioSession.SetActiveOptions.notifyOthersOnDeactivation)
     }
     
     func play(index: Int, in songList: [Song]) {
