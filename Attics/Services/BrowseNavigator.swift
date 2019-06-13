@@ -9,14 +9,79 @@
 import UIKit
 import CoreData
 
-final class BrowseNavigator {
+final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
     let navigationController: UINavigationController
     let dataStore = NetworkDataStore()
     let cache = CacheDataStore(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
     
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    var context: NSManagedObjectContext {
-        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//    var context: NSManagedObjectContext {
+//        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//    }
+//
+    var state = AppState()
+    var isStartingUp = true
+    var restoreDepth = 0
+    
+    override init() {
+        let yearsViewController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.yearsWithTopShows) as! YearsViewController
+        yearsViewController.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        navigationController = UINavigationController(rootViewController: yearsViewController)        
+        super.init()
+        
+        //navigationController.delegate = self
+        
+        yearsViewController.network = dataStore
+        //yearsViewController.cache = cache
+        yearsViewController.onYearTapped = pushShowsController
+        yearsViewController.onShowTapped = pushSourcesController
+        
+        configureNavigationController()
+        
+        if state.source != nil {
+            restoreDepth = 3
+        } else if state.show != nil {
+            restoreDepth = 2
+        } else if state.year != nil {
+            restoreDepth = 1
+        }
+        print(restoreDepth)
+        
+        if let year = state.year {
+            pushShowsController(year: year)
+        }
+        if let show = state.show {
+            pushSourcesController(show: show)
+        }
+        if let source = state.source {
+            pushSongsController(source: source)
+        }
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        print(restoreDepth)
+        
+        if viewController is YearsViewController {
+            state.year = nil
+            state.show = nil
+            state.source = nil
+        } else if let vc = viewController as? ShowsViewController {
+            state.year = vc.year
+            if restoreDepth == 1 { restoreDepth = 0; return }
+            state.show = nil
+            state.source = nil
+        } else if let vc = viewController as? SourcesViewController {
+            state.year = vc.show.year
+            state.show = vc.show
+            if restoreDepth == 2 { restoreDepth = 0; return }
+            state.source = nil
+            
+        } else if let vc = viewController as? SongsViewController {
+            state.year = vc.source.show.year
+            state.show = vc.source.show
+            state.source = vc.source
+        }
     }
     
     func pushShowsController(year: Year) {
@@ -75,20 +140,6 @@ final class BrowseNavigator {
         navigationController.tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)
     }
     
-    init() {
-        let yearsViewController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.yearsWithTopShows) as! YearsViewController
-        yearsViewController.cache = cache
-        yearsViewController.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        
-        navigationController = UINavigationController(rootViewController: yearsViewController)
-        
-        yearsViewController.dataStore = dataStore
-        yearsViewController.onYearTapped = pushShowsController
-        yearsViewController.onShowTapped = pushSourcesController
-        
-        configureNavigationController()
-    }
-    
     private func configureNavigationController() {
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.navigationBar.barTintColor = #colorLiteral(red: 0.1997258663, green: 0.2665995359, blue: 0.5491077304, alpha: 1)
@@ -97,5 +148,55 @@ final class BrowseNavigator {
         navigationController.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
         navigationController.navigationBar.tintColor = .white
         navigationController.tabBarItem = UITabBarItem(title: "Browse", image: UIImage.fontAwesomeIcon(name: .thList, style: .solid, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), tag: 1)
+        navigationController.delegate = self
+    }
+}
+
+struct AppState: Codable {
+    var year: Year? = nil {
+        didSet {
+            if let year = year, let data = try? JSONEncoder().encode(year) {
+                UserDefaults.standard.set(data, forKey: "year")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "year")
+            }
+        }
+    }
+    
+    var show: Show? = nil {
+        didSet {
+            if let show = show, let data = try? JSONEncoder().encode(show) {
+                UserDefaults.standard.set(data, forKey: "show")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "show")
+            }
+        }
+    }
+    
+    var source: Source? = nil {
+        didSet {
+            if let source = source, let data = try? JSONEncoder().encode(source) {
+                UserDefaults.standard.set(data, forKey: "source")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "source")
+            }
+        }
+    }
+    
+    init() {
+        if let data = UserDefaults.standard.data(forKey: "year"),
+            let year = try? JSONDecoder().decode(Year.self, from: data) {
+            self.year = year
+        }
+        
+        if let data = UserDefaults.standard.data(forKey: "show"),
+            let show = try? JSONDecoder().decode(Show.self, from: data) {
+            self.show = show
+        }
+        
+        if let data = UserDefaults.standard.data(forKey: "source"),
+            let source = try? JSONDecoder().decode(Source.self, from: data) {
+            self.source = source
+        }
     }
 }

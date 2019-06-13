@@ -8,7 +8,7 @@
 
 import CoreData
 
-struct Year: Equatable {
+struct Year: Codable, Equatable {
     let id: Int
     let year: String
 }

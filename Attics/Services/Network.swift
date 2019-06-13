@@ -30,7 +30,12 @@ final class WebApiService: ApiService {
     let urlSession: URLSession
     
     func load<T>(_ resource: Resource<T>, then completion: @escaping (Result<T>) -> ()) {
-        urlSession.dataTask(with: resource.url) { (data, _, _) in
+        urlSession.dataTask(with: resource.url) { (data, _, error) in
+            guard error == nil else {
+                completion(.failure(NetworkError(message: error!.localizedDescription)))
+                return
+            }
+            
             guard let data = data else {
                 completion(.failure(NetworkError(message: "Failed to load data.")))
                 return
@@ -52,7 +57,9 @@ func parseJson<T: Decodable>(from data: Data) -> Result<T> {
         let decodedItem = try decoder.decode(T.self, from: data)
         return .success(decodedItem)
     } catch {
+        print("parseJson error")
         print(error)
+        
         return .failure(NetworkError(message: error.localizedDescription))
     }
 }

@@ -25,9 +25,11 @@ class SourcesViewController: UICollectionViewController, Refreshable {
     }
     
     func setupViews() {
+        // configure navigation
         navigationItem.title = "\(show.date) sources"
         let backItem = UIBarButtonItem(title: "Sources", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backItem
+        
         extendedLayoutIncludesOpaqueBars = true
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)

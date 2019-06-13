@@ -21,39 +21,49 @@ class CacheDataStore : DataStore {
         return UserDefaults.standard.object(forKey: "cacheDate") as? Date
     }
     
-    func updateCacheDate(to date: Date) {
+    func updateCacheDate(to date: Date = Date()) {
         let defaults = UserDefaults.standard
         defaults.set(date, forKey: "cacheDate")
     }
     
-    var cacheStatus: CacheStatus {
+    var status: CacheStatus {
         guard let cacheDate = cacheDate() else { return .empty }
-        let lastWeekDate = Calendar.current.date(byAdding: .minute, value: -1, to: Date())!
-        
-        print(cacheDate.compare(lastWeekDate))
-        
-        let fr = YearMO.fetchRequest() as NSFetchRequest<YearMO>
-        let yearMOs = try! context.fetch(fr)
-        if yearMOs.isEmpty {
-            return .empty
-        }
+        let lastWeekDate = Calendar.current.date(byAdding: .weekday, value: -2, to: Date())!
+        if lastWeekDate > cacheDate { return .expired }
         return .full
     }
     
-//    func updateCache() {
-//        for pair in years {
-//            let yearMO = YearMO(pair.year, into: context)
-//            for show in pair.shows {
-//                let _ = ShowMO(show, for: yearMO, into: context)
-//            }
-//        }
-//
-//        do {
-//            try context.save()
-//        } catch(let error) {
-//            print(error)
-//        }
-//    }
+    func clearCache() {
+        let fr = YearMO.fetchRequest() as NSFetchRequest<YearMO>
+        let yearMOs = try! context.fetch(fr)
+        for year in yearMOs {
+            for show in year.shows?.allObjects as! [ShowMO] {
+                context.delete(show)
+            }
+            context.delete(year)
+        }
+        
+        try? context.save()
+    }
+    
+    func updateCache(years: [YearWithTopShows]) {
+        clearCache()
+        
+        for pair in years {
+            let yearMO = YearMO(pair.year, into: context)
+            for show in pair.shows {
+                let _ = ShowMO(show, for: yearMO, into: context)
+            }
+        }
+
+        do {
+            try context.save()
+            updateCacheDate()
+            print("updated cache \(cacheDate()!)")
+        } catch(let error) {
+            print(error)
+        }
+    }
     
     func fetchTopShows(numShows: Int, then completion: @escaping (Result<[YearWithTopShows]>) -> ()) {
         let fr = YearMO.fetchRequest() as NSFetchRequest<YearMO>
@@ -63,10 +73,10 @@ class CacheDataStore : DataStore {
         let res: [YearWithTopShows] = yearMOs.map { yearMO in
             let showMOs = yearMO.shows!.allObjects as! [ShowMO]
             let year = Year(yearMO: yearMO)
-            let shows = showMOs.map { Show($0, year) }
+            let shows = showMOs.map { Show($0, year) }.sorted { $0.stars > $1.stars }
             return (year: year, shows: shows)
         }
-        
+        print("read from cache")
         completion(.success(res))
     }
     
@@ -88,32 +98,5 @@ class CacheDataStore : DataStore {
     
     init(context: NSManagedObjectContext) {
         self.context = context
-    }
-}
-
-extension Date {
-    func isInSameWeek(date: Date) -> Bool {
-        return Calendar.current.isDate(self, equalTo: date, toGranularity: .weekOfYear)
-    }
-    func isInSameMonth(date: Date) -> Bool {
-        return Calendar.current.isDate(self, equalTo: date, toGranularity: .month)
-    }
-    func isInSameYear(date: Date) -> Bool {
-        return Calendar.current.isDate(self, equalTo: date, toGranularity: .year)
-    }
-    func isInSameDay(date: Date) -> Bool {
-        return Calendar.current.isDate(self, equalTo: date, toGranularity: .day)
-    }
-    var isInThisWeek: Bool {
-        return isInSameWeek(date: Date())
-    }
-    var isInToday: Bool {
-        return Calendar.current.isDateInToday(self)
-    }
-    var isInTheFuture: Bool {
-        return Date() < self
-    }
-    var isInThePast: Bool {
-        return self < Date()
     }
 }

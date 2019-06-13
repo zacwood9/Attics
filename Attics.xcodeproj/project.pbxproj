@@ -317,7 +317,7 @@
 				C54C120B20D1EC440013F697 /* Frameworks */,
 				C54C120C20D1EC440013F697 /* Resources */,
 				C575FFBA20D5C23100DE76BA /* ShellScript */,
-				11C2A6312220EB9700E78CCB /* ShellScript */,
+				11C2A6312220EB9700E78CCB /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -443,7 +443,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		11C2A6312220EB9700E78CCB /* ShellScript */ = {
+		11C2A6312220EB9700E78CCB /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -453,6 +453,7 @@
 			inputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (

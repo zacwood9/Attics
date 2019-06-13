@@ -8,7 +8,7 @@
 
 import CoreData
 
-struct Show: Equatable {
+struct Show: Codable, Equatable {
     let id: Int
     let date: String
     let venue: String

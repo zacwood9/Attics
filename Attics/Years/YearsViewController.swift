@@ -11,7 +11,8 @@ import Cosmos
 import FontAwesome
 import CoreData
 
-class YearsViewController: UIViewController, Refreshable {
+class YearsViewController: UIViewController {
+    
     //MARK: Properties
     
     @IBOutlet weak var tableView: UITableView!
@@ -19,8 +20,8 @@ class YearsViewController: UIViewController, Refreshable {
     
     var years: [YearWithTopShows] = []
     
-    var dataStore: DataStore!
-    var cache: DataStore!
+    var network: NetworkDataStore!
+    var cache: CacheDataStore!
     
     var onYearTapped: (Year) -> () = { _ in }
     var onShowTapped: (Show) -> () = { _ in }
@@ -31,12 +32,18 @@ class YearsViewController: UIViewController, Refreshable {
     
     var context: NSManagedObjectContext!
     
+    let showsToLoad = UIDevice.current.userInterfaceIdiom == .pad ? 10 : 5
+    
     // MARK: View Controller Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        refresh()
+//        if cache.status == .full {
+//            refresh(from: cache)
+//        } else {
+            refresh(from: network)
+//        }
     }
     
     func setupViews() {
@@ -46,19 +53,35 @@ class YearsViewController: UIViewController, Refreshable {
         tableView.refreshControl = refreshControl
         extendedLayoutIncludesOpaqueBars = true
         
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshTarget), for: .valueChanged)
     }
     
-    @objc func refresh() {
-        var numShows = 5
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            numShows = 10
-        }
-        
-        dataStore.fetchTopShows(numShows: numShows) { [weak self] result in
+    @objc func refreshTarget() {
+        refresh(from: network)
+    }
+    
+    func refresh(from cache: CacheDataStore) {
+        cache.fetchTopShows(numShows: showsToLoad) { [weak self] result in
             switch result {
             case .success(let years):
                 self?.years = years
+            case .failure(let error):
+                self?.presentAlert(with: error.message)
+            }
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+                self?.refreshControl.endRefreshing()
+            }
+        }
+    }
+    
+    func refresh(from network: NetworkDataStore) {
+        network.fetchTopShows(numShows: showsToLoad) { [weak self] result in
+            switch result {
+            case .success(let years):
+                self?.years = years
+//                self?.cache.updateCache(years: years)
             case .failure(let error):
                 print(error.message)
                 self?.presentAlert(with: error.message)

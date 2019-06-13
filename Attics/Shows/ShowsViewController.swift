@@ -33,16 +33,16 @@ class ShowsViewController: UICollectionViewController, Refreshable {
         dataStore.fetchShows(in: year) { [weak self] result in
             switch result {
             case .success(let shows):
-                self?.shows = shows                
+                self?.shows = shows
             case .failure(let error):
-                print(error)
+                print("shows error")
                 self?.presentAlert(with: error.localizedDescription)
             }
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
-            self?.refreshControl.endRefreshing()
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.collectionView.reloadData()
+                self?.refreshControl.endRefreshing()
+            }
         }
     }
     
