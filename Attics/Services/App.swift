@@ -15,6 +15,7 @@ import CoreData
 final class App {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let browseNavigator = BrowseNavigator()
+    let myShowsNavigator = MyShowsNavigator()
     let downloadsController = UINavigationController()
     let settingsNavigator = SettingsNavigator()
     
@@ -25,14 +26,27 @@ final class App {
         tabBarController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.mainTabBar) as! UITabBarController
         tabBarController.setViewControllers([
             browseNavigator.navigationController,
-//            downloadsController,
+            myShowsNavigator.navigationController,
             settingsNavigator.navigationController],  animated: true)
         window.rootViewController = tabBarController
         
-        let downloadsVC = storyboard.instantiateViewController(withIdentifier: "DownloadsViewController")
-        downloadsController.pushViewController(downloadsVC, animated: false)
-        downloadsController.tabBarItem = UITabBarItem(tabBarSystemItem: .downloads, tag: 1)
         configureAudio()
+        
+        func getSizeOfUserDefaults() -> Int? {
+            guard let libraryDir = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first else {
+                return nil
+            }
+            
+            guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
+                return nil
+            }
+            
+            let filepath = "\(libraryDir)/Preferences/\(bundleIdentifier).plist"
+            let filesize = try? FileManager.default.attributesOfItem(atPath: filepath)
+            let retVal = filesize?[FileAttributeKey.size]
+            return retVal as? Int
+        }
+        print(getSizeOfUserDefaults() ?? 0)
     }
     
     private func configureAudio() {

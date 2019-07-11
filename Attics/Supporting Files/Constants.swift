@@ -25,4 +25,5 @@ struct ViewControllerIds {
     static let songs = "SongsController"
     static let nowPlaying = "NowPlayingController"
     static let settings = "SettingsController"
+    static let myShows = "MyShowsController"
 }

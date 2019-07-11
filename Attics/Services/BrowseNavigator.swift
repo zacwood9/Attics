@@ -13,12 +13,10 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
     let navigationController: UINavigationController
     let dataStore = NetworkDataStore()
     let cache = CacheDataStore(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+    let favoriteStore = UDFavoritesStore()
     
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//    var context: NSManagedObjectContext {
-//        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//    }
-//
+    
     var state = AppState()
     var isStartingUp = true
     var restoreDepth = 0
@@ -60,8 +58,6 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
     }
     
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        print(restoreDepth)
-        
         if viewController is YearsViewController {
             state.year = nil
             state.show = nil
@@ -72,7 +68,7 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
             state.show = nil
             state.source = nil
         } else if let vc = viewController as? SourcesViewController {
-            state.year = vc.show.year
+            state.year = vc.show?.year
             state.show = vc.show
             if restoreDepth == 2 { restoreDepth = 0; return }
             state.source = nil
@@ -106,6 +102,18 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
         songsVC.dataStore = dataStore
         songsVC.onSongTapped = presentNowPlayingController
         songsVC.onMoreInfoTapped = presentSourceInfoAlert
+        songsVC.onFavoriteTapped = { [weak self] s in
+            guard let self = self else { return }
+            if self.favoriteStore.isFavorite(source: s) {
+                self.favoriteStore.removeFavorite(source: s)
+            } else {
+                self.favoriteStore.saveFavorite(source: s)
+            }
+            print(self.favoriteStore.loadFavorites().map { $0.identifier})
+        }
+        songsVC.isFavorite = { [weak self] in
+            return self?.favoriteStore.isFavorite(source: source) ?? false
+        }
         navigationController.pushViewController(songsVC, animated: true)
     }
     
@@ -136,6 +144,18 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
         let dataSource = SongsDataSource(songs: songs)
         popupVC.dataSource = dataSource
         popupVC.onMoreInfoTapped = presentSourceInfoAlert
+        popupVC.onFavoriteTapped = { [weak self] s in
+            guard let self = self else { return }
+            if self.favoriteStore.isFavorite(source: s) {
+                self.favoriteStore.removeFavorite(source: s)
+            } else {
+                self.favoriteStore.saveFavorite(source: s)
+            }
+            print(self.favoriteStore.loadFavorites().map { $0.identifier})
+        }
+        popupVC.isFavorite = { [weak self] in
+            return self?.favoriteStore.isFavorite(source: song.source) ?? false
+        }
         
         navigationController.tabBarController?.presentPopupBar(withContentViewController: popupVC, animated: true, completion: nil)
     }

@@ -10,10 +10,17 @@ import Foundation
 
 typealias YearWithTopShows = (year: Year, shows: [Show])
 
-protocol DataStore {
+protocol SourcesDataStore {
+    func fetchSources(for show: Show?, then completion: @escaping (Result<[Source]>) -> ())
+}
+
+protocol SongsDataStore {
+    func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ())
+}
+
+protocol DataStore: SongsDataStore {
     func fetchTopShows(numShows: Int, then completion: @escaping (Result<[YearWithTopShows]>) -> ())
     func fetchShows(in year: Year, then completion: @escaping (Result<[Show]>) -> ())
-    func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ())
-    func fetchSongs(in source: Source, then completion: @escaping (Result<[Song]>) -> ())
+    func fetchSources(for show: Show?, then completion: @escaping (Result<[Source]>) -> ())
     func fetchReviews(for source: Source, then completion: @escaping (Result<[Review]>) -> ())
 }

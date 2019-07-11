@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class NetworkDataStore: DataStore {
+final class NetworkDataStore: SourcesDataStore, SongsDataStore, DataStore {
     var years: [Year] = []
     var shows: [Show] = []
     var sources: [Source] = []
@@ -54,7 +54,12 @@ final class NetworkDataStore: DataStore {
         }
     }
     
-    func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ()) {
+    func fetchSources(for show: Show?, then completion: @escaping (Result<[Source]>) -> ()) {
+        guard  let show = show else {
+            completion(.failure(NetworkError(message: "NetworkDataStore.fetchSources -- No show")))
+            return
+        }
+        
         WebApiService().load(show.sourcesResource) { result in
             switch result {
             case .success(let networkSources):
@@ -104,7 +109,7 @@ final class NetworkDataStore: DataStore {
     }
 }
 
-fileprivate let apiUrl = "https://gdapi.zacwood.me/api"
+fileprivate let apiUrl = "http://localhost:3000/api"
 
 struct NetworkYear: Codable {
     let id: Int
@@ -166,7 +171,7 @@ struct NetworkSource: Codable {
     let avgRating: Double?
     let downloads: Int?
     let numReviews: Int?
-    let description: String?
+//    let description: String?
     let lineage: String?
     let showId: Int
 }
@@ -180,7 +185,7 @@ fileprivate extension Source {
         avgRating = networkSource.avgRating ?? 0
         downloads = networkSource.downloads ?? 0
         numReviews = networkSource.numReviews ?? 0
-        description = networkSource.description ?? "Unknown"
+        //description = networkSource.description ?? "Unknown"
         lineage = networkSource.lineage ?? "Unknown Lineage"
         self.show = show
     }

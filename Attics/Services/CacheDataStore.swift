@@ -84,7 +84,7 @@ class CacheDataStore : DataStore {
         
     }
     
-    func fetchSources(for show: Show, then completion: @escaping (Result<[Source]>) -> ()) {
+    func fetchSources(for show: Show?, then completion: @escaping (Result<[Source]>) -> ()) {
         
     }
     

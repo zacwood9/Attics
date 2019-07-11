@@ -15,11 +15,13 @@ class SongsViewController: UITableViewController {
     
     var source: Source!
     
-    var dataStore: DataStore!
+    var dataStore: SongsDataStore!
     var songs: [Song] = []
     
     var onSongTapped: (Int, [Song]) -> () = { _,_ in }
     var onMoreInfoTapped: (Source, UIView) -> () = { _,_ in }
+    var onFavoriteTapped: (Source) -> () = { _ in }
+    var isFavorite: () -> Bool = { return false }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +41,9 @@ class SongsViewController: UITableViewController {
         tableView.delegate = self
         tableView.dataSource = self
         extendedLayoutIncludesOpaqueBars = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(setAsFavorite(notification:)), name: .FavoriteWasAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeAsFavorite(notification:)), name: .FavoriteWasRemoved, object: nil)
     }
     
     func loadData() {
@@ -64,6 +69,16 @@ class SongsViewController: UITableViewController {
         if let song = notification.object as? Song, let indexOfSong = songs.index(of: song) {
             tableView.selectRow(at: IndexPath(row: indexOfSong, section: 1), animated: true, scrollPosition: .none)
         }
+    }
+    
+    @objc func setAsFavorite(notification: Notification) {
+        guard (notification.object as? String) == source.identifier else { return }
+        tableView.reloadData()
+    }
+    
+    @objc func removeAsFavorite(notification: Notification) {
+        guard (notification.object as? String) == source.identifier else { return }
+        tableView.reloadData()
     }
 }
 
@@ -94,6 +109,11 @@ extension SongsViewController {
         onMoreInfoTapped(source, view)
     }
     
+    @objc func favoriteTapped() {
+        onFavoriteTapped(source)
+        tableView.reloadData()
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
@@ -104,6 +124,14 @@ extension SongsViewController {
             cell.infoButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .ellipsisH), ofSize: 26)
             cell.infoButton.setTitleColor(.white, for: .normal)
             cell.infoButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(moreInfoTapped(_:))))
+            
+            cell.favoriteButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .heart), ofSize: 26)
+            if isFavorite() {
+                cell.favoriteButton.setTitleColor(.red, for: .normal)
+            } else {
+                cell.favoriteButton.setTitleColor(.white, for: .normal)
+            }            
+            cell.favoriteButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(favoriteTapped)))
         
             return cell
         default:

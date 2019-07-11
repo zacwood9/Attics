@@ -23,6 +23,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var advanceButton: UIButton!
     @IBOutlet weak var previousButton: UIButton!
+    @IBOutlet weak var favoriteButton: UIButton!
     
     var dataSource: SongsDataSource!
     private var playPauseBarButton: UIBarButtonItem!
@@ -34,6 +35,8 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
     var musicPlayer = MusicPlayer.instance
     
     var onMoreInfoTapped: (Source, UIView) -> () = { _,_ in }
+    var onFavoriteTapped: (Source) -> () = { _ in }
+    var isFavorite: () -> Bool = { return false }
     
     override func viewDidLoad() {
         setupInitialViews()
@@ -60,8 +63,27 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         advanceButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .forward), ofSize: 46)
         previousButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .backward), ofSize: 46)
         infoButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .ellipsisH), ofSize: 26)
+        favoriteButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .heart), ofSize: 26)
+        favoriteButton.setTitleColor(.red, for: .normal)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(setAsFavorite(notification:)), name: .FavoriteWasAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeAsFavorite(notification:)), name: .FavoriteWasRemoved, object: nil)
         
         configureLabels()
+    }
+    
+    @objc func favoriteTapped() {
+        onFavoriteTapped(musicPlayer.currentSong.source)
+    }
+    
+    @objc func setAsFavorite(notification: Notification) {
+        guard (notification.object as? String) == musicPlayer.currentSong.source.identifier else { return }
+        favoriteButton.setTitleColor(.red, for: .normal)
+    }
+    
+    @objc func removeAsFavorite(notification: Notification) {
+        guard (notification.object as? String) == musicPlayer.currentSong.source.identifier else { return }
+        favoriteButton.setTitleColor(.white, for: .normal)
     }
     
     
@@ -78,6 +100,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         advanceButton.addTarget(musicPlayer, action: #selector(musicPlayer.playNextTrack), for: .touchUpInside)
         previousButton.addTarget(musicPlayer, action: #selector(musicPlayer.playPreviousTrack), for: .touchUpInside)
         infoButton.addTarget(self, action: #selector(showMoreInfoAlert(_:)), for: .touchUpInside)
+        favoriteButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
         
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidPlay(notification:)), name: .MusicPlayerDidPlay, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(playerWasPaused), name: .MusicPlayerDidPause, object: nil)

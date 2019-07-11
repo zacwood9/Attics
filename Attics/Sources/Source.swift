@@ -16,7 +16,7 @@ struct Source: Codable, Equatable {
     let avgRating: Double
     let downloads: Int
     let numReviews: Int
-    let description: String
+//    let description: String
     let lineage: String
     
     let show: Show

@@ -8,10 +8,9 @@
 
 import UIKit
 
-class SourcesViewController: UICollectionViewController, Refreshable {
+class MyShowsViewController: UICollectionViewController, Refreshable {
     var refreshControl = UIRefreshControl()
     
-    var show: Show?
     var sources: [Source] = []
     
     var dataStore: SourcesDataStore!
@@ -19,11 +18,11 @@ class SourcesViewController: UICollectionViewController, Refreshable {
     var onSourceTap: (Source) -> () = { _ in }
     
     var configureCell: (Source, SourceCollectionViewCell) -> () = { source, cell in
-        cell.lineageLabel.text = source.lineage
-        cell.downloadsLabel.text = "\(source.downloads) downloads"
-        cell.reviewsLabel.text = "\(source.numReviews) reviews"
-        cell.transfererLabel.text = source.transferer
-        cell.transfererLabel.font = UIFont.preferredFont(forTextStyle: .title2, withSymbolicTraits: .traitBold)
+        cell.lineageLabel.text = "\(source.show.city), \(source.show.state)"
+        cell.downloadsLabel.text = "\(source.show.venue)"
+        cell.reviewsLabel.text = "Source: \(source.transferer)"
+        cell.transfererLabel.text = source.show.date
+        cell.transfererLabel.font = UIFont.preferredFont(forTextStyle: .title1, withSymbolicTraits: .traitBold)
         cell.stars.rating = source.avgRating
         cell.recordingTypeLabel.text = ""
         
@@ -35,28 +34,27 @@ class SourcesViewController: UICollectionViewController, Refreshable {
         super.viewDidLoad()
         setupViews()
         refresh()
+        NotificationCenter.default.addObserver(self, selector: #selector(objcRefresh(_:)), name: .FavoriteWasAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(objcRefresh(_:)), name: .FavoriteWasRemoved, object: nil)
     }
     
     func setupViews() {
         // configure navigation
-        if show != nil {
-            navigationItem.title = "\(show!.date) sources"
-        } else {
-            navigationItem.title = "My Shows"
-        }
-        let backItem = UIBarButtonItem(title: "Sources", style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem = backItem
+        navigationItem.title = "My Shows"
         
         extendedLayoutIncludesOpaqueBars = true
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
     
+    @objc func objcRefresh(_ notification: NSNotification) { refresh() }
+    
     func refresh() {
-        dataStore.fetchSources(for: show) { [weak self] result in
+        print("refresh")
+        dataStore.fetchSources(for: nil) { [weak self] result in
             switch result {
             case .success(let sources):
-                self?.sources = sources
+                self?.sources = sources.sorted { $0.show.date < $1.show.date }
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
                     self?.refreshControl.endRefreshing()
@@ -66,9 +64,13 @@ class SourcesViewController: UICollectionViewController, Refreshable {
             }
         }
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
-extension SourcesViewController {
+extension MyShowsViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sources.count
@@ -86,7 +88,7 @@ extension SourcesViewController {
     }
 }
 
-extension SourcesViewController: UICollectionViewDelegateFlowLayout {
+extension MyShowsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.size.width
         if collectionView.traitCollection.horizontalSizeClass == .regular { // iPad
