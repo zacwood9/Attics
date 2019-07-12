@@ -30,6 +30,15 @@ class MyShowsViewController: UICollectionViewController, Refreshable {
         cell.view.setShadow()
     }
     
+    let label: UILabel = {
+       let label = UILabel()
+        label.text = "Tap the favorite button to save your favorite shows here!"
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -45,12 +54,18 @@ class MyShowsViewController: UICollectionViewController, Refreshable {
         extendedLayoutIncludesOpaqueBars = true
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        view.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 64),
+            label.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -64)
+            ])
     }
     
     @objc func objcRefresh(_ notification: NSNotification) { refresh() }
     
     func refresh() {
-        print("refresh")
         dataStore.fetchSources(for: nil) { [weak self] result in
             switch result {
             case .success(let sources):
@@ -58,6 +73,7 @@ class MyShowsViewController: UICollectionViewController, Refreshable {
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
                     self?.refreshControl.endRefreshing()
+                    self?.label.isHidden = !sources.isEmpty
                 }
             case .failure(let error):
                 print(error)

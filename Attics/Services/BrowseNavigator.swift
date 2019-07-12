@@ -44,7 +44,6 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
         } else if state.year != nil {
             restoreDepth = 1
         }
-        print(restoreDepth)
         
         if let year = state.year {
             pushShowsController(year: year)
@@ -109,7 +108,7 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
             } else {
                 self.favoriteStore.saveFavorite(source: s)
             }
-            print(self.favoriteStore.loadFavorites().map { $0.identifier})
+            UIDevice.vibrate(style: .medium)
         }
         songsVC.isFavorite = { [weak self] in
             return self?.favoriteStore.isFavorite(source: source) ?? false
@@ -151,7 +150,7 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
             } else {
                 self.favoriteStore.saveFavorite(source: s)
             }
-            print(self.favoriteStore.loadFavorites().map { $0.identifier})
+            UIDevice.vibrate(style: .medium)
         }
         popupVC.isFavorite = { [weak self] in
             return self?.favoriteStore.isFavorite(source: song.source) ?? false

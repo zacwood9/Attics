@@ -109,7 +109,7 @@ final class NetworkDataStore: SourcesDataStore, SongsDataStore, DataStore {
     }
 }
 
-fileprivate let apiUrl = "http://localhost:3000/api"
+fileprivate let apiUrl = "https://gdapi.zacwood.me/api"
 
 struct NetworkYear: Codable {
     let id: Int

@@ -9,6 +9,7 @@
 import UIKit
 import FontAwesome
 import SafariServices
+import AVFoundation
 
 extension UIFont {
     class func preferredFont(forTextStyle style: UIFont.TextStyle, withSymbolicTraits traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
@@ -92,5 +93,28 @@ extension UIViewController {
         willMove(toParent: nil)
         view.removeFromSuperview()
         removeFromParent()
+    }
+}
+
+extension UIDevice {
+    enum VibrateStyle {
+        case light, medium, heavy, select
+    }
+    static func vibrate(style: VibrateStyle = .light) {
+        switch style {        
+        case .light:
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+        case .medium:
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        case .heavy:
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.impactOccurred()
+        default:
+            let generator = UISelectionFeedbackGenerator()
+            generator.selectionChanged()
+        }
+        
     }
 }

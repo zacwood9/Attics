@@ -78,16 +78,19 @@ class MusicPlayer {
         
         currentPlayer.play()
         NotificationCenter.default.post(name: .MusicPlayerDidPlay, object: song)
+        UIDevice.vibrate()
     }
     
     @objc func pause() {
         currentPlayer.pause()
         NotificationCenter.default.post(name: .MusicPlayerDidPause, object: nil)
+        UIDevice.vibrate()
     }
     
     @objc func resume() {
         currentPlayer.play()
         NotificationCenter.default.post(name: .MusicPlayerDidPlay, object: nil)
+        UIDevice.vibrate()
     }
     
     @objc func playNextTrack() {
@@ -95,6 +98,7 @@ class MusicPlayer {
             currentSongIndex += 1
             play(index: currentSongIndex, in: songList)
         }
+        UIDevice.vibrate()
     }
     
     @objc func playPreviousTrack() {
@@ -108,6 +112,7 @@ class MusicPlayer {
                 currentPlayer.seek(to: CMTime(seconds: 0, preferredTimescale: 100))
             }
         }
+        UIDevice.vibrate()
     }
     
     @objc func seek(to time: Double) {

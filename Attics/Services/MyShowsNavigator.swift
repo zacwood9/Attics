@@ -20,6 +20,8 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
     var isStartingUp = true
     var restoreDepth = 0
     
+    var state = AppState()
+    
     override init() {
         let sourcesVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.myShows) as! MyShowsViewController
         navigationController = UINavigationController(rootViewController: sourcesVC)
@@ -27,6 +29,10 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
         sourcesVC.dataStore = favoriteStore
         sourcesVC.onSourceTap = pushSongsController
         sourcesVC.sources = favoriteStore.loadFavorites()
+        
+        if let source = state.source {
+            pushSongsController(source: source)
+        }
         
         configureNavigationController()
     }
@@ -44,11 +50,13 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
             } else {
                 self.favoriteStore.saveFavorite(source: s)
             }
-            print(self.favoriteStore.loadFavorites().map { $0.identifier})
+            UIDevice.vibrate(style: .medium)
         }
         songsVC.isFavorite = { [weak self] in
             return self?.favoriteStore.isFavorite(source: source) ?? false
         }
+        
+        state.source = source
         navigationController.pushViewController(songsVC, animated: true)
     }
     
@@ -86,7 +94,7 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
             } else {
                 self.favoriteStore.saveFavorite(source: s)
             }
-            print(self.favoriteStore.loadFavorites().map { $0.identifier})
+            UIDevice.vibrate(style: .medium)
         }
         popupVC.isFavorite = { [weak self] in
             return self?.favoriteStore.isFavorite(source: song.source) ?? false
@@ -103,5 +111,13 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
         navigationController.navigationBar.tintColor = .white
         navigationController.tabBarItem = UITabBarItem(title: "My Shows", image: UIImage.fontAwesomeIcon(name: .heart, style: .solid, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), tag: 1)
         navigationController.delegate = self
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if viewController is MyShowsViewController {
+            state.source = nil
+        } else if let vc = viewController as? SongsViewController {
+            state.source = vc.source
+        }
     }
 }

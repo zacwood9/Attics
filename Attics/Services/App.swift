@@ -12,7 +12,7 @@ import FontAwesome
 import MediaPlayer
 import CoreData
 
-final class App {
+final class App: NSObject, UITabBarControllerDelegate {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let browseNavigator = BrowseNavigator()
     let myShowsNavigator = MyShowsNavigator()
@@ -22,35 +22,40 @@ final class App {
     let tabBarController: UITabBarController
     let dataStore = NetworkDataStore()
     
+    var tabState = TabState()
+    
     init(window: UIWindow) {
         tabBarController = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.mainTabBar) as! UITabBarController
+        super.init()
+        
         tabBarController.setViewControllers([
             browseNavigator.navigationController,
             myShowsNavigator.navigationController,
-            settingsNavigator.navigationController],  animated: true)
+            settingsNavigator.navigationController],  animated: true)        
         window.rootViewController = tabBarController
-        
+        tabBarController.selectedIndex = tabState.tab
+        tabBarController.delegate = self
         configureAudio()
-        
-        func getSizeOfUserDefaults() -> Int? {
-            guard let libraryDir = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first else {
-                return nil
-            }
-            
-            guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
-                return nil
-            }
-            
-            let filepath = "\(libraryDir)/Preferences/\(bundleIdentifier).plist"
-            let filesize = try? FileManager.default.attributesOfItem(atPath: filepath)
-            let retVal = filesize?[FileAttributeKey.size]
-            return retVal as? Int
-        }
-        print(getSizeOfUserDefaults() ?? 0)
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        tabState.tab = tabBarController.selectedIndex
     }
     
     private func configureAudio() {
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         UIApplication.shared.beginReceivingRemoteControlEvents()
+    }
+}
+
+struct TabState {
+    var tab: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "tabIndex")
+        }
+        set {
+            print(newValue)
+            UserDefaults.standard.set(newValue, forKey: "tabIndex")
+        }
     }
 }
