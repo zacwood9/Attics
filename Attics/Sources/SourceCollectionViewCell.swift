@@ -17,4 +17,5 @@ class SourceCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var recordingTypeLabel: UILabel!
     @IBOutlet weak var stars: CosmosView!
     @IBOutlet weak var view: UIView!
+    @IBOutlet weak var recordingTypeWrapper: UIView!
 }

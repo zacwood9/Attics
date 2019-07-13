@@ -64,7 +64,7 @@ class NowPlayingController: UIViewController, UITableViewDelegate {
         previousButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .backward), ofSize: 46)
         infoButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .ellipsisH), ofSize: 26)
         favoriteButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .heart), ofSize: 26)
-        favoriteButton.setTitleColor(.red, for: .normal)
+        favoriteButton.setTitleColor(.white, for: .normal)
         
         NotificationCenter.default.addObserver(self, selector: #selector(setAsFavorite(notification:)), name: .FavoriteWasAdded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeAsFavorite(notification:)), name: .FavoriteWasRemoved, object: nil)

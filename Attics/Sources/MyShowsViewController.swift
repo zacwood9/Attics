@@ -24,7 +24,12 @@ class MyShowsViewController: UICollectionViewController, Refreshable {
         cell.transfererLabel.text = source.show.date
         cell.transfererLabel.font = UIFont.preferredFont(forTextStyle: .title1, withSymbolicTraits: .traitBold)
         cell.stars.rating = source.avgRating
-        cell.recordingTypeLabel.text = ""
+        
+        cell.recordingTypeLabel.text = source.type.rawValue
+        cell.recordingTypeLabel.layer.masksToBounds = true
+        cell.recordingTypeLabel.layer.cornerRadius = 8.0
+        cell.recordingTypeWrapper.roundCorners()
+        cell.recordingTypeWrapper.isHidden = source.type == .unknown
         
         cell.view.roundCorners()
         cell.view.setShadow()

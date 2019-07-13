@@ -71,3 +71,24 @@ extension SourceMO {
         return SourceMO.init(source, into: context)
     }
 }
+
+
+extension Source {
+    enum RecordingType: String {
+        case sbd = "SBD", aud = "AUD", matrix = "MATRIX", unknown = ""
+    }
+    
+    var type: RecordingType {
+        let s = source.lowercased()
+        for type in ["mtx", "matrix"] {
+            if s.contains(type) { return .matrix }
+        }
+        for type in ["aud", "audience"] {
+            if s.contains(type) { return .aud }
+        }
+        for type in ["sbd", "soundboard"] {
+            if s.contains(type) { return .sbd }
+        }
+        return .unknown
+    }
+}

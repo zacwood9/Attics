@@ -25,8 +25,12 @@ class SourcesViewController: UICollectionViewController, Refreshable {
         cell.transfererLabel.text = source.transferer
         cell.transfererLabel.font = UIFont.preferredFont(forTextStyle: .title2, withSymbolicTraits: .traitBold)
         cell.stars.rating = source.avgRating
-        cell.recordingTypeLabel.text = ""
         
+        cell.recordingTypeLabel.text = source.type.rawValue
+        cell.recordingTypeLabel.layer.masksToBounds = true
+        cell.recordingTypeLabel.layer.cornerRadius = 8.0
+        cell.recordingTypeWrapper.roundCorners()
+        cell.recordingTypeWrapper.isHidden = source.type == .unknown
         cell.view.roundCorners()
         cell.view.setShadow()
     }
@@ -57,6 +61,7 @@ class SourcesViewController: UICollectionViewController, Refreshable {
             switch result {
             case .success(let sources):
                 self?.sources = sources
+                sources.forEach { print($0.source) }
                 DispatchQueue.main.async {
                     self?.collectionView.reloadData()
                     self?.refreshControl.endRefreshing()
