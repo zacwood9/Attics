@@ -35,7 +35,6 @@ class ShowsViewController: UICollectionViewController, Refreshable {
             case .success(let shows):
                 self?.shows = shows
             case .failure(let error):
-                print("shows error")
                 self?.presentAlert(with: error.localizedDescription)
             }
             

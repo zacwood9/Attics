@@ -68,7 +68,6 @@ extension SourceMO {
         } catch {
             print("SourceMO.findOrCreate() fetch request failed: \(error)")
         }
-        print("creating source")
         return SourceMO.init(source, into: context)
     }
 }

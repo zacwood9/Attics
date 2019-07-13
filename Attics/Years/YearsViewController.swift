@@ -81,7 +81,6 @@ class YearsViewController: UIViewController {
             switch result {
             case .success(let years):
                 self?.years = years
-//                self?.cache.updateCache(years: years)
             case .failure(let error):
                 print(error.message)
                 self?.presentAlert(with: error.message)

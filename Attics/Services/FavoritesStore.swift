@@ -55,7 +55,6 @@ struct CDFavoritesStore: FavoritesStore {
     
     func isFavorite(source: Source) -> Bool {
         let mo = SourceMO.findOrCreate(from: source, in: context)
-        print("\(source.identifier): \(mo.isFavorite)")
         return mo.isFavorite
     }
 }

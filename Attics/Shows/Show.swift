@@ -65,7 +65,6 @@ extension ShowMO {
         } catch {
             print("ShowMO.findOrCreate(): fetch request failed: \(error)")
         }
-        print("creating show")
         return ShowMO.init(show, into: context)
     }
 }

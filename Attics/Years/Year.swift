@@ -40,7 +40,6 @@ extension YearMO {
         } catch {
             print("YearMO.findOrCreate() fetch request failed: \(error)")
         }
-        print("creating year")
         return YearMO.init(year, into: context)
     }
 }

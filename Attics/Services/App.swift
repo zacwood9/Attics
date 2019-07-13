@@ -54,7 +54,6 @@ struct TabState {
             return UserDefaults.standard.integer(forKey: "tabIndex")
         }
         set {
-            print(newValue)
             UserDefaults.standard.set(newValue, forKey: "tabIndex")
         }
     }

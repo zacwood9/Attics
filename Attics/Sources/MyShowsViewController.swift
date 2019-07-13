@@ -76,7 +76,7 @@ class MyShowsViewController: UICollectionViewController, Refreshable {
                     self?.label.isHidden = !sources.isEmpty
                 }
             case .failure(let error):
-                print(error)
+                print(error) // this will never happen :)
             }
         }
     }
@@ -100,7 +100,6 @@ extension MyShowsViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(sources[indexPath.item])
         onSourceTap(sources[indexPath.item])
     }
 }
