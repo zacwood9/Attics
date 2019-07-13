@@ -187,6 +187,7 @@ fileprivate extension Source {
         numReviews = networkSource.numReviews ?? 0
         //description = networkSource.description ?? "Unknown"
         lineage = networkSource.lineage ?? "Unknown Lineage"
+        isFavorite = false
         self.show = show
     }
     

@@ -6,7 +6,8 @@
 //  Copyright © 2019 Zachary Wood. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import CoreData
 
 protocol FavoritesStore {
     func saveFavorite(source: Source)
@@ -15,6 +16,57 @@ protocol FavoritesStore {
     func isFavorite(source: Source) -> Bool
 }
 
+// An implementation of FavoritesStore using CoreData.
+struct CDFavoritesStore: FavoritesStore {
+    var context: NSManagedObjectContext {
+        return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    }
+    
+    func saveFavorite(source: Source) {
+        let mo = SourceMO.findOrCreate(from: source, in: context)
+        mo.isFavorite = true
+        do {
+            try context.save()
+        } catch {
+            print("CDFavoritesStore.saveFavorite(): \(error)")
+        }
+        NotificationCenter.default.post(name: .FavoriteWasAdded, object: source.identifier)
+    }
+    
+    func removeFavorite(source: Source) {
+        let mo = SourceMO.findOrCreate(from: source, in: context)
+        mo.isFavorite = false
+        do {
+            try context.save()
+        } catch {
+            print("CDFavoritesStore.removeFavorite(): \(error)")
+        }
+        NotificationCenter.default.post(name: .FavoriteWasRemoved, object: source.identifier)
+    }
+    
+    func loadFavorites() -> [Source] {
+        let fr = SourceMO.fetchRequest() as NSFetchRequest<SourceMO>
+        fr.predicate = NSPredicate(format: "isFavorite = YES")
+        if let result = try? context.fetch(fr) {
+            return result.map(Source.init)
+        }
+        return []
+    }
+    
+    func isFavorite(source: Source) -> Bool {
+        let mo = SourceMO.findOrCreate(from: source, in: context)
+        print("\(source.identifier): \(mo.isFavorite)")
+        return mo.isFavorite
+    }
+}
+
+extension CDFavoritesStore: SourcesDataStore {
+    func fetchSources(for show: Show?, then completion: @escaping (Result<[Source]>) -> ()) {
+        completion(.success(loadFavorites()))
+    }
+}
+
+// An implementation of FavoritesStore using UserDefaults. I'm sorry
 struct UDFavoritesStore: FavoritesStore {
         
     func saveFavorite(source: Source) {

@@ -21,7 +21,7 @@ struct Show: Codable, Equatable {
 }
 
 extension Show {
-    init(_ showMO: ShowMO, _ year: Year) {
+    init(_ showMO: ShowMO) {
         self.id = Int(showMO.id)
         self.date = showMO.date!
         self.venue = showMO.venue!
@@ -30,12 +30,16 @@ extension Show {
         self.stars = showMO.stars
         self.sources = Int(showMO.sources)
         self.avgRating = showMO.avgRating
-        self.year = year
+        if let yearMO = showMO.year {
+            self.year = Year(yearMO: yearMO)
+        } else {
+            fatalError("Show.init(): Show managed object does not belong to a year")
+        }
     }
 }
 
 extension ShowMO {
-    convenience init(_ show: Show, for year: YearMO, into context: NSManagedObjectContext) {
+    convenience init(_ show: Show, into context: NSManagedObjectContext) {
         let showED = NSEntityDescription.entity(forEntityName: "Show", in: context)!
         self.init(entity: showED, insertInto: context)
         self.id = Int64(show.id)
@@ -46,6 +50,22 @@ extension ShowMO {
         self.stars = show.stars
         self.sources = Int64(show.sources)
         self.avgRating = show.avgRating
-        self.year = year
+        self.year = YearMO.findOrCreate(from: show.year, in: context)
+        try! context.save()
+    }
+    
+    static func findOrCreate(from show: Show, in context: NSManagedObjectContext) -> ShowMO {
+        let fr = fetchRequest() as NSFetchRequest<ShowMO>
+        fr.predicate = NSPredicate(format: "id = %d", Int64(show.id))
+        do {
+            let result = try context.fetch(fr)
+            if let show = result.first {
+                return show
+            }
+        } catch {
+            print("ShowMO.findOrCreate(): fetch request failed: \(error)")
+        }
+        print("creating show")
+        return ShowMO.init(show, into: context)
     }
 }

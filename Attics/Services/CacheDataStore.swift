@@ -52,7 +52,7 @@ class CacheDataStore : DataStore {
         for pair in years {
             let yearMO = YearMO(pair.year, into: context)
             for show in pair.shows {
-                let _ = ShowMO(show, for: yearMO, into: context)
+                let _ = ShowMO(show, into: context)
             }
         }
 
@@ -73,7 +73,7 @@ class CacheDataStore : DataStore {
         let res: [YearWithTopShows] = yearMOs.map { yearMO in
             let showMOs = yearMO.shows!.allObjects as! [ShowMO]
             let year = Year(yearMO: yearMO)
-            let shows = showMOs.map { Show($0, year) }.sorted { $0.stars > $1.stars }
+            let shows = showMOs.map(Show.init).sorted { $0.stars > $1.stars }
             return (year: year, shows: shows)
         }
         print("read from cache")

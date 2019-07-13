@@ -13,11 +13,11 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
     let navigationController: UINavigationController
     let dataStore = NetworkDataStore()
     let cache = CacheDataStore(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
-    let favoriteStore = UDFavoritesStore()
+    let favoriteStore = CDFavoritesStore()
     
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     
-    var state = AppState()
+    var state = AppState(id: "browse")
     var isStartingUp = true
     var restoreDepth = 0
     
@@ -28,10 +28,7 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
         navigationController = UINavigationController(rootViewController: yearsViewController)        
         super.init()
         
-        //navigationController.delegate = self
-        
         yearsViewController.network = dataStore
-        //yearsViewController.cache = cache
         yearsViewController.onYearTapped = pushShowsController
         yearsViewController.onShowTapped = pushSourcesController
         
@@ -95,24 +92,28 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
         navigationController.pushViewController(sourcesVC, animated: true)
     }
     
+    func onFavoriteTapped(_ s: Source) {
+        if self.favoriteStore.isFavorite(source: s) {
+            self.favoriteStore.removeFavorite(source: s)
+        } else {
+            self.favoriteStore.saveFavorite(source: s)
+        }
+        UIDevice.vibrate(style: .medium)
+    }
+    
+    func isFavorite(_ s: Source) -> Bool {
+        return self.favoriteStore.isFavorite(source: s)
+    }
+    
     func pushSongsController(source: Source) {
         let songsVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.songs) as! SongsViewController
         songsVC.source = source
         songsVC.dataStore = dataStore
         songsVC.onSongTapped = presentNowPlayingController
         songsVC.onMoreInfoTapped = presentSourceInfoAlert
-        songsVC.onFavoriteTapped = { [weak self] s in
-            guard let self = self else { return }
-            if self.favoriteStore.isFavorite(source: s) {
-                self.favoriteStore.removeFavorite(source: s)
-            } else {
-                self.favoriteStore.saveFavorite(source: s)
-            }
-            UIDevice.vibrate(style: .medium)
-        }
-        songsVC.isFavorite = { [weak self] in
-            return self?.favoriteStore.isFavorite(source: source) ?? false
-        }
+        songsVC.onFavoriteTapped = onFavoriteTapped
+        songsVC.isFavorite = isFavorite
+        
         navigationController.pushViewController(songsVC, animated: true)
     }
     
@@ -143,15 +144,7 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
         let dataSource = SongsDataSource(songs: songs)
         popupVC.dataSource = dataSource
         popupVC.onMoreInfoTapped = presentSourceInfoAlert
-        popupVC.onFavoriteTapped = { [weak self] s in
-            guard let self = self else { return }
-            if self.favoriteStore.isFavorite(source: s) {
-                self.favoriteStore.removeFavorite(source: s)
-            } else {
-                self.favoriteStore.saveFavorite(source: s)
-            }
-            UIDevice.vibrate(style: .medium)
-        }
+        popupVC.onFavoriteTapped = onFavoriteTapped
         popupVC.isFavorite = { [weak self] in
             return self?.favoriteStore.isFavorite(source: song.source) ?? false
         }
@@ -172,12 +165,14 @@ final class BrowseNavigator: NSObject, UINavigationControllerDelegate {
 }
 
 struct AppState: Codable {
+    let id: String
+    
     var year: Year? = nil {
         didSet {
             if let year = year, let data = try? JSONEncoder().encode(year) {
-                UserDefaults.standard.set(data, forKey: "year")
+                UserDefaults.standard.set(data, forKey: "\(id)-year")
             } else {
-                UserDefaults.standard.removeObject(forKey: "year")
+                UserDefaults.standard.removeObject(forKey: "\(id)-year")
             }
         }
     }
@@ -185,9 +180,9 @@ struct AppState: Codable {
     var show: Show? = nil {
         didSet {
             if let show = show, let data = try? JSONEncoder().encode(show) {
-                UserDefaults.standard.set(data, forKey: "show")
+                UserDefaults.standard.set(data, forKey: "\(id)-show")
             } else {
-                UserDefaults.standard.removeObject(forKey: "show")
+                UserDefaults.standard.removeObject(forKey: "\(id)-show")
             }
         }
     }
@@ -195,25 +190,27 @@ struct AppState: Codable {
     var source: Source? = nil {
         didSet {
             if let source = source, let data = try? JSONEncoder().encode(source) {
-                UserDefaults.standard.set(data, forKey: "source")
+                UserDefaults.standard.set(data, forKey: "\(id)-source")
             } else {
-                UserDefaults.standard.removeObject(forKey: "source")
+                UserDefaults.standard.removeObject(forKey: "\(id)-source")
             }
         }
     }
     
-    init() {
-        if let data = UserDefaults.standard.data(forKey: "year"),
+    init(id: String) {
+        self.id = id
+        
+        if let data = UserDefaults.standard.data(forKey: "\(id)-year"),
             let year = try? JSONDecoder().decode(Year.self, from: data) {
             self.year = year
         }
         
-        if let data = UserDefaults.standard.data(forKey: "show"),
+        if let data = UserDefaults.standard.data(forKey: "\(id)-show"),
             let show = try? JSONDecoder().decode(Show.self, from: data) {
             self.show = show
         }
         
-        if let data = UserDefaults.standard.data(forKey: "source"),
+        if let data = UserDefaults.standard.data(forKey: "\(id)-source"),
             let source = try? JSONDecoder().decode(Source.self, from: data) {
             self.source = source
         }

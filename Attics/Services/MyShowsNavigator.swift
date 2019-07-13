@@ -13,14 +13,14 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
     let navigationController: UINavigationController
     let dataStore = NetworkDataStore()
     let cache = CacheDataStore(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
-    let favoriteStore = UDFavoritesStore()
+    let favoriteStore = CDFavoritesStore()
     
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     
     var isStartingUp = true
     var restoreDepth = 0
     
-    var state = AppState()
+    var state = AppState(id: "myShows")
     
     override init() {
         let sourcesVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.myShows) as! MyShowsViewController
@@ -52,7 +52,7 @@ final class MyShowsNavigator: NSObject, UINavigationControllerDelegate {
             }
             UIDevice.vibrate(style: .medium)
         }
-        songsVC.isFavorite = { [weak self] in
+        songsVC.isFavorite = { [weak self] _ in
             return self?.favoriteStore.isFavorite(source: source) ?? false
         }
         

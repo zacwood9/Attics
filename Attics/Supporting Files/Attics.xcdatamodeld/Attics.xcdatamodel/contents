@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Show" representedClassName="ShowMO" syncable="YES" codeGenerationType="class">
         <attribute name="avgRating" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
@@ -9,7 +9,20 @@
         <attribute name="stars" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="venue" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="sourceMOs" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Source" inverseName="show" inverseEntity="Source" syncable="YES"/>
         <relationship name="year" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Year" inverseName="shows" inverseEntity="Year" syncable="YES"/>
+    </entity>
+    <entity name="Source" representedClassName="SourceMO" syncable="YES" codeGenerationType="class">
+        <attribute name="avgRating" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="downloads" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isFavorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lineage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="numReviews" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transferer" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="show" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Show" inverseName="sourceMOs" inverseEntity="Show" syncable="YES"/>
     </entity>
     <entity name="Year" representedClassName="YearMO" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -17,7 +30,8 @@
         <relationship name="shows" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Show" inverseName="year" inverseEntity="Show" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Show" positionX="-54" positionY="9" width="128" height="178"/>
+        <element name="Show" positionX="-54" positionY="9" width="128" height="193"/>
         <element name="Year" positionX="-289.23046875" positionY="26.5625" width="128" height="88"/>
+        <element name="Source" positionX="162.85546875" positionY="123.83984375" width="128" height="193"/>
     </elements>
 </model>

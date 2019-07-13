@@ -21,7 +21,7 @@ class SongsViewController: UITableViewController {
     var onSongTapped: (Int, [Song]) -> () = { _,_ in }
     var onMoreInfoTapped: (Source, UIView) -> () = { _,_ in }
     var onFavoriteTapped: (Source) -> () = { _ in }
-    var isFavorite: () -> Bool = { return false }
+    var isFavorite: (Source) -> Bool = { _ in return false }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,7 +126,7 @@ extension SongsViewController {
             cell.infoButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(moreInfoTapped(_:))))
             
             cell.favoriteButton.setTitle(fontAwesome: String.fontAwesomeIcon(name: .heart), ofSize: 26)
-            if isFavorite() {
+            if isFavorite(source) {
                 cell.favoriteButton.setTitleColor(.red, for: .normal)
             } else {
                 cell.favoriteButton.setTitleColor(.white, for: .normal)

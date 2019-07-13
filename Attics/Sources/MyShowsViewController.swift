@@ -54,12 +54,12 @@ class MyShowsViewController: UICollectionViewController, Refreshable {
         extendedLayoutIncludesOpaqueBars = true
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        view.addSubview(label)
+        collectionView.addSubview(label)
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 64),
-            label.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -64)
+            label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: collectionView.topAnchor, constant: 64),
+            label.leftAnchor.constraint(equalTo: collectionView.leftAnchor, constant: 64),
+            label.rightAnchor.constraint(equalTo: collectionView.rightAnchor, constant: -64)
             ])
     }
     
@@ -100,6 +100,7 @@ extension MyShowsViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(sources[indexPath.item])
         onSourceTap(sources[indexPath.item])
     }
 }

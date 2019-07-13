@@ -25,6 +25,22 @@ extension YearMO {
         let yearED = NSEntityDescription.entity(forEntityName: "Year", in: context)!
         self.init(entity: yearED, insertInto: context)
         self.id = Int64(year.id)
-        self.year = year.year        
+        self.year = year.year
+        try! context.save()
+    }
+    
+    static func findOrCreate(from year: Year, in context: NSManagedObjectContext) -> YearMO {
+        let fr = fetchRequest() as NSFetchRequest<YearMO>
+        fr.predicate = NSPredicate(format: "id = %d", Int64(year.id))
+        do {
+            let result = try context.fetch(fr)
+            if let year = result.first {
+                return year
+            }
+        } catch {
+            print("YearMO.findOrCreate() fetch request failed: \(error)")
+        }
+        print("creating year")
+        return YearMO.init(year, into: context)
     }
 }
