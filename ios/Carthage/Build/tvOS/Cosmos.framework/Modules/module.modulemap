@@ -1,0 +1,4 @@
+framework module Cosmos {
+  header "Cosmos-Swift.h"
+  requires objc
+}

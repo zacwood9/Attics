@@ -1,0 +1,979 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B622EB31B37BAE50090D81B /* Cosmos.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B622EB21B37BAE50090D81B /* Cosmos.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2B622EBA1B37BAE50090D81B /* Cosmos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B622EAF1B37BAE50090D81B /* Cosmos.framework */; };
+		2B622ED31B37BB700090D81B /* CosmosLayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EC91B37BB700090D81B /* CosmosLayers.swift */; };
+		2B622ED41B37BB700090D81B /* CosmosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECA1B37BB700090D81B /* CosmosView.swift */; };
+		2B622ED51B37BB700090D81B /* StarFillMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECB1B37BB700090D81B /* StarFillMode.swift */; };
+		2B622ED61B37BB700090D81B /* StarLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECC1B37BB700090D81B /* StarLayer.swift */; };
+		2B622ED71B37BB700090D81B /* CosmosText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECD1B37BB700090D81B /* CosmosText.swift */; };
+		2B622ED81B37BB700090D81B /* CosmosLayerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECE1B37BB700090D81B /* CosmosLayerHelper.swift */; };
+		2B622ED91B37BB700090D81B /* CosmosSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECF1B37BB700090D81B /* CosmosSettings.swift */; };
+		2B622EDA1B37BB700090D81B /* CosmosDefaultSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ED01B37BB700090D81B /* CosmosDefaultSettings.swift */; };
+		2B622EDB1B37BB700090D81B /* CosmosSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ED11B37BB700090D81B /* CosmosSize.swift */; };
+		2B622EDC1B37BB700090D81B /* CosmosTouch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ED21B37BB700090D81B /* CosmosTouch.swift */; };
+		2B622EDF1B37BB850090D81B /* CosmosTouchTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EDE1B37BB850090D81B /* CosmosTouchTarget.swift */; };
+		2B622EE31B37BBC20090D81B /* CosmosTouchTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EE21B37BBC20090D81B /* CosmosTouchTargetTests.swift */; };
+		2B622EE51B37BBC60090D81B /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EE41B37BBC60090D81B /* Round.swift */; };
+		2B622EE91B37BBD10090D81B /* CosmosViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EE61B37BBD10090D81B /* CosmosViewTests.swift */; };
+		2B622EEA1B37BBD10090D81B /* CosmosLayersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EE71B37BBD10090D81B /* CosmosLayersTests.swift */; };
+		2B622EEB1B37BBD10090D81B /* CosmosTouchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EE81B37BBD10090D81B /* CosmosTouchTests.swift */; };
+		2B622EF31B37BC120090D81B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EF21B37BC120090D81B /* AppDelegate.swift */; };
+		2B622EF81B37BC120090D81B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B622EF61B37BC120090D81B /* Main.storyboard */; };
+		2B622EFA1B37BC120090D81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B622EF91B37BC120090D81B /* Assets.xcassets */; };
+		2B622EFD1B37BC120090D81B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B622EFB1B37BC120090D81B /* LaunchScreen.storyboard */; };
+		2B622F031B37BC270090D81B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622F021B37BC270090D81B /* ViewController.swift */; };
+		2B622F041B37BC6B0090D81B /* Cosmos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B622EAF1B37BAE50090D81B /* Cosmos.framework */; };
+		2B622F051B37BC6B0090D81B /* Cosmos.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B622EAF1B37BAE50090D81B /* Cosmos.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2B622F0F1B37BE780090D81B /* CosmosDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622F0E1B37BE780090D81B /* CosmosDistrib.swift */; };
+		2BC473551B9D3F4900BDF89F /* CosmosLocalizedRatingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC473541B9D3F4900BDF89F /* CosmosLocalizedRatingTests.swift */; };
+		2BC473571B9D3F9400BDF89F /* CosmosLocalizedRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC473561B9D3F9400BDF89F /* CosmosLocalizedRating.swift */; };
+		2BC696811BAF996F00576887 /* PerformanceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC696801BAF996F00576887 /* PerformanceTableViewController.swift */; };
+		2BC696841BAF9A4700576887 /* PerformanceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC696831BAF9A4700576887 /* PerformanceTableViewCell.swift */; };
+		7E089C6C1B9CF6AE00F11623 /* CosmosAccessibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E089C6B1B9CF6AE00F11623 /* CosmosAccessibilityTests.swift */; };
+		7E089C6E1B9CF7AC00F11623 /* CosmosRatingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E089C6D1B9CF7AC00F11623 /* CosmosRatingTests.swift */; };
+		7E089C701B9CF8FC00F11623 /* CosmosRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E089C6F1B9CF8FC00F11623 /* CosmosRating.swift */; };
+		7E0C396A1BF0072C006AB7AE /* CosmosAccessibilityCallbacksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0C39691BF0072C006AB7AE /* CosmosAccessibilityCallbacksTests.swift */; };
+		7E1A88471E3412CB0053A0FA /* RightToLeft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE7F1E01E33254800995862 /* RightToLeft.swift */; };
+		7E236536201FEA5F00FD853B /* CosmosSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E236535201FEA5F00FD853B /* CosmosSettingsTests.swift */; };
+		7E4295551B38C70900C66E9F /* launch_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E4295541B38C70900C66E9F /* launch_screen.png */; };
+		7E646DB11C04438B00048339 /* Cosmos-tvOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E646DB01C04438B00048339 /* Cosmos-tvOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7E646DB61C04440B00048339 /* CosmosAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE834C01B9D0270007BFDD2 /* CosmosAccessibility.swift */; };
+		7E646DB71C04440B00048339 /* CosmosDefaultSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ED01B37BB700090D81B /* CosmosDefaultSettings.swift */; };
+		7E646DB81C04440B00048339 /* CosmosLayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EC91B37BB700090D81B /* CosmosLayers.swift */; };
+		7E646DB91C04440B00048339 /* CosmosLayerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECE1B37BB700090D81B /* CosmosLayerHelper.swift */; };
+		7E646DBA1C04440B00048339 /* CosmosLocalizedRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC473561B9D3F9400BDF89F /* CosmosLocalizedRating.swift */; };
+		7E646DBB1C04440B00048339 /* CosmosRating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E089C6F1B9CF8FC00F11623 /* CosmosRating.swift */; };
+		7E646DBC1C04440B00048339 /* CosmosSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECF1B37BB700090D81B /* CosmosSettings.swift */; };
+		7E646DBD1C04440B00048339 /* CosmosSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ED11B37BB700090D81B /* CosmosSize.swift */; };
+		7E646DBE1C04440B00048339 /* CosmosText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECD1B37BB700090D81B /* CosmosText.swift */; };
+		7E646DBF1C04440B00048339 /* CosmosTouch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ED21B37BB700090D81B /* CosmosTouch.swift */; };
+		7E646DC01C04440B00048339 /* CosmosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECA1B37BB700090D81B /* CosmosView.swift */; };
+		7E646DC11C04440B00048339 /* StarFillMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECB1B37BB700090D81B /* StarFillMode.swift */; };
+		7E646DC21C04440B00048339 /* StarLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622ECC1B37BB700090D81B /* StarLayer.swift */; };
+		7E646DC41C04441400048339 /* CosmosTouchTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B622EDE1B37BB850090D81B /* CosmosTouchTarget.swift */; };
+		7EE20BE61F18AEEF00D1ECD3 /* CosmosTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE20BE51F18AEEF00D1ECD3 /* CosmosTest.swift */; };
+		7EE20BED1F18AFD600D1ECD3 /* 35px.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7EE20BEA1F18AFD600D1ECD3 /* 35px.jpg */; };
+		7EE20BEE1F18AFD600D1ECD3 /* 67px.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE20BEB1F18AFD600D1ECD3 /* 67px.png */; };
+		7EE20BEF1F18AFD600D1ECD3 /* 96px.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EE20BEC1F18AFD600D1ECD3 /* 96px.png */; };
+		7EE7F1E11E33254800995862 /* RightToLeft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE7F1E01E33254800995862 /* RightToLeft.swift */; };
+		7EE834C11B9D0270007BFDD2 /* CosmosAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE834C01B9D0270007BFDD2 /* CosmosAccessibility.swift */; };
+		7EF4F8251D91E97F00799197 /* CosmosSettingsObjCBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF4F8241D91E97F00799197 /* CosmosSettingsObjCBridge.swift */; };
+		89C3109920A625B1001FCA22 /* CosmosView.swift in Headers */ = {isa = PBXBuildFile; fileRef = 2B622ECA1B37BB700090D81B /* CosmosView.swift */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2B622EBB1B37BAE50090D81B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B622EA61B37BAE50090D81B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B622EAE1B37BAE50090D81B;
+			remoteInfo = Cosmos;
+		};
+		2B622F061B37BC6B0090D81B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B622EA61B37BAE50090D81B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B622EAE1B37BAE50090D81B;
+			remoteInfo = Cosmos;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2B622F081B37BC6B0090D81B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2B622F051B37BC6B0090D81B /* Cosmos.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2B622EAF1B37BAE50090D81B /* Cosmos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cosmos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B622EB21B37BAE50090D81B /* Cosmos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cosmos.h; sourceTree = "<group>"; };
+		2B622EB41B37BAE50090D81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B622EB91B37BAE50090D81B /* CosmosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CosmosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B622EC01B37BAE50090D81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B622EC91B37BB700090D81B /* CosmosLayers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosLayers.swift; sourceTree = "<group>"; };
+		2B622ECA1B37BB700090D81B /* CosmosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosView.swift; sourceTree = "<group>"; };
+		2B622ECB1B37BB700090D81B /* StarFillMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarFillMode.swift; sourceTree = "<group>"; };
+		2B622ECC1B37BB700090D81B /* StarLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarLayer.swift; sourceTree = "<group>"; };
+		2B622ECD1B37BB700090D81B /* CosmosText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosText.swift; sourceTree = "<group>"; };
+		2B622ECE1B37BB700090D81B /* CosmosLayerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosLayerHelper.swift; sourceTree = "<group>"; };
+		2B622ECF1B37BB700090D81B /* CosmosSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosSettings.swift; sourceTree = "<group>"; };
+		2B622ED01B37BB700090D81B /* CosmosDefaultSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosDefaultSettings.swift; sourceTree = "<group>"; };
+		2B622ED11B37BB700090D81B /* CosmosSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosSize.swift; sourceTree = "<group>"; };
+		2B622ED21B37BB700090D81B /* CosmosTouch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosTouch.swift; sourceTree = "<group>"; };
+		2B622EDE1B37BB850090D81B /* CosmosTouchTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosTouchTarget.swift; sourceTree = "<group>"; };
+		2B622EE21B37BBC20090D81B /* CosmosTouchTargetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosTouchTargetTests.swift; sourceTree = "<group>"; };
+		2B622EE41B37BBC60090D81B /* Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
+		2B622EE61B37BBD10090D81B /* CosmosViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosViewTests.swift; sourceTree = "<group>"; };
+		2B622EE71B37BBD10090D81B /* CosmosLayersTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosLayersTests.swift; sourceTree = "<group>"; };
+		2B622EE81B37BBD10090D81B /* CosmosTouchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosTouchTests.swift; sourceTree = "<group>"; };
+		2B622EF01B37BC120090D81B /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B622EF21B37BC120090D81B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2B622EF71B37BC120090D81B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2B622EF91B37BC120090D81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2B622EFC1B37BC120090D81B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2B622EFE1B37BC120090D81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B622F021B37BC270090D81B /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2B622F0E1B37BE780090D81B /* CosmosDistrib.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosDistrib.swift; sourceTree = "<group>"; };
+		2BC473541B9D3F4900BDF89F /* CosmosLocalizedRatingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosLocalizedRatingTests.swift; sourceTree = "<group>"; };
+		2BC473561B9D3F9400BDF89F /* CosmosLocalizedRating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosLocalizedRating.swift; sourceTree = "<group>"; };
+		2BC696801BAF996F00576887 /* PerformanceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceTableViewController.swift; sourceTree = "<group>"; };
+		2BC696831BAF9A4700576887 /* PerformanceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceTableViewCell.swift; sourceTree = "<group>"; };
+		7E089C6B1B9CF6AE00F11623 /* CosmosAccessibilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosAccessibilityTests.swift; sourceTree = "<group>"; };
+		7E089C6D1B9CF7AC00F11623 /* CosmosRatingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosRatingTests.swift; sourceTree = "<group>"; };
+		7E089C6F1B9CF8FC00F11623 /* CosmosRating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosRating.swift; sourceTree = "<group>"; };
+		7E0C39691BF0072C006AB7AE /* CosmosAccessibilityCallbacksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosAccessibilityCallbacksTests.swift; sourceTree = "<group>"; };
+		7E236535201FEA5F00FD853B /* CosmosSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CosmosSettingsTests.swift; sourceTree = "<group>"; };
+		7E4295541B38C70900C66E9F /* launch_screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch_screen.png; sourceTree = "<group>"; };
+		7E646DAE1C04438B00048339 /* Cosmos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cosmos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E646DB01C04438B00048339 /* Cosmos-tvOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cosmos-tvOS.h"; sourceTree = "<group>"; };
+		7E646DB21C04438B00048339 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7EE20BE51F18AEEF00D1ECD3 /* CosmosTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosTest.swift; sourceTree = "<group>"; };
+		7EE20BEA1F18AFD600D1ECD3 /* 35px.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 35px.jpg; sourceTree = "<group>"; };
+		7EE20BEB1F18AFD600D1ECD3 /* 67px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 67px.png; sourceTree = "<group>"; };
+		7EE20BEC1F18AFD600D1ECD3 /* 96px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 96px.png; sourceTree = "<group>"; };
+		7EE7F1E01E33254800995862 /* RightToLeft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightToLeft.swift; sourceTree = "<group>"; };
+		7EE834C01B9D0270007BFDD2 /* CosmosAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosAccessibility.swift; sourceTree = "<group>"; };
+		7EF4F8241D91E97F00799197 /* CosmosSettingsObjCBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CosmosSettingsObjCBridge.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2B622EAB1B37BAE50090D81B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B622EB61B37BAE50090D81B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B622EBA1B37BAE50090D81B /* Cosmos.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B622EED1B37BC120090D81B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B622F041B37BC6B0090D81B /* Cosmos.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E646DAA1C04438B00048339 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2B622EA51B37BAE50090D81B = {
+			isa = PBXGroup;
+			children = (
+				2B622EB11B37BAE50090D81B /* Cosmos */,
+				2B622EBD1B37BAE50090D81B /* CosmosTests */,
+				2B622EF11B37BC120090D81B /* Demo */,
+				2B622F0D1B37BE780090D81B /* Distrib */,
+				7E646DAF1C04438B00048339 /* Cosmos-tvOS */,
+				2B622EB01B37BAE50090D81B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2B622EB01B37BAE50090D81B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2B622EAF1B37BAE50090D81B /* Cosmos.framework */,
+				2B622EB91B37BAE50090D81B /* CosmosTests.xctest */,
+				2B622EF01B37BC120090D81B /* Demo.app */,
+				7E646DAE1C04438B00048339 /* Cosmos.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2B622EB11B37BAE50090D81B /* Cosmos */ = {
+			isa = PBXGroup;
+			children = (
+				2B622EDD1B37BB7F0090D81B /* Helpers */,
+				7EE834C01B9D0270007BFDD2 /* CosmosAccessibility.swift */,
+				2B622ED01B37BB700090D81B /* CosmosDefaultSettings.swift */,
+				2B622EC91B37BB700090D81B /* CosmosLayers.swift */,
+				2B622ECE1B37BB700090D81B /* CosmosLayerHelper.swift */,
+				2BC473561B9D3F9400BDF89F /* CosmosLocalizedRating.swift */,
+				7E089C6F1B9CF8FC00F11623 /* CosmosRating.swift */,
+				2B622ECF1B37BB700090D81B /* CosmosSettings.swift */,
+				2B622ED11B37BB700090D81B /* CosmosSize.swift */,
+				2B622ECD1B37BB700090D81B /* CosmosText.swift */,
+				2B622ED21B37BB700090D81B /* CosmosTouch.swift */,
+				2B622ECA1B37BB700090D81B /* CosmosView.swift */,
+				2B622ECB1B37BB700090D81B /* StarFillMode.swift */,
+				2B622ECC1B37BB700090D81B /* StarLayer.swift */,
+				2B622EB21B37BAE50090D81B /* Cosmos.h */,
+				2B622EB41B37BAE50090D81B /* Info.plist */,
+			);
+			path = Cosmos;
+			sourceTree = "<group>";
+		};
+		2B622EBD1B37BAE50090D81B /* CosmosTests */ = {
+			isa = PBXGroup;
+			children = (
+				2B622EE01B37BBB20090D81B /* Helpers */,
+				7EE20BE91F18AFA200D1ECD3 /* Images */,
+				2B622EE11B37BBBA0090D81B /* TestHelpers */,
+				7E089C6B1B9CF6AE00F11623 /* CosmosAccessibilityTests.swift */,
+				7E0C39691BF0072C006AB7AE /* CosmosAccessibilityCallbacksTests.swift */,
+				7E089C6D1B9CF7AC00F11623 /* CosmosRatingTests.swift */,
+				7E236535201FEA5F00FD853B /* CosmosSettingsTests.swift */,
+				2B622EE61B37BBD10090D81B /* CosmosViewTests.swift */,
+				2B622EE71B37BBD10090D81B /* CosmosLayersTests.swift */,
+				2BC473541B9D3F4900BDF89F /* CosmosLocalizedRatingTests.swift */,
+				2B622EE81B37BBD10090D81B /* CosmosTouchTests.swift */,
+				2B622EC01B37BAE50090D81B /* Info.plist */,
+			);
+			path = CosmosTests;
+			sourceTree = "<group>";
+		};
+		2B622EDD1B37BB7F0090D81B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2B622EDE1B37BB850090D81B /* CosmosTouchTarget.swift */,
+				7EE7F1E01E33254800995862 /* RightToLeft.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		2B622EE01B37BBB20090D81B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				7EE20BE51F18AEEF00D1ECD3 /* CosmosTest.swift */,
+				2B622EE21B37BBC20090D81B /* CosmosTouchTargetTests.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		2B622EE11B37BBBA0090D81B /* TestHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				2B622EE41B37BBC60090D81B /* Round.swift */,
+			);
+			path = TestHelpers;
+			sourceTree = "<group>";
+		};
+		2B622EF11B37BC120090D81B /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				7E4295531B38C6FF00C66E9F /* graphics */,
+				2B622EF21B37BC120090D81B /* AppDelegate.swift */,
+				7EF4F8241D91E97F00799197 /* CosmosSettingsObjCBridge.swift */,
+				2B622F021B37BC270090D81B /* ViewController.swift */,
+				2BC696831BAF9A4700576887 /* PerformanceTableViewCell.swift */,
+				2BC696801BAF996F00576887 /* PerformanceTableViewController.swift */,
+				2B622EF61B37BC120090D81B /* Main.storyboard */,
+				2B622EF91B37BC120090D81B /* Assets.xcassets */,
+				2B622EFB1B37BC120090D81B /* LaunchScreen.storyboard */,
+				2B622EFE1B37BC120090D81B /* Info.plist */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		2B622F0D1B37BE780090D81B /* Distrib */ = {
+			isa = PBXGroup;
+			children = (
+				2B622F0E1B37BE780090D81B /* CosmosDistrib.swift */,
+			);
+			path = Distrib;
+			sourceTree = "<group>";
+		};
+		7E4295531B38C6FF00C66E9F /* graphics */ = {
+			isa = PBXGroup;
+			children = (
+				7E4295541B38C70900C66E9F /* launch_screen.png */,
+			);
+			path = graphics;
+			sourceTree = "<group>";
+		};
+		7E646DAF1C04438B00048339 /* Cosmos-tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				7E646DB01C04438B00048339 /* Cosmos-tvOS.h */,
+				7E646DB21C04438B00048339 /* Info.plist */,
+			);
+			path = "Cosmos-tvOS";
+			sourceTree = "<group>";
+		};
+		7EE20BE91F18AFA200D1ECD3 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				7EE20BEA1F18AFD600D1ECD3 /* 35px.jpg */,
+				7EE20BEB1F18AFD600D1ECD3 /* 67px.png */,
+				7EE20BEC1F18AFD600D1ECD3 /* 96px.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2B622EAC1B37BAE50090D81B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B622EB31B37BAE50090D81B /* Cosmos.h in Headers */,
+				89C3109920A625B1001FCA22 /* CosmosView.swift in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E646DAB1C04438B00048339 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E646DB11C04438B00048339 /* Cosmos-tvOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		2B622F091B37BD960090D81B /* ConcatenateSwiftFiles */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$PROJECT_DIR/Cosmos $PROJECT_DIR/Distrib/CosmosDistrib.swift \"//\n// Star rating control written in Swift for iOS and tvOS.\n//\n// https://github.com/evgenyneu/Cosmos\n//\n// This file was automatically generated by combining multiple Swift source files.\n//\"";
+			buildConfigurationList = 2B622F0A1B37BD960090D81B /* Build configuration list for PBXLegacyTarget "ConcatenateSwiftFiles" */;
+			buildPhases = (
+			);
+			buildToolPath = $PROJECT_DIR/scripts/concatenate_swift_files.sh;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = ConcatenateSwiftFiles;
+			passBuildSettingsInEnvironment = 1;
+			productName = ConcatenateSwiftFiles;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		2B622EAE1B37BAE50090D81B /* Cosmos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B622EC31B37BAE50090D81B /* Build configuration list for PBXNativeTarget "Cosmos" */;
+			buildPhases = (
+				2B622EAA1B37BAE50090D81B /* Sources */,
+				2B622EAB1B37BAE50090D81B /* Frameworks */,
+				2B622EAC1B37BAE50090D81B /* Headers */,
+				2B622EAD1B37BAE50090D81B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Cosmos;
+			productName = Cosmos;
+			productReference = 2B622EAF1B37BAE50090D81B /* Cosmos.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2B622EB81B37BAE50090D81B /* CosmosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B622EC61B37BAE50090D81B /* Build configuration list for PBXNativeTarget "CosmosTests" */;
+			buildPhases = (
+				2B622EB51B37BAE50090D81B /* Sources */,
+				2B622EB61B37BAE50090D81B /* Frameworks */,
+				2B622EB71B37BAE50090D81B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B622EBC1B37BAE50090D81B /* PBXTargetDependency */,
+			);
+			name = CosmosTests;
+			productName = CosmosTests;
+			productReference = 2B622EB91B37BAE50090D81B /* CosmosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2B622EEF1B37BC120090D81B /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B622EFF1B37BC120090D81B /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				2B622EEC1B37BC120090D81B /* Sources */,
+				2B622EED1B37BC120090D81B /* Frameworks */,
+				2B622EEE1B37BC120090D81B /* Resources */,
+				2B622F081B37BC6B0090D81B /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B622F071B37BC6B0090D81B /* PBXTargetDependency */,
+			);
+			name = Demo;
+			productName = Demo;
+			productReference = 2B622EF01B37BC120090D81B /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7E646DAD1C04438B00048339 /* Cosmos-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E646DB51C04438B00048339 /* Build configuration list for PBXNativeTarget "Cosmos-tvOS" */;
+			buildPhases = (
+				7E646DA91C04438B00048339 /* Sources */,
+				7E646DAA1C04438B00048339 /* Frameworks */,
+				7E646DAB1C04438B00048339 /* Headers */,
+				7E646DAC1C04438B00048339 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cosmos-tvOS";
+			productName = "Cosmos-tvOS";
+			productReference = 7E646DAE1C04438B00048339 /* Cosmos.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2B622EA61B37BAE50090D81B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = Marketplacer;
+				TargetAttributes = {
+					2B622EAE1B37BAE50090D81B = {
+						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0900;
+					};
+					2B622EB81B37BAE50090D81B = {
+						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0900;
+					};
+					2B622EEF1B37BC120090D81B = {
+						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0900;
+					};
+					2B622F091B37BD960090D81B = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					7E646DAD1C04438B00048339 = {
+						CreatedOnToolsVersion = 7.1.1;
+						LastSwiftMigration = 0900;
+					};
+				};
+			};
+			buildConfigurationList = 2B622EA91B37BAE50090D81B /* Build configuration list for PBXProject "Cosmos" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2B622EA51B37BAE50090D81B;
+			productRefGroup = 2B622EB01B37BAE50090D81B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2B622EAE1B37BAE50090D81B /* Cosmos */,
+				7E646DAD1C04438B00048339 /* Cosmos-tvOS */,
+				2B622EB81B37BAE50090D81B /* CosmosTests */,
+				2B622EEF1B37BC120090D81B /* Demo */,
+				2B622F091B37BD960090D81B /* ConcatenateSwiftFiles */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2B622EAD1B37BAE50090D81B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B622EB71B37BAE50090D81B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EE20BEF1F18AFD600D1ECD3 /* 96px.png in Resources */,
+				7EE20BEE1F18AFD600D1ECD3 /* 67px.png in Resources */,
+				7EE20BED1F18AFD600D1ECD3 /* 35px.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B622EEE1B37BC120090D81B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B622EFD1B37BC120090D81B /* LaunchScreen.storyboard in Resources */,
+				2B622EFA1B37BC120090D81B /* Assets.xcassets in Resources */,
+				7E4295551B38C70900C66E9F /* launch_screen.png in Resources */,
+				2B622EF81B37BC120090D81B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E646DAC1C04438B00048339 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2B622EAA1B37BAE50090D81B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B622ED81B37BB700090D81B /* CosmosLayerHelper.swift in Sources */,
+				2B622ED91B37BB700090D81B /* CosmosSettings.swift in Sources */,
+				7E089C701B9CF8FC00F11623 /* CosmosRating.swift in Sources */,
+				2B622ED31B37BB700090D81B /* CosmosLayers.swift in Sources */,
+				2B622ED61B37BB700090D81B /* StarLayer.swift in Sources */,
+				2B622EDF1B37BB850090D81B /* CosmosTouchTarget.swift in Sources */,
+				2B622ED71B37BB700090D81B /* CosmosText.swift in Sources */,
+				2B622ED51B37BB700090D81B /* StarFillMode.swift in Sources */,
+				2B622ED41B37BB700090D81B /* CosmosView.swift in Sources */,
+				2B622EDC1B37BB700090D81B /* CosmosTouch.swift in Sources */,
+				7EE834C11B9D0270007BFDD2 /* CosmosAccessibility.swift in Sources */,
+				2B622EDB1B37BB700090D81B /* CosmosSize.swift in Sources */,
+				2BC473571B9D3F9400BDF89F /* CosmosLocalizedRating.swift in Sources */,
+				2B622EDA1B37BB700090D81B /* CosmosDefaultSettings.swift in Sources */,
+				7EE7F1E11E33254800995862 /* RightToLeft.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B622EB51B37BAE50090D81B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E0C396A1BF0072C006AB7AE /* CosmosAccessibilityCallbacksTests.swift in Sources */,
+				7E089C6C1B9CF6AE00F11623 /* CosmosAccessibilityTests.swift in Sources */,
+				2B622EE31B37BBC20090D81B /* CosmosTouchTargetTests.swift in Sources */,
+				7E236536201FEA5F00FD853B /* CosmosSettingsTests.swift in Sources */,
+				2B622EE91B37BBD10090D81B /* CosmosViewTests.swift in Sources */,
+				2B622EEA1B37BBD10090D81B /* CosmosLayersTests.swift in Sources */,
+				2BC473551B9D3F4900BDF89F /* CosmosLocalizedRatingTests.swift in Sources */,
+				2B622EEB1B37BBD10090D81B /* CosmosTouchTests.swift in Sources */,
+				7EE20BE61F18AEEF00D1ECD3 /* CosmosTest.swift in Sources */,
+				7E089C6E1B9CF7AC00F11623 /* CosmosRatingTests.swift in Sources */,
+				2B622EE51B37BBC60090D81B /* Round.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B622EEC1B37BC120090D81B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B622F031B37BC270090D81B /* ViewController.swift in Sources */,
+				2B622EF31B37BC120090D81B /* AppDelegate.swift in Sources */,
+				2B622F0F1B37BE780090D81B /* CosmosDistrib.swift in Sources */,
+				2BC696841BAF9A4700576887 /* PerformanceTableViewCell.swift in Sources */,
+				7EF4F8251D91E97F00799197 /* CosmosSettingsObjCBridge.swift in Sources */,
+				2BC696811BAF996F00576887 /* PerformanceTableViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E646DA91C04438B00048339 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E646DBA1C04440B00048339 /* CosmosLocalizedRating.swift in Sources */,
+				7E646DC01C04440B00048339 /* CosmosView.swift in Sources */,
+				7E646DB81C04440B00048339 /* CosmosLayers.swift in Sources */,
+				7E646DBD1C04440B00048339 /* CosmosSize.swift in Sources */,
+				7E646DC41C04441400048339 /* CosmosTouchTarget.swift in Sources */,
+				7E646DBF1C04440B00048339 /* CosmosTouch.swift in Sources */,
+				7E646DBE1C04440B00048339 /* CosmosText.swift in Sources */,
+				7E646DB71C04440B00048339 /* CosmosDefaultSettings.swift in Sources */,
+				7E646DC11C04440B00048339 /* StarFillMode.swift in Sources */,
+				7E646DB61C04440B00048339 /* CosmosAccessibility.swift in Sources */,
+				7E646DBB1C04440B00048339 /* CosmosRating.swift in Sources */,
+				7E646DB91C04440B00048339 /* CosmosLayerHelper.swift in Sources */,
+				7E646DC21C04440B00048339 /* StarLayer.swift in Sources */,
+				7E646DBC1C04440B00048339 /* CosmosSettings.swift in Sources */,
+				7E1A88471E3412CB0053A0FA /* RightToLeft.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2B622EBC1B37BAE50090D81B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B622EAE1B37BAE50090D81B /* Cosmos */;
+			targetProxy = 2B622EBB1B37BAE50090D81B /* PBXContainerItemProxy */;
+		};
+		2B622F071B37BC6B0090D81B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B622EAE1B37BAE50090D81B /* Cosmos */;
+			targetProxy = 2B622F061B37BC6B0090D81B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2B622EF61B37BC120090D81B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2B622EF71B37BC120090D81B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2B622EFB1B37BC120090D81B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2B622EFC1B37BC120090D81B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2B622EC11B37BAE50090D81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2B622EC21B37BAE50090D81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2B622EC41B37BAE50090D81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Cosmos/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.marketplacer.Cosmos;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		2B622EC51B37BAE50090D81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Cosmos/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.marketplacer.Cosmos;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		2B622EC71B37BAE50090D81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = CosmosTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.marketplacer.CosmosTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		2B622EC81B37BAE50090D81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = CosmosTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.marketplacer.CosmosTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		2B622F001B37BC120090D81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Demo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.marketplacer.CosmosDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		2B622F011B37BC120090D81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Demo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.marketplacer.CosmosDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		2B622F0B1B37BD960090D81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2B622F0C1B37BD960090D81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7E646DB31C04438B00048339 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Cosmos-tvOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.evgenii.Cosmos-tvOS";
+				PRODUCT_NAME = Cosmos;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		7E646DB41C04438B00048339 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Cosmos-tvOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.evgenii.Cosmos-tvOS";
+				PRODUCT_NAME = Cosmos;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B622EA91B37BAE50090D81B /* Build configuration list for PBXProject "Cosmos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B622EC11B37BAE50090D81B /* Debug */,
+				2B622EC21B37BAE50090D81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B622EC31B37BAE50090D81B /* Build configuration list for PBXNativeTarget "Cosmos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B622EC41B37BAE50090D81B /* Debug */,
+				2B622EC51B37BAE50090D81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B622EC61B37BAE50090D81B /* Build configuration list for PBXNativeTarget "CosmosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B622EC71B37BAE50090D81B /* Debug */,
+				2B622EC81B37BAE50090D81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B622EFF1B37BC120090D81B /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B622F001B37BC120090D81B /* Debug */,
+				2B622F011B37BC120090D81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B622F0A1B37BD960090D81B /* Build configuration list for PBXLegacyTarget "ConcatenateSwiftFiles" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B622F0B1B37BD960090D81B /* Debug */,
+				2B622F0C1B37BD960090D81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E646DB51C04438B00048339 /* Build configuration list for PBXNativeTarget "Cosmos-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E646DB31C04438B00048339 /* Debug */,
+				7E646DB41C04438B00048339 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2B622EA61B37BAE50090D81B /* Project object */;
+}

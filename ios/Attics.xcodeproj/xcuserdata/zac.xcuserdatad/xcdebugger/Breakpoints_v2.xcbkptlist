@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "364CC98B-1D84-478A-A610-ED9CACDFE708"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FD0FB30B-FBC5-4E7C-8EAF-1AED8968366A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Attics/Services/BrowseNavigator.swift"
+            timestampString = "588268984.783408"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "16"
+            endingLineNumber = "16"
+            landmarkName = "init(bandStore:favoriteStore:downloadStore:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "FD0FB30B-FBC5-4E7C-8EAF-1AED8968366A - bdd4e36ea033af16"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Attics.BrowseNavigator.__allocating_init() -&gt; Attics.BrowseNavigator"
+                  moduleName = "Attics"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zac/Developer/Attics/Attics/Services/BrowseNavigator.swift"
+                  timestampString = "586538262.81399"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "12">
+               </Location>
+               <Location
+                  uuid = "FD0FB30B-FBC5-4E7C-8EAF-1AED8968366A - e698259eb21ce44c"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Attics.BrowseNavigator.init() -&gt; Attics.BrowseNavigator"
+                  moduleName = "Attics"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/zac/Developer/Attics/Attics/Services/BrowseNavigator.swift"
+                  timestampString = "586538262.823971"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "14"
+                  endingLineNumber = "14"
+                  offsetFromSymbolStart = "143">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D50F444F-C909-4C3E-A01A-576F26C3B16A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Attics/Sources/Source.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "init(_:into:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3ADA50C-D881-42E3-BD4F-A3BB84A98F9F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Attics/Sources/Source.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "findOrCreate(from:in:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
