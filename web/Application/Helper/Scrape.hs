@@ -97,6 +97,7 @@ buildPerformanceFromRecordings band (firstSrc : srcs) =
               |> set #venue venue
               |> set #city city
               |> set #state state
+              |> set #bandId (get #id band)
         (src : srcs) ->
           let nextVenue = if venue == "Unknown" then srcVenue src else venue
               nextCity = if city == "Unknown" then srcCity src else city
