@@ -12,6 +12,7 @@ struct SettingsView: View {
     let openSafari: (String) -> ()
     let openReview: () -> ()
     let removeAllDownloads: () -> ()
+    let openUpdate: () -> ()
     @State var deleteOpen = false
     
     var body: some View {
@@ -91,6 +92,14 @@ struct SettingsView: View {
         }.contentShape(Rectangle())
         .onTapGesture { openSafari("mailto:zac.wood@hey.com") }
         Divider()
+            
+        HStack {
+            Text("View last update popup")
+                .padding(.leading)
+            Spacer()
+        }.contentShape(Rectangle())
+        .onTapGesture { openUpdate() }
+        Divider()
             .padding(.bottom)
     }
     
@@ -130,6 +139,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(openSafari: { _ in}, openReview: { }, removeAllDownloads: { })
+        SettingsView(openSafari: { _ in}, openReview: { }, removeAllDownloads: { }, openUpdate: { })
     }
 }

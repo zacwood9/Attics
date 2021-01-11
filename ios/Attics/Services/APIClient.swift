@@ -63,7 +63,7 @@ struct APIResource {
 
 struct APIClient {
     let urlSession: URLSession = .shared
-    let baseUrl = APIResource(base: "https://8cffcbc4c98b.ngrok.io/")
+    let baseUrl = APIResource(base: "http://c4fed52716ab.ngrok.io/")
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
         let url = baseUrl.appendingPath("Bands")
@@ -75,7 +75,6 @@ struct APIClient {
             .appendingPath("TopPerformances")
             .appendingQuery(key: "collection", value: band.collection)
             .appendingQuery(key: "numPerformances", value: "5")
-        print(url.toURL().absoluteURL)
         return get(url: url.toURL())
     }
     

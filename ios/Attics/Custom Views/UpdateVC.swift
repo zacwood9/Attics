@@ -71,11 +71,23 @@ struct UpdateView: View {
                 }
                 .padding(.top, 16)
                 
+                gapless.padding()
                 share.padding()
-                redesign.padding()
                 search.padding()
+                redesign.padding()
+                tipJar.padding()
                 
             }
+        }
+    }
+    
+    var gapless: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Gapless playback!")
+                .font(.title2)
+                .bold()
+            
+            Text("By far the most requested feature, Attics now automatically loads the next song before the current song is finished, ensuring a near gapless transition. Enjoy those Help>Slip>Franklin's even more!")
         }
     }
     
@@ -105,7 +117,17 @@ struct UpdateView: View {
                 .font(.title2)
                 .bold()
             
-            Text("When viewing performances for a given year, swipe down to search through the list. You can search by date, venue, and location. This is only the beginning: in the next update, I'll be adding an entirely new search tab with much more powerful functionality. Stay tuned!")
+            Text("When viewing performances for a given year or viewing your saved shows, swipe down to search through the list. You can search by date, venue, and location. This is only the beginning: in the next update, I'll be adding an entirely new search tab with much more powerful functionality. Stay tuned!")
+        }
+    }
+    
+    var tipJar: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Tip jar")
+                .font(.title2)
+                .bold()
+            
+            Text("I've also added a tip jar to the \"more\" tab. Developing and running this app is a lot of fun and a passion project of mine, but it also costs a lot of time and money. If you feel so inclined, any small tips or just a nice message is always appriciated, but not expected :)")
         }
     }
 }

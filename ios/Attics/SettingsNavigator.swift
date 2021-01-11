@@ -21,14 +21,16 @@ final class SettingsNavigator {
         navigationController = UINavigationController()
         navigationController.tabBarItem = UITabBarItem(tabBarSystemItem: .more, tag: 1)
         navigationController.navigationBar.isHidden = true
-//        navigationController.navigationBar.prefersLargeTitles = false
-//        navigationController.navigationBar.barTintColor = #colorLiteral(red: 0.1997258663, green: 0.2665995359, blue: 0.5491077304, alpha: 1)
-//        navigationController.navigationBar.isTranslucent = false
-//        navigationController.navigationBar.largeTitleTextAttributes = [.foregroundColor : UIColor.white]
-//        navigationController.navigationBar.titleTextAttributes = [.foregroundColor : UIColor.white]
-//        navigationController.navigationBar.tintColor = .white
         
-        let settingsVC = UIHostingController(rootView: SettingsView(openSafari: { a in self.openSafari(in:a) }, openReview: { self.openReview() } , removeAllDownloads: { try? self.storage.removeAllDownloads() }))
+        let settingsVC = UIHostingController(
+            rootView:
+                SettingsView(
+                    openSafari: { a in self.openSafari(in:a) },
+                    openReview: { self.openReview() } ,
+                    removeAllDownloads: { try? self.storage.removeAllDownloads() },
+                    openUpdate: openUpdate
+                )
+        )
         navigationController.pushViewController(settingsVC, animated: false)
     }
     
@@ -38,5 +40,9 @@ final class SettingsNavigator {
     
     private func openReview() {
         SKStoreReviewController.requestReview()
+    }
+    
+    func openUpdate() {
+        navigationController.present(UpdateVC(), animated: true, completion: nil)
     }
 }

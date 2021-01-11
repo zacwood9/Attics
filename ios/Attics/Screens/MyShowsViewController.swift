@@ -9,11 +9,29 @@
 import UIKit
 import Combine
 
-class MyShowsViewController: UICollectionViewController {
+class MyShowsViewController: UICollectionViewController, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        searchText = text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+    
+    var searchText = "" { didSet { refresh() }}
+    
     var refreshControl = UIRefreshControl()
     
     var recordings: [StoredRecording] = [] {
         didSet { refresh() }
+    }
+    
+    func displayedRecordings() -> [StoredRecording] {
+        let venueMatches: (StoredRecording) -> Bool = { $0.performance.venue.lowercased().contains(self.searchText) }
+        let cityMatches: (StoredRecording) -> Bool = { $0.performance.city.lowercased().starts(with: self.searchText) }
+        let stateMatches: (StoredRecording) -> Bool = { $0.performance.state.lowercased().starts(with: self.searchText) }
+        let dateMatches: (StoredRecording) -> Bool = { $0.performance.date.contains(self.searchText) }
+        
+        return recordings
+            .filter(matchesAny: [venueMatches, cityMatches, stateMatches, dateMatches])
+            .sorted(by: { $0.performance.date < $1.performance.date })
     }
     
     var storage: AppStorageManager!
@@ -49,6 +67,12 @@ class MyShowsViewController: UICollectionViewController {
             .map { $0.filter { stored in stored.band.collection == self.storage.band.collection }}
             .map { $0.filter { stored in stored.favorite || stored.downloadState == .downloaded }}
             .assign(to: \.recordings, on: self)
+        
+        let searchController = UISearchController()
+        searchController.searchBar.barTintColor = .white
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
     }
     
     
@@ -94,12 +118,12 @@ class MyShowsViewController: UICollectionViewController {
 extension MyShowsViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recordings.count
+        return displayedRecordings().count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Source Cell", for: indexPath) as? SourceCollectionViewCell else { fatalError("Incorrect Cell type") }
-        let stored = recordings[indexPath.item]
+        let stored = displayedRecordings()[indexPath.item]
         let recording = stored.recording
         
         cell.lineageLabel.text = "\(stored.performance.city), \(stored.performance.state)"
@@ -127,7 +151,7 @@ extension MyShowsViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        onSourceTap(recordings[indexPath.row])
+        onSourceTap(displayedRecordings()[indexPath.row])
     }
 }
 
