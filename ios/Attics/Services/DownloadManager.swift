@@ -7,212 +7,207 @@
 //
 
 import Foundation
+import Combine
 import Network
 
-protocol DownloadManagerDelegate: class {
-    func downloadProgress(_ manager: DownloadManager, for song: Song, with progress: Double)
-    func downloadFinished(_ manager: DownloadManager, for song: Song)
-    func downloadFailed(_ manager: DownloadManager, for song: Song)
-}
-
-fileprivate protocol DownloadDelegate: class {
-    func downloadProgress(for song: Song, percentageFinished: Double)
-    func downloadFinished(for song: Song)
-    func downloadFailed(for song: Song)
-}
-
-class DownloadManager: DownloadDelegate {
-    weak var delegate: DownloadManagerDelegate?
+enum DownloadState : Codable, Equatable {
+    case notDownloaded
+    case downloaded
+    case downloading([Song : Double])
     
-    let source: Source
-    var progresses: [Song : Double] = [:]
-    var downloaded: Bool {
-        // metadata.json is created after all songs finish downloading,
-        // so if it exists the source has been downloaded
-        folder.containsFile(named: "metadata.json")
-    }
-    
-    private let folder: Folder
-    private var songs: [Song] = []
-    private var tasks: [Song:DownloadTask] = [:]
-    
-    var isOnline: () -> Bool = { true }
-    
-    var downloadedSongs: Set<Song> = []
-    
-    var songMap: [String : Song] {
-        songs.reduce(into: [String:Song]()) { result, song in
-            result[song.fileName] = song
-        }
-    }
-    
-    init(source: Source) {
-        self.source = source
-        
-        let cacheDir = Folder.applicationSupport
-        let downloadsDir = try! cacheDir.createSubfolderIfNeeded(at: "Downloads")
-        downloadsDir.excludeForBackup()
-        folder = try! downloadsDir.createSubfolderIfNeeded(at: source.identifier)
-    }
-    
-    func downloadAll(songs: [Song]) throws {
-        self.songs = songs
-        for song in songs {
-            try download(song)
-        }
-    }
-    
-    func download(_ song: Song) throws {
-        if isSongDownloaded(song) {
-            print("Skipping: \(song.fileName)")
-            downloadedSongs.insert(song)
-            downloadFinished(for: song)
-            return
-        }
-        
-        print("Downloading \(song.title)")
-        if let task = tasks[song] {
-            _ = task.attemptResume()
-        } else {
-            let task = DownloadTask(in: folder, for: song, delegate: self)
-            task.start()
-            tasks[song] = task
-            progresses[song] = 0
-        }
-    }
-    
-    func remove() {
-        folder.files.forEach { try! $0.delete() }
-        tasks.values.forEach { $0.cancel() }
-        progresses = [:]
-    }
-    
-    func downloadProgress(for song: Song, percentageFinished: Double) {
-        DispatchQueue.main.async {
-            self.progresses[song] = percentageFinished
-            self.delegate?.downloadProgress(self, for: song, with: percentageFinished)
-        }
-    }
-    
-    func downloadFinished(for song: Song) {
-        DispatchQueue.main.async {
-            self.progresses.removeValue(forKey: song)
-            self.tasks.removeValue(forKey: song)
-            self.downloadedSongs.insert(song)
-            if self.progresses.isEmpty {
-                let metadata = try! self.folder.createFileIfNeeded(withName: "metadata.json")
-                try! metadata.write(JSONEncoder().encode(self.songs))
+    init(from decoder: Decoder) throws {
+        let v = try decoder.singleValueContainer()
+        if let d = try? v.decode(String.self) {
+            switch d {
+            case "downloaded": self = .downloaded
+            case "not_downloaded": self = .notDownloaded
+            default: throw DecodingError.dataCorruptedError(in: v, debugDescription: "unable to decode download state")
             }
-            self.delegate?.downloadFinished(self, for: song)
-        }      
-    }
-    
-    func downloadFailed(for song: Song) {
-        guard !(tasks[song]?.attemptResume() ?? false) else { return }
-        DispatchQueue.main.async {
-            self.delegate?.downloadFailed(self, for: song)
+        } else if let d = try? v.decode([Song : Double].self) {
+            self = .downloading(d)
+        } else {
+            throw DecodingError.dataCorruptedError(in: v, debugDescription: "unable to decode download state")
         }
     }
     
-    func isSongDownloaded(_ song: Song) -> Bool {
-        return folder.containsFile(named: song.fileName)
-    }
-    
-    func path(for song: Song) -> URL? {
-        if isSongDownloaded(song) {
-            return folder.url.appendingPathComponent(song.fileName)
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .downloaded: try container.encode("downloaded")
+        case .notDownloaded: try container.encode("not_downloaded")
+        case .downloading(let d): try container.encode(d)
         }
-        return nil
     }
 }
 
-extension Source {
-    var downloadFolder: Folder {
-        let cacheDir = Folder.applicationSupport
-        let downloadsDir = try! cacheDir.createSubfolderIfNeeded(at: "Downloads")
-        return try! downloadsDir.createSubfolderIfNeeded(at: identifier)
+/// Manages downloading a recording
+class DownloadManager_ {
+    let storage: AppStorageManager
+    let storedRecording: StoredRecording
+    
+    var songQueue: [Song] = []
+    
+    private var currentTasks: [DownloadTask_] = []
+    private var currentCancellables: [AnyCancellable] = []
+    private let _publisher = PassthroughSubject<(Song, Double), Error>()
+    
+    init(storage: AppStorageManager, recording: Source) {
+        self.storage = storage
+        self.storedRecording = storage.recordings.first(where: { $0.id == recording.id })! // TODO: force unwrap
     }
     
-    var isDownloaded: Bool {
-        downloadFolder.containsFile(named: "metadata.json")
-    }
-    
-    var downloadedSongs: [Song] {
-        (try? JSONDecoder().decode([Song].self, from: downloadFolder.file(named: "metadata.json").read())) ?? []
-    }
-}
-
-extension Song {
-    var fileURL: URL? {
-//        if source.downloadFolder.containsFile(named: fileName) {
-//            return source.downloadFolder.url.appendingPathComponent(fileName)
-//        }
-        return nil
-    }
-}
-
-fileprivate class DownloadTask: NSObject, URLSessionDownloadDelegate {
-    let folder: Folder
-    let song: Song
-    var urlSession: URLSession! = nil
-    var delegate: DownloadDelegate?
-    var resumeData: Data?
-    var task: URLSessionDownloadTask?
-    
-    init(in folder: Folder, for song: Song, delegate: DownloadDelegate? = nil) {
-        self.folder = folder
-        self.song = song
-        self.delegate = delegate
-        super.init()
-        
-        let config = URLSessionConfiguration.background(withIdentifier: "me.zacwood.Attics.\(song.fileName)")
-        config.isDiscretionary = false
-        self.urlSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
+    var publisher: AnyPublisher<(Song, Double), Error> {
+        _publisher.eraseToAnyPublisher()
     }
     
     func start() {
-//        task = urlSession.downloadTask(with: song.downloadURL)
-//        task?.resume()
-    }
-    
-    func attemptResume() -> Bool {
-        if let resumeData = resumeData {
-            print("resuming \(song.title)")
-            task = urlSession.downloadTask(withResumeData: resumeData)
-            task?.resume()
-            return true
-        }
-        return false
+        songQueue = storedRecording.songs
+        downloadFromQueue()
     }
     
     func cancel() {
-        task?.cancel()
+        currentTasks.forEach { $0.cancel() }
+        currentCancellables.forEach { $0.cancel() }
     }
     
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        delegate?.downloadProgress(for: song, percentageFinished: Double(totalBytesWritten)/Double(totalBytesExpectedToWrite))
-    }
-    
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        delegate?.downloadFinished(for: song)
-        do {
-            try File(path: location.path).move(to: folder)
-            try folder.file(named: location.lastPathComponent).rename(to: song.fileName, keepExtension: false)
-        } catch {
-            print("FAILED: \(error)")
+    private func downloadFromQueue() {
+        if let song = songQueue.first {
+            songQueue.removeFirst()
+            
+            let url = "https://archive.org/download/\(storedRecording.recording.identifier)/\(song.fileName)"
+            let currentTask = DownloadTask_(
+                url: URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!,
+                onComplete: { self.storage.moveDownloadToStorage($0, self.storedRecording, song) }
+            )
+            let currentCancellable = currentTask.publisher_
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        let _ = self.currentTasks.popLast()
+                        if self.currentTasks.isEmpty {
+                            self._publisher.send(completion: .finished)
+                        }
+                    case .failure(let error): print("ERROR: \(error)")
+                    }
+                } receiveValue: { percentageFinished in
+                    self._publisher.send((song, percentageFinished))
+                }
+            
+            currentTask.resume()
+            currentTasks.append(currentTask)
+            currentCancellables.append(currentCancellable)
+            
+            downloadFromQueue()
         }
-    }
-    
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let error = error else { return }
-        
-        print("download failed for \(song.title)")
-        if let error = error as? URLError {
-            self.resumeData = error.downloadTaskResumeData
-        }
-        
-        delegate?.downloadFailed(for: song)
     }
 }
 
+struct StoredRecording : Codable, Equatable, Hashable {
+    static func == (lhs: StoredRecording, rhs: StoredRecording) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    var id: String {
+        recording.id
+    }
+    
+    var band: Band
+    var performance: Show
+    var recording: Source
+    var songs: [Song]
+    var favorite: Bool
+    var downloadState: DownloadState
+    
+    var hashValue: Int { id.hashValue }
+    func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
+    }
+}
 
+class DownloadTask_: NSObject, URLSessionDownloadDelegate {
+    private var downloadTask: URLSessionDownloadTask!
+    private let _publisher = PassthroughSubject<Double, Error>()
+    private let onComplete: (URL) -> ()
+    
+    var publisher_: AnyPublisher<Double, Error> {
+        _publisher.eraseToAnyPublisher()
+    }
+    
+    init(url: URL, onComplete: @escaping (URL) -> ()) {
+        self.onComplete = onComplete
+        super.init()
+        self.downloadTask = NetworkManager.shared.registerTask(self, url: url)
+    }
+    
+    func resume() {
+        self.downloadTask.resume()
+    }
+    
+    func cancel() {
+        downloadTask.cancel()
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        _publisher.send(completion: .finished)
+        onComplete(location)
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        _publisher.send(Double(totalBytesWritten) / Double(totalBytesExpectedToWrite))
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        if let error = error {
+            _publisher.send(completion: .failure(error))
+        } else if let error = task.error {
+            _publisher.send(completion: .failure(error))
+        } else {
+            _publisher.send(completion: .failure(URLError(.badServerResponse)))
+        }
+    }
+}
+
+class NetworkManager: NSObject, URLSessionDownloadDelegate {
+    static var shared = NetworkManager()
+    
+    lazy var urlSession: URLSession = {
+        let config = URLSessionConfiguration.background(withIdentifier: "me.zacwood.Attics.1")
+        config.isDiscretionary = false
+        return URLSession(configuration: config, delegate: self, delegateQueue: .main)
+    }()
+    
+    private var downloadTasks = [Int : DownloadTask_]()
+    private override init() { }
+    
+    func registerTask(_ task: DownloadTask_, url: URL) -> URLSessionDownloadTask {
+        let t = urlSession.downloadTask(with: url)
+        downloadTasks[t.taskIdentifier] = task
+        return t
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        guard let registeredTask = downloadTasks[downloadTask.taskIdentifier] else {
+            print("unregistered task finished")
+            return
+        }
+        registeredTask.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location)
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        guard let registeredTask = downloadTasks[downloadTask.taskIdentifier] else {
+            print("wrote data for unregistered task: cancelling")
+            downloadTask.cancel()
+            return
+        }
+        registeredTask.urlSession(session, downloadTask: downloadTask, didWriteData: bytesWritten, totalBytesWritten: totalBytesWritten, totalBytesExpectedToWrite: totalBytesExpectedToWrite)
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let registeredTask = downloadTasks[task.taskIdentifier] else {
+            return
+        }
+        registeredTask.urlSession(session, task: task, didCompleteWithError: error)
+        downloadTasks[task.taskIdentifier] = nil
+    }
+}

@@ -34,7 +34,7 @@ class MusicPlayer : ObservableObject {
         var duration: Double
         var playing: Bool
         
-        private func songIndex() -> Int {
+        func songIndex() -> Int {
             guard let index = playlist.songs.firstIndex(where: { $0.id == song.id }) else {
                 fatalError("Coudln't find song in current playlist?")
             }
@@ -175,6 +175,28 @@ class MusicPlayer : ObservableObject {
         interruptionObserver = nc.publisher(for: AVAudioSession.interruptionNotification).sink { [weak self] _ in
             self?.dispatch(action: .pause)
         }
+        
+        cacheNextSong()
+    }
+    
+    var nextSongTask: DownloadTask_?
+    func cacheNextSong() {
+        guard let state = state else { return }
+        
+        let nextIndex = state.songIndex() + 1
+        guard nextIndex < state.playlist.songs.count else { return }
+        let nextSong = state.playlist.songs[nextIndex]
+        
+        let downloadUrl = "https://archive.org/download/\(state.playlist.source.identifier)/\(nextSong.fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        if let task = nextSongTask {
+            task.cancel()
+        }
+        
+        nextSongTask = DownloadTask_(url: URL(string: downloadUrl)!) { url in
+            print("got url")
+            self.storage.moveDownloadToCache(url, state.playlist.source.identifier, nextSong)
+        }
+        nextSongTask?.resume()
     }
     
     func updateSeeker() {
