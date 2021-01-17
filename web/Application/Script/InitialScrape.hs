@@ -54,7 +54,7 @@ run = do
           return ()
 
     makeRecordingRecord'' perfs recording = do
-      performance <- findPerformance (srcDate recording) perfs
+      performance <- findPerformance (get #date recording) perfs
       let record = makeRecordingRecord (get #id performance) recording
       pure record
 
@@ -68,17 +68,18 @@ scrapeCollection band = do
   let shows = buildShowsFromSources band sources
   pure (shows, sources)
 
-buildDateMap :: [RecordingData] -> HashMap Text [RecordingData]
-buildDateMap =
-  foldr
-    (\src -> HM.insertWith (++) (srcDate src) [src])
-    HM.empty
-
 buildShowsFromSources :: Band -> [RecordingData] -> [Performance]
 buildShowsFromSources band srcs =
   mapMaybe (buildPerformanceFromRecordings band) groupedSources
   where
     groupedSources = HM.elems $ buildDateMap srcs
+
+buildDateMap :: [RecordingData] -> HashMap Text [RecordingData]
+buildDateMap =
+  foldr
+    (\src -> HM.insertWith (++) (get #date src) [src])
+    HM.empty
+
 
 getSongRecords :: Recording -> IO [Song]
 getSongRecords recording = do

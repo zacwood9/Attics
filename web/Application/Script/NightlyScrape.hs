@@ -9,9 +9,8 @@ import Application.Helper.Scrape
 import Application.Script.Prelude
 import Control.Exception
 import Control.Monad
-import Control.Monad.Trans.State
-import qualified Control.Monad.Trans.State as S
-import qualified Data.List as L
+import qualified Control.Monad.Trans.State as State
+import qualified Data.List as List
 
 run :: Script
 run = do
@@ -32,7 +31,7 @@ addNewRecordings band@Band {collection = c} = do
     [] -> putStrLn $ "No recent recordings found for " <> c <> ". Skipping."
     recentRecordings -> do
       records <- mapM (makeRecordingRecord' band) recentRecordings >>= createMany
-      putStrLn $ "Created " <> show (L.length records) <> " new recordings for " <> c
+      putStrLn $ "Created " <> show (List.length records) <> " new recordings for " <> c
 
 updateRecentlyReviewedRecordings :: Band -> Script
 updateRecentlyReviewedRecordings band@Band {collection = c} = do
@@ -42,7 +41,7 @@ updateRecentlyReviewedRecordings band@Band {collection = c} = do
     recentlyReviewed -> do
       recordings <- mapM getRecording recentlyReviewed
       updated <- mapM updateRecording (zip recordings recentlyReviewed)
-      putStrLn $ "Updated " <> show (L.length updated) <> " recordings for " <> c
+      putStrLn $ "Updated " <> show (List.length updated) <> " recordings for " <> c
 
 addUpdate :: Band -> Script
 addUpdate band = do
@@ -53,10 +52,10 @@ addUpdate band = do
       |> updateRecord
 
 getRecording :: (?modelContext :: ModelContext) => RecordingData -> IO Recording
-getRecording RecordingData {..} = do
+getRecording recording = do
   recordings <-
     query @Recording
-      |> filterWhere (#identifier, srcIdentifier)
+      |> filterWhere (#identifier, get #identifier recording)
       |> fetch
 
   case recordings of
@@ -64,11 +63,11 @@ getRecording RecordingData {..} = do
     (recording : _) -> pure recording
 
 updateRecording :: (?modelContext :: ModelContext) => (Recording, RecordingData) -> IO Recording
-updateRecording (recording, RecordingData {..}) = do
+updateRecording (recording, newData) = do
   recording
-    |> set #avgRating srcAvgRating
-    |> set #numReviews srcNumReviews
-    |> set #archiveDownloads srcDownloads
+    |> set #avgRating (get #avgRating newData)
+    |> set #numReviews (get #numReviews newData)
+    |> set #archiveDownloads (get #downloads newData)
     |> updateRecord
 
 scrapeRecentRecordings :: Band -> AdvancedSearchSort -> IO [RecordingData]
@@ -88,28 +87,28 @@ mapFst f (a, c) = (f a, c)
 scrapeSongsForBand :: (?modelContext :: ModelContext) => Band -> IO ()
 scrapeSongsForBand Band {id = bandId} = do
   srcs <- sqlQuery "select recordings.* from recordings inner join performances on recordings.performance_id = performances.id inner join bands on performances.band_id = bands.id where bands.id = ?" (Only bandId)
-  putStrLn $ "got " <> cs (show (L.length srcs)) <> " sources"
-  recordingsAndSongs <- evalStateT scrapeSongsForRecordings (1, L.length srcs, srcs, False)
-  putStrLn $ show $ L.length recordingsAndSongs
+  putStrLn $ "got " <> cs (show (List.length srcs)) <> " sources"
+  recordingsAndSongs <- State.evalStateT scrapeSongsForRecordings (1, List.length srcs, srcs, False)
+  putStrLn $ show $ List.length recordingsAndSongs
   putStrLn "done scraping"
   return ()
 
 type ScrapeState = (Int, Int, [Recording], Bool)
 
-scrapeSongsForRecordings :: StateT ScrapeState IO [(Recording, [ArchiveSong])]
+scrapeSongsForRecordings :: State.StateT ScrapeState IO [(Recording, [ArchiveSong])]
 scrapeSongsForRecordings = do
-  (num, total, srcs, _) <- S.get
+  (num, total, srcs, _) <- State.get
   case srcs of
     [] -> pure []
     (src : rest) -> do
       songs <- scrapeSongs
-      put (num + 1, total, rest, False) -- move to the next source
+      State.put (num + 1, total, rest, False) -- move to the next source
       rest <- scrapeSongsForRecordings -- get the list of all the rest
-      pure $ [(src, songs)] ++ rest -- combine current + rest
+      pure $ (src, songs) : rest -- combine current + rest
 
-scrapeSongs :: StateT ScrapeState IO [ArchiveSong]
+scrapeSongs :: State.StateT ScrapeState IO [ArchiveSong]
 scrapeSongs = do
-  (num, total, srcs@(Recording {..} : _), alreadyTried) <- S.get
+  (num, total, srcs@(Recording {..} : _), alreadyTried) <- State.get
 
   result <- liftIO $ do
     putStrLn $ "scraping " <> cs (show num) <> "/" <> cs (show total) <> " " <> identifier
@@ -129,5 +128,5 @@ scrapeSongs = do
           liftIO $ putStrLn $ "scrape " <> identifier <> " FAILED."
           pure []
         else do
-          put (num, total, srcs, True)
+          State.put (num, total, srcs, True)
           scrapeSongs

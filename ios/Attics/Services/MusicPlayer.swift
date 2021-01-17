@@ -192,6 +192,8 @@ class MusicPlayer : ObservableObject {
             task.cancel()
         }
         
+        guard storage.getLocalSongUrl(recording: state.playlist.source, song: nextSong) == nil else { return }
+        
         nextSongTask = DownloadTask_(url: URL(string: downloadUrl)!) { url in
             print("got url")
             self.storage.moveDownloadToCache(url, state.playlist.source.identifier, nextSong)

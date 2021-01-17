@@ -1,5 +1,5 @@
 module Application.Helper.Scrape
-  ( PerformanceData (..),
+  (
     RecordingData (..),
     archiveToAttics,
     buildPerformanceFromRecordings,
@@ -19,48 +19,48 @@ import qualified Data.Text as Text
 import Database.PostgreSQL.Simple.SqlQQ
 import Text.Read (readMaybe)
 
-data PerformanceData = PerformanceData
-  { showCollection :: Text,
-    showDate :: Text,
-    showVenue :: Text,
-    showCity :: Text,
-    showState :: Text
-  }
-  deriving (Show)
+-- data PerformanceData = PerformanceData
+--   { showCollection :: Text,
+--     showDate :: Text,
+--     showVenue :: Text,
+--     showCity :: Text,
+--     showState :: Text
+--   }
+--   deriving (Show)
 
 data RecordingData = RecordingData
-  { srcIdentifier :: Text,
-    srcCollection :: Text,
-    srcDate :: Text,
-    srcVenue :: Text,
-    srcCity :: Text,
-    srcState :: Text,
-    srcTransferer :: Text,
-    srcSource :: Text,
-    srcLineage :: Text,
-    srcDownloads :: Int,
-    srcAvgRating :: Double,
-    srcNumReviews :: Int,
-    srcAtticsDownloads :: Int
+  { identifier :: Text,
+    collection :: Text,
+    date :: Text,
+    venue :: Text,
+    city :: Text,
+    state :: Text,
+    transferer :: Text,
+    source :: Text,
+    lineage :: Text,
+    downloads :: Int,
+    avgRating :: Double,
+    numReviews :: Int,
+    atticsDownloads :: Int
   }
   deriving (Show)
 
 archiveToAttics :: Text -> ArchiveItem -> RecordingData
 archiveToAttics defaultCollection ArchiveItem {..} =
   RecordingData
-    { srcCollection = fromMaybe defaultCollection collection,
-      srcIdentifier = identifier,
-      srcDate = Text.takeWhile (/= 'T') date,
-      srcTransferer = mbUnknown transferer,
-      srcDownloads = fromMaybe 0 downloads,
-      srcSource = mbUnknown source,
-      srcAvgRating = fromMaybe 0 (avgRating >>= readMaybe . cs),
-      srcNumReviews = fromMaybe 0 numReviews,
-      srcLineage = mbUnknown lineage,
-      srcVenue = mbUnknown venue,
-      srcCity = city,
-      srcState = state,
-      srcAtticsDownloads = 0
+    { collection = fromMaybe defaultCollection collection,
+      identifier = identifier,
+      date = Text.takeWhile (/= 'T') date,
+      transferer = mbUnknown transferer,
+      downloads = fromMaybe 0 downloads,
+      source = mbUnknown source,
+      avgRating = fromMaybe 0 (avgRating >>= readMaybe . cs),
+      numReviews = fromMaybe 0 numReviews,
+      lineage = mbUnknown lineage,
+      venue = mbUnknown venue,
+      city = city,
+      state = state,
+      atticsDownloads = 0
     }
   where
     mbUnknown = fromMaybe "Unknown"
@@ -71,25 +71,33 @@ archiveToAttics defaultCollection ArchiveItem {..} =
         then pure (mbUnknown $ head s, Text.strip (s !! 1))
         else Nothing
 
-data Builder = Builder Band Text Text Text Text [RecordingData]
+-- data Builder = Builder Band Text Text Text Text [RecordingData]
+data Builder = Builder {
+  band :: Band,
+  date :: Text,
+  venue :: Text,
+  city :: Text,
+  state :: Text,
+  recordings :: [RecordingData]
+}
 
 buildPerformanceFromRecordings :: Band -> [RecordingData] -> Maybe Performance
 buildPerformanceFromRecordings _ [] = Nothing
-buildPerformanceFromRecordings band (firstSrc : srcs) =
+buildPerformanceFromRecordings band (firstRecording : recordings) =
   let firstState =
         Builder
           band
-          (get #srcDate firstSrc)
-          (get #srcVenue firstSrc)
-          (get #srcCity firstSrc)
-          (get #srcState firstSrc)
-          srcs
-   in pure $ State.evalState (helper firstSrc) firstState
+          (get #date firstRecording)
+          (get #venue firstRecording)
+          (get #city firstRecording)
+          (get #state firstRecording)
+          recordings
+   in pure $ State.evalState (helper firstRecording) firstState
   where
     helper :: RecordingData -> State Builder Performance
     helper firstSrc = do
-      (Builder band date venue city state srcs) <- State.get
-      case srcs of
+      Builder {..} <- State.get
+      case recordings of
         [] ->
           pure $
             newRecord @Performance
@@ -98,28 +106,28 @@ buildPerformanceFromRecordings band (firstSrc : srcs) =
               |> set #city city
               |> set #state state
               |> set #bandId (get #id band)
-        (src : srcs) ->
-          let nextVenue = if venue == "Unknown" then srcVenue src else venue
-              nextCity = if city == "Unknown" then srcCity src else city
-              nextState = if state == "Unknown" then srcState src else state
+        (recording : rest) ->
+          let nextVenue = if venue == "Unknown" then get #venue recording else venue
+              nextCity = if city == "Unknown" then get #city recording else city
+              nextState = if state == "Unknown" then get #state recording else state
            in do
-                State.put (Builder band date nextVenue nextCity nextState srcs)
+                State.put (Builder band date nextVenue nextCity nextState rest)
                 helper firstSrc
 
 makeRecordingRecord performanceId RecordingData {..} =
   newRecord @Recording
-    |> set #identifier srcIdentifier
+    |> set #identifier identifier
     |> set #performanceId performanceId
-    |> set #transferer srcTransferer
-    |> set #source srcSource
-    |> set #lineage srcLineage
-    |> set #archiveDownloads srcDownloads
-    |> set #avgRating srcAvgRating
-    |> set #numReviews srcNumReviews
+    |> set #transferer transferer
+    |> set #source source
+    |> set #lineage lineage
+    |> set #archiveDownloads downloads
+    |> set #avgRating avgRating
+    |> set #numReviews numReviews
 
 makeRecordingRecord' :: (?modelContext :: ModelContext) => Band -> RecordingData -> IO Recording
-makeRecordingRecord' band recording@RecordingData {..} = do
-  performanceId <- sqlQuery performanceIdQuery [srcIdentifier, srcDate]
+makeRecordingRecord' band recording = do
+  performanceId <- sqlQuery performanceIdQuery [get #identifier recording, get #date recording]
 
   -- if the performance is found, return its ID,
   -- else create the performance from the recording data and use the new id
