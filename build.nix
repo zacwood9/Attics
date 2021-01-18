@@ -1,15 +1,26 @@
-{ compiler ? "ghc8103", ihp, haskellDeps ? (p: []), otherDeps ? (p: []), projectPath ? ./. }:
+{ compiler ? "ghc8103"
+, ihp
+, haskellDeps ? (p: [])
+, otherDeps ? (p: [])
+, projectPath ? ./. 
+}:
 
 let
     pkgs = import "${toString projectPath}/Config/nix/nixpkgs-config.nix" { ihp = ihp; };
     ghc = pkgs.haskell.packages.${compiler};
-    allHaskellPackages = ghc.ghcWithPackages (p: builtins.concatLists [ [p.haskell-language-server] (haskellDeps p) ] );
-    allNativePackages = builtins.concatLists [ (otherDeps pkgs) [pkgs.postgresql] (if pkgs.stdenv.isDarwin then [] else []) ];
+    allHaskellPackages = ghc.ghcWithPackages 
+      (p: builtins.concatLists [ [p.haskell-language-server] (haskellDeps p) ] );
+    allNativePackages = builtins.concatLists [ 
+      (otherDeps pkgs) 
+      [pkgs.postgresql] 
+    ];
 in
     pkgs.stdenv.mkDerivation {
-        name = "app";
+        name = "attics";
         buildPhase = ''
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/RunUnoptimizedProdServer
+          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/InitialScrape
+          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/NightlyScrape
           make -f ${ihp}/lib/IHP/Makefile.dist -B static/prod.css
           make -f ${ihp}/lib/IHP/Makefile.dist -B static/prod.js
         '';
