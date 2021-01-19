@@ -29,6 +29,9 @@ COPY --from=builder /tmp/nix-store-closure /nix/store
 COPY --from=builder /app/result /app
 COPY --from=builder /app/web/IHP /app/IHP
 
+# certs for HTTPS requests
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
 WORKDIR /app
 
 LABEL org.opencontainers.image.source=https://github.com/zacwood9/Attics
