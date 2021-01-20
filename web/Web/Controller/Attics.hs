@@ -4,6 +4,7 @@ import Web.Controller.Prelude
 import Web.View.Attics.Bands
 import Web.View.Attics.Performances
 import Web.View.Attics.Recordings
+import Data.Text
 
 instance Controller AtticsController where
   action BandsAction = do
@@ -34,3 +35,10 @@ instance Controller AtticsController where
     band <- fetch bandId
     songs <- query @Song |> filterWhere (#recordingId, get #id recording) |> fetch
     render ShowRecordingView {..}
+
+  action (MigrationAction _) = do
+    let idStr :: Text = param "identifiers"
+    let identifiers = splitOn "," (cs idStr)
+    items <- fetchMigrationItems identifiers
+    render MigrationView { .. }
+

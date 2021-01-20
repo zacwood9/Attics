@@ -9,12 +9,6 @@ data RecordingsView = RecordingsView
     recordings :: [Recording]
   }
 
-data ShowRecordingView = ShowRecordingView
-  { band :: Band,
-    performance :: PerformanceWithMetadata,
-    recording :: Recording,
-    songs :: [Song]
-  }
 
 instance View RecordingsView where
   html RecordingsView {..} = comingSoon
@@ -26,6 +20,13 @@ instance View RecordingsView where
           "recordings" .= recordings
         ]
 
+data ShowRecordingView = ShowRecordingView
+  { band :: Band,
+    performance :: PerformanceWithMetadata,
+    recording :: Recording,
+    songs :: [Song]
+  }
+
 instance View ShowRecordingView where
   html ShowRecordingView {..} = comingSoon
   json ShowRecordingView {..} =
@@ -36,3 +37,17 @@ instance View ShowRecordingView where
           "recording" .= recording,
           "songs" .= songs
         ]
+
+newtype MigrationView = MigrationView
+  { items :: [MigrationItem] }
+
+instance View MigrationView where
+  html MigrationView { .. } = comingSoon
+  json MigrationView { .. } = toJSON items
+
+instance ToJSON MigrationItem where
+  toJSON (MigrationItem band performance recording) = object [
+    "band" .= band,
+    "performance" .= performance,
+    "recording" .= recording
+    ]

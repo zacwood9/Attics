@@ -5,6 +5,7 @@ module Application.Helper.Controller
     fetchBand,
     fetchBands,
     fetchTopPerformances,
+    fetchMigrationItems,
     fetchPerformance,
     fetchPerformance',
     fetchPerformances,
@@ -167,3 +168,43 @@ fetchBands = sqlQuery bandsQuery ()
     LEFT JOIN recordings ON performances.id = recordings.performance_id
     GROUP BY bands.id
   |]
+
+fetchBand' :: (?modelContext :: ModelContext) => Id Band -> IO BandWithMetadata
+fetchBand' id = sqlQuery bandsQuery (Only id) >>= \case
+  (band : _) -> pure band
+  _ -> error "no band found with ID"
+  where
+    bandsQuery =
+      [sql|
+        SELECT
+          bands.id, collection, name, updated_at, url, logo_url,
+          count(DISTINCT performances.id) as num_performances,
+          count(recordings.id) as num_recordings
+        FROM bands
+        LEFT JOIN performances ON bands.id = performances.band_id
+        LEFT JOIN recordings ON performances.id = recordings.performance_id
+        WHERE bands.id = ?
+        GROUP BY bands.id
+  |]
+
+
+instance FromRow MigrationItem where
+  fromRow = MigrationItem <$> fromRow <*> fromRow <*> fromRow
+
+fetchMigrationItems :: (?modelContext :: ModelContext) => [Identifier] -> IO [MigrationItem]
+fetchMigrationItems ids = do
+  recordings <- mapM
+    (\id -> query @Recording |> filterWhere (#identifier, id) |> fetchOne)
+    ids
+
+  perfs <- mapM
+    (fetchPerformance' . get #performanceId)
+    recordings
+
+  bands <- mapM
+    (fetchBand' . get #bandId . get #performance)
+    perfs
+
+  pure $ zip3 bands perfs recordings
+    |> map (\(a, b, c) -> MigrationItem a b c)
+

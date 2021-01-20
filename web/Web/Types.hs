@@ -9,10 +9,11 @@ data WebApplication = WebApplication deriving (Eq, Show)
 
 data AtticsController
   = BandsAction
-  | TopPerformancesAction { collection :: !(Collection) }
-  | ShowBandAction {collection :: !(Collection), year :: !(Year)}
-  | RecordingsAction {collection :: !(Collection), date :: !(Date)}
-  | ShowRecordingAction { identifier:: !(Identifier) }
+  | TopPerformancesAction { collection :: !Collection }
+  | ShowBandAction {collection :: !Collection, year :: !Year}
+  | RecordingsAction {collection :: !Collection, date :: !Date}
+  | ShowRecordingAction { identifier:: !Identifier }
+  | MigrationAction { identifiers :: ![Identifier] }
   deriving (Eq, Show, Data)
 
 data AppleController = AppSiteAssociationAction
@@ -22,6 +23,7 @@ type Collection = Text
 type Date = Text
 type Identifier = Text
 type Year = Text
+
 
 data PerformanceWithMetadata = PerformanceWithMetadata {
   performance :: Performance,
@@ -37,3 +39,6 @@ data BandWithMetadata = BandWithMetadata {
   numPerformances :: Int,
   numRecordings :: Int
 } deriving (Generic)
+
+data MigrationItem = MigrationItem BandWithMetadata PerformanceWithMetadata Recording
+  deriving (Generic)
