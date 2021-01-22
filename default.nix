@@ -8,16 +8,7 @@ let
 in
   import ./build.nix {
     ihp = ihp;
-    haskellDeps = p: with p; [
-        cabal-install
-        base
-        wai
-        text
-        hlint
-        p.ihp
-        hspec
-        raw-strings-qq
-    ];
+    haskellDeps = import ./web/haskellDeps.nix;
     otherDeps = p: with p; [
         # Native dependencies, e.g. imagemagick
     ];
