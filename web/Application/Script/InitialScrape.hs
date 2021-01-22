@@ -18,14 +18,19 @@ import Text.Read (readMaybe)
 run :: Script
 run = do
   bands <- query @Band |> fetch
-  mapM_ initialScrape bands
+  mapM_ initialScrape' bands
   where
+    initialScrape' band =
+      initialScrape band `catch` \(e :: IOException) ->
+        putStrLn $ "Unable to scrape " <> get #collection band <> ": " <> show e
+
     initialScrape band = do
-      currentPerformances <- query @Performance
-        |> filterWhere (#bandId, get #id band)
-        |> fetch
+      currentPerformances <-
+        query @Performance
+          |> filterWhere (#bandId, get #id band)
+          |> fetch
       case currentPerformances of
-        (_:_) -> putStrLn $ "Initial scrape has already ran for " <> get #name band <> ". Continuing..."
+        (_ : _) -> putStrLn $ "Initial scrape has already ran for " <> get #name band <> ". Continuing..."
         [] -> do
           (performances, recordings) <- scrapeCollection band
           dbPerformances <- performances |> createMany
@@ -79,7 +84,6 @@ buildDateMap =
   foldr
     (\src -> HM.insertWith (++) (get #date src) [src])
     HM.empty
-
 
 getSongRecords :: Recording -> IO [Song]
 getSongRecords recording = do
