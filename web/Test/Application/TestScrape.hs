@@ -15,9 +15,10 @@ import           Main ()
 import Application.Helper.Archive
 import Application.Helper.Scrape
 import Text.RawString.QQ
-import Data.Aeson (decode)
+import Data.Aeson
 
 import Control.Exception (evaluate)
+import Data.Either (isRight)
 
 spec :: Spec
 spec = do
@@ -27,11 +28,12 @@ spec = do
 
   where
     attemptParse text = do
-      let result = decode (cs text) :: Maybe ArchiveItem
-      result `shouldNotBe` Nothing
+      let result = eitherDecode (cs text) :: Either String ArchiveItem
+      result `shouldSatisfy` isRight
 
 testArchiveItems :: [ByteString]
 testArchiveItems = [
+  -- source :: Array
  [r|{
       "lineage": "Amadeus Pro > xACT > Flac",
       "date": "2010-08-27T00:00:00Z",
@@ -46,6 +48,7 @@ testArchiveItems = [
       ]
     }|],
 
+   -- source :: Text
     [r|{
       "lineage": "wav>pc>Soundforge(fades, edits)>waveditor",
       "date": "2010-08-21T00:00:00Z",
@@ -55,5 +58,16 @@ testArchiveItems = [
       "transferer": "Brian Hormann (Grout)",
       "downloads": 109,
       "source": "Schoeps CMC6\/Mk4 > Sound Devices 744T (24 bit@48KHZ)"
+    }|],
+
+   -- source :: Nothing
+    [r|{
+      "lineage": "wav>pc>Soundforge(fades, edits)>waveditor",
+      "date": "2010-08-21T00:00:00Z",
+      "coverage": "Tempe, AZ",
+      "identifier": "ymsb2010-08-21.jbillerb24",
+      "venue": "The Marquee Theatre",
+      "transferer": "Brian Hormann (Grout)",
+      "downloads": 109
     }|]
  ]

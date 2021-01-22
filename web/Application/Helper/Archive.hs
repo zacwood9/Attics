@@ -53,10 +53,10 @@ instance FromJSON ArchiveItem where
 
 parseSource :: Object -> Parser (Maybe Text)
 parseSource o = do
-  let source = o HM.! "source"
+  let source = o HM.!? "source"
   case source of
-    String single -> pure $ pure single
-    Array multiple -> pure $ multiple V.!? 0
+    Just (String single) -> pure $ pure single
+    Just (Array multiple) -> pure $ multiple V.!? 0
       |> \case
         Just (String first) -> pure first
         _ -> Nothing
