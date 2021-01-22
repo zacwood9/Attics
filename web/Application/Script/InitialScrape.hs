@@ -21,7 +21,7 @@ run = do
   mapM_ initialScrape' bands
   where
     initialScrape' band =
-      initialScrape band `catch` \(e :: IOException) ->
+      initialScrape band `catch` \(e :: SomeException) ->
         putStrLn $ "Unable to scrape " <> get #collection band <> ": " <> show e
 
     initialScrape band = do

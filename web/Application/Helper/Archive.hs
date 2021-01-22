@@ -19,6 +19,8 @@ import GHC.Generics
 import IHP.Prelude
 import Network.HTTP.Simple
 
+data Source = Single Text | Multi [Text]
+
 data ArchiveItem = ArchiveItem
   { identifier :: Text,
     date :: Text,
@@ -42,12 +44,23 @@ instance FromJSON ArchiveItem where
       <*> obj .:? "collection"
       <*> obj .:? "transferer"
       <*> obj .:? "downloads"
-      <*> obj .:? "source"
+      <*> parseSource obj
       <*> obj .:? "avg_rating"
       <*> obj .:? "num_reviews"
       <*> obj .:? "lineage"
       <*> obj .:? "coverage"
       <*> obj .:? "venue"
+
+parseSource :: Object -> Parser (Maybe Text)
+parseSource o = do
+  let source = o HM.! "source"
+  case source of
+    String single -> pure $ pure single
+    Array multiple -> pure $ multiple V.!? 0
+      |> \case
+        Just (String first) -> pure first
+        _ -> Nothing
+    _ -> pure Nothing
 
 data ScrapeResponse = ScrapeResponse
   { scrapeItems :: [ArchiveItem],
