@@ -22,21 +22,26 @@ spec :: Spec
 spec = do
   describe "ArchiveItem parser" $ do
     it "should parse all examples" $ do
-      mapM_ attemptParse testArchiveItems
+      mapM_
+        ( \text -> do
+            let result = eitherDecode (cs text) :: Either String ArchiveItem
+            result `shouldSatisfy` isRight
+          )
+        testArchiveItems
 
   describe "advancedSearch Parser" $ do
     it "should parse with review date" $ do
       let result = eitherDecode (cs reviewWithReviewDate) :: Either String AdvancedSearchResult
       result `shouldSatisfy` \case
         Left _ -> False
-        Right (ReviewDateResponse (_:_)) -> True
+        Right (ReviewDateResponse (_ : _)) -> True
         Right _ -> False
 
     it "should parse with public date" $ do
       let result = eitherDecode (cs reviewWithPublicDate) :: Either String AdvancedSearchResult
       result `shouldSatisfy` \case
         Left _ -> False
-        Right (PublicDateResponse (_:_)) -> True
+        Right (PublicDateResponse (_ : _)) -> True
         Right _ -> False
 
     it "should parse without review date" $ do
@@ -45,19 +50,6 @@ spec = do
         Left _ -> False
         Right (ReviewDateResponse []) -> True
         Right _ -> False
-
-  where
-    attemptParse text = do
-      let result = eitherDecode (cs text) :: Either String ArchiveItem
-      result `shouldSatisfy` isRight
-
-
-
-
-
-
-
-
 
 -- Test data -------
 
@@ -101,7 +93,8 @@ testArchiveItems =
   ]
 
 reviewWithReviewDate :: Text
-reviewWithReviewDate = [r|{
+reviewWithReviewDate =
+  [r|{
   "responseHeader": {
     "status": 0,
     "QTime": 11,
@@ -136,7 +129,8 @@ reviewWithReviewDate = [r|{
 }|]
 
 reviewWithoutDate :: Text
-reviewWithoutDate = [r|{
+reviewWithoutDate =
+  [r|{
   "responseHeader": {
     "status": 0,
     "QTime": 11,
@@ -168,6 +162,7 @@ reviewWithoutDate = [r|{
     ]
   }
 }|]
+
 reviewWithPublicDate :: Text
 reviewWithPublicDate =
   [r|{

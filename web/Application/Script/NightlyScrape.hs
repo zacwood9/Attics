@@ -20,9 +20,13 @@ run = do
 
 runBand :: Band -> Script
 runBand band = do
-  addNewRecordings band
-  updateRecentlyReviewedRecordings band
-  addUpdate band
+  result <- try $ do
+    addNewRecordings band
+    updateRecentlyReviewedRecordings band
+    addUpdate band
+  case result of
+    Left (e :: SomeException) -> putStrLn $ "failed to update " <> get #collection band <> ": " <> show e
+    Right _ -> pure ()
 
 addNewRecordings :: Band -> Script
 addNewRecordings band@Band {collection = c} = do
