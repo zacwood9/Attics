@@ -3,6 +3,7 @@ module Application.Helper.Archive
     ArchiveFile (..),
     ArchiveSong (..),
     AdvancedSearchSort (..),
+    AdvancedSearchResult(..),
     ItemFiles(..),
     getItemFiles,
     scrape,
@@ -18,6 +19,8 @@ import qualified Data.Vector as V
 import GHC.Generics
 import IHP.Prelude
 import Network.HTTP.Simple
+import System.IO.Unsafe
+import Control.Exception
 
 data Source = Single Text | Multi [Text]
 
@@ -193,7 +196,7 @@ data AdvancedSearchSort
 data AdvancedSearchResult
   = PublicDateResponse [(ArchiveItem, UTCTime)]
   | ReviewDateResponse [(ArchiveItem, UTCTime)]
-  deriving (Generic)
+  deriving (Generic, Show)
 
 instance FromJSON AdvancedSearchResult where
   parseJSON = withObject "AdvancedSearchResponse" $ \obj -> do
@@ -201,7 +204,6 @@ instance FromJSON AdvancedSearchResult where
     (Object params) <- header .: "params"
     (String sort) <- params .: "sort"
     let sortedField = head $ T.words sort
-
     case sortedField of
       Just "publicdate" -> PublicDateResponse <$> parsePairs obj "publicdate"
       Just "reviewdate" -> ReviewDateResponse <$> parsePairs obj "reviewdate"
@@ -211,8 +213,10 @@ instance FromJSON AdvancedSearchResult where
         (Object response) <- obj .: "response"
         let items@(Array arr) = response HM.! "docs"
         srcs <- parseJSON items
-        times <- mapM (\(Object a) -> a .: sortedField) arr
-        pure $ zip srcs (V.toList times)
+        times <- catMaybes . V.toList <$> mapM (\(Object a) -> a .:? sortedField) arr
+        if length times /= length arr
+          then pure []
+          else pure $ zip srcs times
 
 data ItemFiles = ItemFiles
   { mp3s :: [ArchiveSong],

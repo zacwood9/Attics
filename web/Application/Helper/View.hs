@@ -13,7 +13,7 @@ where
 import Data.Aeson
 import Generated.Types
 import IHP.ViewPrelude
-import Web.Types
+import Application.Types
 
 instance ToJSON Band where
   toJSON Band {..} =

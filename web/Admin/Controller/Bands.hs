@@ -14,7 +14,7 @@ instance Controller BandsController where
         basicAuth "zac" (fromMaybe "zac" (pass <&> cs)) ""
 
     action BandsAction = do
-        bands <- query @Band |> fetch
+        bands <- fetchBands
         render IndexView { .. }
 
     action NewBandAction = do

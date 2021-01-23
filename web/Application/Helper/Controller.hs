@@ -18,7 +18,7 @@ where
 -- To use the built in login:
 -- import IHP.LoginSupport.Helper.Controller
 
-import qualified Data.HashMap.Strict as HM
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Text as Text
 import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.SqlQQ
@@ -26,7 +26,7 @@ import Generated.Types
 import IHP.ControllerPrelude
 import Network.HTTP.Types.Status
 import Network.Wai
-import Web.Types
+import Application.Types
 
 badRequest :: IO ()
 badRequest = respondAndExit $ responseLBS status403 [] "bad request"
@@ -43,15 +43,15 @@ fetchTopPerformances collection n = do
     group =
       foldr
         ( \p@PerformanceWithMetadata {performance = Performance {date}} ->
-            HM.insertWith (++) (Text.take 4 date) [p]
+            HashMap.insertWith (++) (Text.take 4 date) [p]
         )
-        HM.empty
+        HashMap.empty
 
     takeN hm n =
       hm
-        |> HM.toList
+        |> HashMap.toList
         |> map (\(y, shows) -> (y, shows |> sortByStars |> take n))
-        |> HM.fromList
+        |> HashMap.fromList
 
     sortByStars = sortBy (\a b -> stars b `compare` stars a)
     stars PerformanceWithMetadata {..} = avgRating * fromIntegral numReviews

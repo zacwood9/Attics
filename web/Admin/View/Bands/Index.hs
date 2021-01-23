@@ -1,10 +1,12 @@
 module Admin.View.Bands.Index where
+
 import Admin.View.Prelude
 
-data IndexView = IndexView { bands :: [Band] }
+data IndexView = IndexView {bands :: [BandWithMetadata]}
 
 instance View IndexView where
-    html IndexView { .. } = [hsx|
+  html IndexView {..} =
+    [hsx|
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active"><a href={BandsAction}>Bands</a></li>
@@ -26,13 +28,15 @@ instance View IndexView where
         </div>
     |]
 
-
-
-renderBand band = [hsx|
+renderBand band =
+  let band' = get #band band
+   in [hsx|
     <tr>
-        <td>{collection band}</td>
-        <td><a href={ShowBandAction (get #id band)}>Show</a></td>
-        <td><a href={EditBandAction (get #id band)} class="text-muted">Edit</a></td>
-        <td><a href={DeleteBandAction (get #id band)} class="js-delete text-muted">Delete</a></td>
+        <td>
+            {get #name band'} ({get #numPerformances band} performances)
+        </td>
+        <td><a href={ShowBandAction (get #id band')}>Show</a></td>
+        <td><a href={EditBandAction (get #id band')} class="text-muted">Edit</a></td>
+        <td><a href={DeleteBandAction (get #id band')} class="js-delete text-muted">Delete</a></td>
     </tr>
 |]
