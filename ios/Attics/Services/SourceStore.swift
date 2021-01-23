@@ -74,6 +74,8 @@ struct FileSystemSourceStore: SourceStore {
 }
 
 class AppStorageManager {
+    public static var shared = AppStorageManager()
+    
     /// All recordings persisted on system.
     private lazy var _recordings: CurrentValueSubject<[StoredRecording], Never> = {
         let folder = Folder.applicationSupport
@@ -96,18 +98,18 @@ class AppStorageManager {
     }()
     
     private lazy var _band: CurrentValueSubject<Band, Never> = {
-        let folder = Folder.applicationSupport
-        if let file = try? folder.file(named: "band.json"),
-           let data = try? file.read(),
-           let value = try? JSONDecoder().decode(Band.self, from: data) {
-            return CurrentValueSubject(value)
-        }
-        return CurrentValueSubject(Band(collection: "GratefulDead", name: "Grateful Dead", logoUrl: ""))
+        let band: Band = readFromFile("band.json", defaultValue: Band(collection: "GratefulDead", name: "Grateful Dead", logoUrl: ""))
+        return CurrentValueSubject(band)
+    }()
+    
+    private lazy var _bands: CurrentValueSubject<[BandWithMetadata], Never> = {
+        let bands: [BandWithMetadata] = readFromFile("bands.json", defaultValue: [])
+        return CurrentValueSubject(bands)
     }()
     
     var downloadManagers = [String : (DownloadManager_, AnyCancellable)]()
     
-    init() {
+    private init() {
         let f = Folder.applicationSupport
         try! f.createSubfolderIfNeeded(withName: "Downloads")
     }
@@ -119,6 +121,15 @@ class AppStorageManager {
     
     var bandPublisher: AnyPublisher<Band, Never> {
         _band.eraseToAnyPublisher()
+    }
+    
+    var bands: [BandWithMetadata] {
+        get { _bands.value }
+        set { _bands.value = newValue }
+    }
+    
+    var bandsPublisher: AnyPublisher<[BandWithMetadata], Never> {
+        _bands.eraseToAnyPublisher()
     }
     
     var recordings: [StoredRecording] {
@@ -228,7 +239,11 @@ class AppStorageManager {
         
         if let base = try? Folder.applicationSupport.subfolder(named: "Downloads"),
            let recordingFolder = try? base.createSubfolderIfNeeded(withName: stored.recording.identifier) {
-            recordingFolder.files.forEach { try! $0.delete() }
+            do {
+                try recordingFolder.delete()
+            } catch {
+                print("failed to delete download folder")
+            }
         }
     }
     
@@ -254,7 +269,12 @@ class AppStorageManager {
     
     @discardableResult
     func addRecording(band: Band, performance: Show, recording: Source, songs: [Song]) -> StoredRecording {
-        if let stored = getStoredRecording(for: recording) { return stored }
+        if let stored = getStoredRecording(for: recording) {
+            var copy = stored
+            copy.songs = songs
+            updateStoredRecording(copy)
+            return copy
+        }
         let newEntry = StoredRecording(
             band: band,
             performance: performance,
@@ -277,6 +297,13 @@ class AppStorageManager {
         return _recordings.value.first(where: { $0.id == recording.id })
     }
     
+    func addStoredRecording(_ stored: StoredRecording) {
+        guard getStoredRecording(for: stored.recording) == nil else { return }
+        var copy = _recordings.value
+        copy.append(stored)
+        _recordings.value = copy
+    }
+    
     func updateStoredRecording(_ recording: StoredRecording) {
         guard let index = _recordings.value.firstIndex(where: { $0.id == recording.id }) else { fatalError("updating record not found" )}
         // updating the index directly doesn't always trigger a change, so copy and reassign
@@ -287,22 +314,12 @@ class AppStorageManager {
     }
     
     func saveToDisk() {
-        let folder = Folder.applicationSupport
         let recordingsToSave = _recordings.value.filter { $0.favorite || $0.downloadState == .downloaded }
-        if let data = try? JSONEncoder().encode(recordingsToSave) {
-            let file = try! folder.createFileIfNeeded(withName: "storage.json")
-            try! file.write(data)
-        } else {
-            print("unable to save recordings to disk")
-        }
-        
-        if let data = try? JSONEncoder().encode(_band.value) {
-            let file = try! folder.createFileIfNeeded(withName: "band.json")
-            try! file.write(data)
-        } else {
-            print("unable to save band to disk")
-        }
-        
+        saveToFile("storage.json", value: recordingsToSave)
+        saveToFile("band.json", value: _band.value)
+        saveToFile("bands.json", value: _bands.value)
+        saveToFile("browseState.json", value: browseState)
+        saveToFile("musicPlayer.json", value: MusicPlayer.shared.state)
         print("saved to disk")
     }
     
@@ -330,6 +347,7 @@ class AppStorageManager {
            let tempFile = try? File(path: url.path) {
             try! tempFile.move(to: recordingFolder)
             try? tempFile.rename(to: song.fileName, keepExtension: false)
+            tempFile.excludeFromBackup()
         }
     }
     
@@ -339,10 +357,55 @@ class AppStorageManager {
            let tempFile = try? File(path: url.path) {
             try! tempFile.move(to: recordingFolder)
             try? tempFile.rename(to: song.fileName, keepExtension: false)
-            print("moved to cache")
+            tempFile.excludeFromBackup()
         }
     }
     
+    lazy var browseState: RestoreState = {
+        return readFromFile("browseState.json", defaultValue: .band(band))
+    }()
+    
+    lazy var myShowsState: RestoreState = {
+        return readFromFile("myShowsState.json", defaultValue: .band(band))
+    }()
+    
+    lazy var musicPlayerState: MusicPlayer.State? = {
+        return readFromFile("musicPlayer.json", defaultValue: nil)
+    }()
+}
+
+func readFromFile<T: Decodable>(_ name: String, defaultValue: T) -> T {
+    let folder = Folder.applicationSupport
+    if let file = try? folder.createFileIfNeeded(withName: name),
+       let data = try? file.read() {
+        do {
+            let value = try JSONDecoder().decode(T.self, from: data)
+            return value
+        }
+        catch {
+            print(error)
+            return defaultValue
+        }
+        
+    }
+    
+    print("default value read")
+    return defaultValue
+}
+
+func saveToFile<T: Encodable>(_ name: String, value: T) {
+    let folder = Folder.applicationSupport
+    if let data = try? JSONEncoder().encode(value) {        
+        do {
+            let file = try folder.createFileIfNeeded(withName: name)
+            file.excludeFromBackup()
+            try file.write(data)
+        } catch {
+            print("unable to save file: \(name)")
+        }
+    } else {
+        print("unable to save file, encoding error: \(name)")
+    }
 }
 
 

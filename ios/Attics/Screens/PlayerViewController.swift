@@ -49,6 +49,7 @@ class PlayerViewController : UIViewController {
         songList.view.translatesAutoresizingMaskIntoConstraints = false
         controls.view.translatesAutoresizingMaskIntoConstraints = false
         
+        scrollView.bounces = true
         view.addSubview(scrollView)
         
         let imageView = UIImageView(image: UIImage(systemName: "square.and.arrow.up"))
@@ -69,7 +70,7 @@ class PlayerViewController : UIViewController {
         add(controls)
                 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 24),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: controls.view.topAnchor),

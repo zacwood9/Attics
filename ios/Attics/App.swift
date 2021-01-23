@@ -24,9 +24,6 @@ final class App: NSObject {
     lazy var settingsNavigator = SettingsNavigator(storage: storage)
     let api = APIClient()
     
-    let favoritesStore = FileSystemSourceStore(named: "favorites.json")
-    let downloadsStore = FileSystemSourceStore(named: "downloads.json")
-    
     let monitor = NWPathMonitor()
     
     var downloadManagers: [Source : DownloadManager_] = [:]
@@ -35,9 +32,9 @@ final class App: NSObject {
     var tabState = UserDefaultStore<Int>(withKey: "tabIndex", defaultValue: 0)
     
     /// Is the app being launched for the first time? Key changes with each update
-    var firstLaunch = UserDefaultStore<Bool>(withKey: "v1.4update", defaultValue: true)
+    var firstLaunch = UserDefaultStore<Bool>(withKey: "v1.5update", defaultValue: true)
     
-    lazy var musicPlayer = MusicPlayer(storage: storage)
+    lazy var musicPlayer = MusicPlayer.shared
     
     private override init() {
         super.init()
@@ -55,7 +52,7 @@ final class App: NSObject {
         monitor.currentPath.status
     }
     
-    let storage = AppStorageManager()
+    let storage = AppStorageManager.shared
     
     // MARK: - Configuration
     
@@ -73,8 +70,7 @@ final class App: NSObject {
         
         self.tabBarController = ATSTabBarController()
         self.tabBarController.shouldPresentUpdate = { [unowned self] in
-//            self.firstLaunch.item!
-            true
+            self.firstLaunch.item!
         }
         self.tabBarController.didPresentUpdate = { [unowned self] in
             self.firstLaunch.item = false

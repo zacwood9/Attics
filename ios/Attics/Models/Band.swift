@@ -15,6 +15,7 @@ struct Band: Codable {
 }
 
 struct BandWithMetadata: Codable {
+    let id: String
     let collection: String
     let name: String
     let logoUrl: String

@@ -100,6 +100,14 @@ struct SettingsView: View {
         }.contentShape(Rectangle())
         .onTapGesture { openUpdate() }
         Divider()
+        
+        HStack {
+            Text("Live Music Archive streaming policy")
+                .padding(.leading)
+            Spacer()
+        }.contentShape(Rectangle())
+        .onTapGesture { openSafari("https://help.archive.org/hc/en-us/articles/360016553532-Live-Music-Archive-etree-org-#about-lma") }
+        Divider()
             .padding(.bottom)
     }
     

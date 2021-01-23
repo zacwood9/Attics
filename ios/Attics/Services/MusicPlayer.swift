@@ -25,6 +25,7 @@ class MusicPlayer : ObservableObject {
         case seek(Double)
         case pause
         case resume
+        case restore(State)
     }
     
     struct State: Codable {
@@ -57,7 +58,7 @@ class MusicPlayer : ObservableObject {
         }
         
         fileprivate mutating func seek(to time: Double) {
-            
+            self.time = time
         }
         
         fileprivate mutating func pause() {
@@ -98,8 +99,15 @@ class MusicPlayer : ObservableObject {
             
         case .pause:
             guard state != nil else { fatalError(".pause action called without state") }
-            state!.pause()
+            state!.playing = false
             player.pause()
+            
+        case .restore(let s):
+            guard state == nil else { return }
+            state = s
+            startPlayer()
+            player.pause()
+            player.seek(to: CMTime(seconds: s.time, preferredTimescale: 100))
         }
     }
     
@@ -115,10 +123,12 @@ class MusicPlayer : ObservableObject {
     
     @Published var percentFinished: Double = 0
     
-    init(storage: AppStorageManager) {
+    private init(storage: AppStorageManager) {
         self.storage = storage
         setupRemoteControls()
     }
+    
+    static var shared = MusicPlayer(storage: AppStorageManager.shared)
     
     private var songEndedObserver: AnyCancellable?
     private var interruptionObserver: AnyCancellable?
@@ -253,6 +263,11 @@ class MusicPlayer : ObservableObject {
             return try encoder.encode(state)
         }
         return nil
+    }
+    
+    func restoreState() {
+        guard let state = state else { return }
+        
     }
     
     private func setupRemoteControls() {

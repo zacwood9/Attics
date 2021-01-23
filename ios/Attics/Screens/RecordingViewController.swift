@@ -128,8 +128,8 @@ class RecordingViewModel: ObservableObject {
     @Published var state: ViewState = .loading
     @Published var downloadState: DownloadState
     var warningState: WarningState = .notWarned
-    @Published var warningModelOpen = false
-    @Published var cancelDownloadModalOpen: Bool = false
+    @Published var modalOpen = false
+    var isWarningModal = false
     
     var songs: [Song] {
         switch state {
@@ -186,7 +186,7 @@ class RecordingViewModel: ObservableObject {
     }
     
     func load() {
-        if let stored = storage.getStoredRecording(for: recording) {
+        if let stored = storage.getStoredRecording(for: recording), !stored.songs.isEmpty {
             state = .success(stored.songs)
             print("LOG got songs from cache")
         } else {
@@ -206,13 +206,15 @@ class RecordingViewModel: ObservableObject {
     
     func favoriteClick() {
         storage.addFavorite(band: band, performance: performance, recording: recording)
+        UIDevice.vibrate()
     }
     
     func downloadClick() {
         switch warningState {
         case .notWarned:
             if monitor.currentPath.isExpensive {
-                warningModelOpen = true
+                modalOpen = true
+                isWarningModal = true
             } else {
                 warningState = .warned
                 downloadClick()
@@ -220,7 +222,9 @@ class RecordingViewModel: ObservableObject {
         default:
             switch downloadState {
             case .downloading: cancelDownload()
-            case .downloaded: cancelDownloadModalOpen = true
+            case .downloaded:
+                modalOpen = true
+                isWarningModal = false
             case .notDownloaded: startDownload()
             }
         }
@@ -229,19 +233,23 @@ class RecordingViewModel: ObservableObject {
     
     private func cancelDownload() {
         storage.cancelDownload(for: recording)
+        UIDevice.vibrate()
     }
     
     func removeDownload() {
         storage.removeDownload(for: recording)
+        UIDevice.vibrate()
     }
     
     private func startDownload() {
         storage.startDownload(recording: recording)
+        UIDevice.vibrate()
     }
     
     func songTapped(_ song: Song) {
         guard let stored = storage.getStoredRecording(for: recording) else { fatalError() }
         _songTapped(stored, song)
+        UIDevice.vibrate(style: .select)
     }
     
     deinit {
@@ -279,21 +287,22 @@ struct RecordingView : View {
                 Spacer()
             }
         }
-        .actionSheet(isPresented: $viewModel.cancelDownloadModalOpen) {
-            let nvm = ActionSheet.Button.cancel(Text("Never mind!")) { viewModel.cancelDownloadModalOpen = false }
-            let remove = ActionSheet.Button.destructive(Text("Yes, remove download")) { viewModel.removeDownload() }
-            return ActionSheet(title: Text("Remove download?"), message: nil, buttons: [remove, nvm])
-        }
-        .actionSheet(isPresented: $viewModel.warningModelOpen) {
-            let nvm = ActionSheet.Button.cancel(Text("Never mind!")) {
-                viewModel.warningModelOpen = false
+        .actionSheet(isPresented: $viewModel.modalOpen) {
+            if viewModel.isWarningModal {
+                let nvm = ActionSheet.Button.cancel(Text("Never mind!")) {
+                    viewModel.modalOpen = false
+                }
+                let remove = ActionSheet.Button.default(Text("Yes, download")) {
+                    viewModel.warningState = .warned
+                    viewModel.removeDownload()
+                    viewModel.downloadClick()
+                }
+                return ActionSheet(title: Text("Downloading shows can use a lot of data. It is recommended you first connect to WiFi. Are you sure you would like to download over cellular?"), message: nil, buttons: [remove, nvm])
+            } else {
+                let nvm = ActionSheet.Button.cancel(Text("Never mind!")) { viewModel.modalOpen = false }
+                let remove = ActionSheet.Button.destructive(Text("Yes, remove download")) { viewModel.removeDownload() }
+                return ActionSheet(title: Text("Remove download?"), message: nil, buttons: [remove, nvm])
             }
-            let remove = ActionSheet.Button.default(Text("Yes, download")) {
-                viewModel.warningState = .warned
-                viewModel.removeDownload()
-                viewModel.downloadClick()
-            }
-            return ActionSheet(title: Text("Downloading shows can use a lot of data. It is recommended you first connect to WiFi. Are you sure you would like to download over cellular?"), message: nil, buttons: [remove, nvm])
         }
     }
 }

@@ -63,7 +63,7 @@ struct APIResource {
 
 struct APIClient {
     let urlSession: URLSession = .shared
-    let baseUrl = APIResource(base: "http://c4fed52716ab.ngrok.io/")
+    let baseUrl = APIResource(base: "https://attics.io/")
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
         let url = baseUrl.appendingPath("Bands")
@@ -75,6 +75,13 @@ struct APIClient {
             .appendingPath("TopPerformances")
             .appendingQuery(key: "collection", value: band.collection)
             .appendingQuery(key: "numPerformances", value: "5")
+        return get(url: url.toURL())
+    }
+    
+    func getMigrationItems(_ identifiers: [String]) -> AnyPublisher<[MigrationItem], APIError> {
+        let url = baseUrl
+            .appendingPath("Migration")
+            .appendingQuery(key: "identifiers", value: identifiers.joined(separator: ","))
         return get(url: url.toURL())
     }
     
@@ -116,6 +123,12 @@ struct APIClient {
             }
             .eraseToAnyPublisher()
     }
+}
+
+struct MigrationItem : Decodable {
+    let band: BandWithMetadata
+    let performance: Show
+    let recording: Source
 }
 
 extension JSONDecoder {

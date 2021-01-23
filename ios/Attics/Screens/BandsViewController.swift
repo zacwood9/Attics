@@ -11,10 +11,38 @@ import SwiftUI
 import Combine
 import Network
 
-class BandsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    let viewModel: BandsViewModel
+struct BandsView : View {
+    @ObservedObject var viewModel: BandsViewModel
+    var searchString: String = ""
     
+    var body: some View {
+        ScrollView {
+            switch viewModel.bands {
+            case .success(let bands):
+                let displayedBands = searchString.isEmpty
+                    ? bands
+                    : bands.filter { $0.name.lowercased().contains(searchString) }
+                
+                VStack(spacing: 12) {
+                    ForEach(displayedBands, id: \.collection) { band in
+                        BandView(band: band, onClick: viewModel.onBandClick)
+                            .padding([.leading, .trailing], 12)
+                    }
+                }.background(Color(.systemBackground)).padding(.top, 12)
+            default: LoadingComponent(retry: nil).onAppear(perform: viewModel.load)
+            }
+        }
+    }
+}
+
+class BandsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchResultsUpdating {
+    let viewModel: BandsViewModel
     var bandsSubscriber: AnyCancellable?
+    
+    @Published var searchText: String = ""
+    
+    private lazy var scrollView = UIScrollView()
+    private lazy var hostingController = UIHostingController<BandsView>(rootView: BandsView(viewModel: viewModel))
     
     init(viewModel: BandsViewModel) {
         self.viewModel = viewModel
@@ -26,76 +54,34 @@ class BandsViewController: UICollectionViewController, UICollectionViewDelegateF
     }
     
     override func viewDidLoad() {
-        BandCollectionViewCell.register(with: collectionView)
-        
-        bandsSubscriber = viewModel.$bands.receive(on: DispatchQueue.main).sink(receiveValue: { _ in
-            print("reloading")
-            self.collectionView.reloadData()
-        })
-        
-        viewModel.load()
-        
         navigationItem.title = "Bands"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        configureViews()
+        configureSearch()
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch viewModel.bands {
-        case .success(let bands):
-            return bands.count
-        default:
-            return 1
-        }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = BandCollectionViewCell.getReusedCellFrom(collectionView, cellForItemAt: indexPath)
-        switch viewModel.bands {
-        case .success(let bands):
-            let band = bands[indexPath.item]
-            cell.hostingController.rootView = AnyView(BandView(band: band, onClick: viewModel.onBandClick))
-        case .loading:
-            cell.hostingController.rootView = AnyView(LoadingComponent(retry: nil))
-        case .error(let error):
-            cell.hostingController.rootView = AnyView(Text(error.localizedDescription))
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width - 32, height: 150)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
-    }
-}
-
-class BandCollectionViewCell : UICollectionViewCell {
-    private static let reuseId = "BandCVCell"
-    
-    static func register(with collectionView: UICollectionView) {
-        collectionView.register(BandCollectionViewCell.self, forCellWithReuseIdentifier: reuseId)
-    }
-    
-    static func getReusedCellFrom(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> BandCollectionViewCell {
-        return collectionView.dequeueReusableCell(withReuseIdentifier: reuseId, for: indexPath) as! BandCollectionViewCell
-    }
-    
-    var hostingController: UIHostingController<AnyView> = UIHostingController(rootView: AnyView(EmptyView()))
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.addSubview(self.hostingController.view)
-        
+    private func configureViews() {
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        add(hostingController)
         
-        hostingController.view.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        hostingController.view.leftAnchor.constraint(equalTo: contentView.leftAnchor).isActive = true
-        hostingController.view.rightAnchor.constraint(equalTo: contentView.rightAnchor).isActive = true
-        hostingController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init?(coder: NSCoder) has not been implemented")
+    private func configureSearch() {
+        let searchController = UISearchController()
+        searchController.searchBar.barTintColor = .white
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+        hostingController.rootView = BandsView(viewModel: viewModel, searchString: text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
     }
 }

@@ -20,8 +20,6 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     let storage: AppStorageManager
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     lazy var musicPlayer = App.shared.musicPlayer
-    var isStartingUp = true
-    var restoreDepth = 0
     
     // Delegate downloads to parent since all navigators need to be in sync
     var startDownload: (Source, [Song]) -> () = { _,_ in }
@@ -38,11 +36,11 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     init(rootViewController: UIViewController, storage: AppStorageManager, networkStatus: @escaping () -> NWPath.Status) {
         self.storage = storage
         self.networkStatus = networkStatus
-        
         navigationController = UINavigationController(rootViewController: rootViewController)
         super.init()
         
         configureNavigationController()
+        restoreMusicPlayer()
     }
     
     // MARK: - Views
@@ -124,10 +122,46 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
         }
         navigationController.tabBarController?.presentPopupBar(withContentViewController: nowPlayingVC, animated: true, completion: nil)
     }
+    func restoreMusicPlayer() {
+        guard var state = storage.musicPlayerState, musicPlayer.state == nil else { return }
+        state.playing = false
+                
+        let vm = RecordingViewModel(
+            band: state.playlist.band,
+            performance: state.playlist.show,
+            recording: state.playlist.source,
+            api: apiClient,
+            storage: storage,
+            songTapped: { [weak self] _,song in self?.musicPlayer.dispatch(action: .play(song, state.playlist)) }
+        )
+        nowPlayingVC = PlayerViewController(viewModel: vm, musicPlayer: musicPlayer)
+        
+        nowPlayingVC.popupInteractionStyle = .scroll
+        nowPlayingVC.popupItem.title = state.song.title
+        nowPlayingVC.popupItem.subtitle = state.song.album
+        nowPlayingVC.popupItem.trailingBarButtonItems = [pauseBtn, nextTrackBtn]
+        
+        musicPlayerStateCancellable = musicPlayer.$state.sink { [weak self] state in
+            guard let self = self, let state = state else { return }
+            
+            if self.nowPlayingVC.popupItem.title != state.song.title {
+                self.nowPlayingVC.popupItem.title = state.song.title
+            }
+            
+            self.nowPlayingVC.popupItem.trailingBarButtonItems = [state.playing ? self.pauseBtn : self.playBtn, self.nextTrackBtn]
+        }
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.navigationController.tabBarController?.presentPopupBar(withContentViewController: self.nowPlayingVC, animated: true, completion: nil)
+            self.musicPlayer.dispatch(action: .restore(state))
+        }
+    }
     
     func presentBandsController() {
         let vm = BandsViewModel(
             apiClient: apiClient,
+            storage: storage,
             onBandClick: { band in
                 self.storage.band = Band(collection: band.collection, name: band.name, logoUrl: band.logoUrl)
                 self.navigationController.viewControllers.last?.dismiss(animated: true, completion: nil)

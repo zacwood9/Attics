@@ -12,16 +12,22 @@ import SwiftUI
 class BandsViewModel : ObservableObject {
     @Published var bands: APIResult<[BandWithMetadata]> = .loading
     var onBandClick: (BandWithMetadata) -> ()
+    var storage: AppStorageManager
     
     private let apiClient: APIClient
     private var request: AnyCancellable?
     
-    init(apiClient: APIClient, onBandClick: @escaping (BandWithMetadata) -> ()) {
+    init(apiClient: APIClient, storage: AppStorageManager, onBandClick: @escaping (BandWithMetadata) -> ()) {
         self.apiClient = apiClient
+        self.storage = storage
         self.onBandClick = onBandClick
     }
     
     func load() {
+        let stored = storage.bands
+        if !stored.isEmpty {
+            bands = .success(stored)
+        }
         request = apiClient.getBands()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -33,6 +39,9 @@ class BandsViewModel : ObservableObject {
                 }
             }, receiveValue: { bands in
                 self.bands = .success(bands.sorted(by: { $0.name < $1.name }))
+                self.storage.bands = bands
+                
+                self.objectWillChange.send()
             })
     }
 }
@@ -49,10 +58,10 @@ struct RemoteImage: View {
     @State var cancellable: AnyCancellable?
     
     func load() {
-        
         if let image = try? loadFromFile() {
             state = .loaded(image)
         } else {
+            print("loading from url")
             cancellable = URLSession.shared.dataTaskPublisher(for: url)
                 .map(\.data)
                 .map(UIImage.init)
@@ -71,14 +80,15 @@ struct RemoteImage: View {
     
     func loadFromFile() throws -> UIImage? {
         let folder = try Folder.applicationSupport.createSubfolderIfNeeded(withName: "Images")
-        let file = try folder.file(named: name + ".png")
+        let file = try folder.file(named: name + ".jpeg")
         return UIImage(data: try file.read())
     }
     
     func writeFile(image: UIImage) throws {
         let folder = try Folder.applicationSupport.createSubfolderIfNeeded(withName: "Images")
-        let file = try folder.createFileIfNeeded(at: name + ".png")
-        try file.write(image.pngData()!)
+        let file = try folder.createFileIfNeeded(at: name + ".jpeg")
+        
+        try file.write(image.jpegData(compressionQuality: 0.10)!)
     }
     
     var body: some View {
@@ -95,6 +105,7 @@ struct RemoteImage: View {
 }
 
 struct BandView: View {
+    
     let band: BandWithMetadata
     let onClick: (BandWithMetadata) -> ()
     
@@ -102,7 +113,7 @@ struct BandView: View {
         VStack(alignment: .center, spacing: 16) {
             Spacer()
             HStack {
-                RemoteImage(name: band.collection, url: URL(string: band.logoUrl)!)
+                RemoteImage(name: URL(string: band.logoUrl)!.lastPathComponent, url: URL(string: band.logoUrl)!)
                     .frame(width: 80, height: 80, alignment: .center)
                     .cornerRadius(50)
                 VStack {
@@ -129,6 +140,7 @@ struct BandView: View {
         .contentShape(Rectangle())
         .onTapGesture { onClick(band) }
     }
+    
 }
 
 //struct BandsView_Previews: PreviewProvider {
