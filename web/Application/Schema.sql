@@ -37,6 +37,6 @@ CREATE TABLE songs (
     album TEXT NOT NULL,
     recording_id UUID NOT NULL
 );
-ALTER TABLE performances ADD CONSTRAINT performances_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE NO ACTION;
-ALTER TABLE recordings ADD CONSTRAINT recordings_ref_performance_id FOREIGN KEY (performance_id) REFERENCES performances (id) ON DELETE NO ACTION;
-ALTER TABLE songs ADD CONSTRAINT songs_ref_recording_id FOREIGN KEY (recording_id) REFERENCES recordings (id) ON DELETE NO ACTION;
+ALTER TABLE performances ADD CONSTRAINT performances_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
+ALTER TABLE recordings ADD CONSTRAINT recordings_ref_performance_id FOREIGN KEY (performance_id) REFERENCES performances (id) ON DELETE CASCADE;
+ALTER TABLE songs ADD CONSTRAINT songs_ref_recording_id FOREIGN KEY (recording_id) REFERENCES recordings (id) ON DELETE CASCADE;

@@ -1,16 +1,19 @@
-module Config (config) where
+module Config (AdminPassword(..), config) where
 
-import IHP.Prelude
-import IHP.Environment
-import IHP.FrameworkConfig
-import System.Environment
+import           Data.Functor        ((<&>))
+import           IHP.Environment
+import           IHP.FrameworkConfig
+import           IHP.Prelude
+import           System.Environment
+
+newtype AdminPassword = AdminPassword Text
 
 config :: ConfigBuilder
 config = do
     result <- liftIO $ lookupEnv "ATTICS_ENVIRONMENT"
     case result of
         Just "production" -> prod
-        _ -> dev
+        _                 -> dev
 
 dev :: ConfigBuilder
 dev = do

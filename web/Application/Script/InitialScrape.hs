@@ -2,18 +2,18 @@
 
 module Application.Script.InitialScrape where
 
-import Application.Helper.Archive
-import Application.Helper.Scrape
-import Application.Script.Prelude
-import Control.Exception (SomeException (..), try)
-import Control.Monad (void)
-import qualified Control.Monad.Trans.State as State (get)
-import qualified Data.HashMap.Strict as HM
-import qualified Data.List as L
-import qualified Data.Text as T (pack, splitOn, strip, takeWhile, unpack)
-import GHC.Generics (Generic)
-import Network.HTTP.Simple
-import Text.Read (readMaybe)
+import           Application.Helper.Archive
+import           Application.Helper.Scrape
+import           Application.Script.Prelude
+import           Control.Exception          (SomeException (..), try)
+import           Control.Monad              (void)
+import qualified Control.Monad.Trans.State  as State (get)
+import qualified Data.HashMap.Strict        as HM
+import qualified Data.List                  as L
+import qualified Data.Text                  as T (pack, splitOn, strip, takeWhile, unpack)
+import           GHC.Generics               (Generic)
+import           Network.HTTP.Simple
+import           Text.Read                  (readMaybe)
 
 run :: Script
 run = do
@@ -45,7 +45,7 @@ run = do
                 songs <- try $ getSongRecords recording
                 case songs of
                   Left (SomeException _) -> putStrLn ("Failed to get songs for " <> get #identifier recording)
-                  Right songs -> unless (null songs) $ void $ createMany songs
+                  Right songs            -> unless (null songs) $ void $ createMany songs
             )
             dbRecordings
 

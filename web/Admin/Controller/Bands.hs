@@ -1,14 +1,17 @@
 module Admin.Controller.Bands where
 
-import Admin.Controller.Prelude
-import Admin.View.Bands.Index
-import Admin.View.Bands.New
-import Admin.View.Bands.Edit
-import Admin.View.Bands.Show
+import           Admin.Controller.Prelude
+import           Admin.View.Bands.Edit
+import           Admin.View.Bands.Index
+import           Admin.View.Bands.New
+import           Admin.View.Bands.Show
+import           Data.Functor             ((<&>))
+import           System.Environment       (lookupEnv)
 
 instance Controller BandsController where
     beforeAction = do
-        basicAuth "zac" "zac" ""
+        pass <- liftIO (lookupEnv "ATTICS_ADMIN_PASSWORD")
+        basicAuth "zac" (fromMaybe "zac" (pass <&> cs)) ""
 
     action BandsAction = do
         bands <- query @Band |> fetch

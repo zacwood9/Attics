@@ -1,24 +1,26 @@
 
-module Test.TestScrape where
+module Test.Application.TestScrape where
 
-import           Test.Hspec
-import           IHP.Test.Mocking
-import           IHP.FrameworkConfig (ConfigBuilder(..))
+import           IHP.FrameworkConfig        (ConfigBuilder (..))
 import           IHP.Prelude
-import           IHP.QueryBuilder (fetch, query)
+import           IHP.QueryBuilder           (fetch, query)
+import           IHP.Test.Mocking
+import           Test.Hspec
 
-import           Web.Types
-import           Web.Routes
 import           Generated.Types
-import           Main ()
+import           Main                       ()
+import           Web.Routes
+import           Web.Types
 
-import Application.Helper.Archive
-import Application.Helper.Scrape
-import Text.RawString.QQ
-import Data.Aeson
+import           Application.Helper.Archive
+import           Application.Helper.Scrape
+import           Data.Aeson
+import           Text.RawString.QQ
 
-import Control.Exception (evaluate)
-import Data.Either (isRight)
+import           Control.Exception          (evaluate)
+import           Data.Either                (isRight)
+
+main = hspec spec
 
 spec :: Spec
 spec = do
