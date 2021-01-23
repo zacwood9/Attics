@@ -18,11 +18,10 @@ in
     pkgs.stdenv.mkDerivation {
         name = "attics";
         buildPhase = ''
-          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/RunUnoptimizedProdServer
+          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/RunOptimizedProdServer
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/InitialScrape
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/NightlyScrape
-          make -f ${ihp}/lib/IHP/Makefile.dist -B static/prod.css
-          make -f ${ihp}/lib/IHP/Makefile.dist -B static/prod.js
+          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/ScrapeSingle
         '';
         installPhase = ''
           mkdir -p $out
