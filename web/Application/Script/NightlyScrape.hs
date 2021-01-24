@@ -25,7 +25,9 @@ runBand band = do
     updateRecentlyReviewedRecordings band
     addUpdate band
   case result of
-    Left (e :: SomeException) -> putStrLn $ "failed to update " <> get #collection band <> ": " <> show e
+    Left (e :: SomeException) -> putStrLn $ "failed to update "
+      <> get #collection band
+      <> ": " <> show e
     Right _ -> pure ()
 
 addNewRecordings :: Band -> Script
@@ -34,7 +36,17 @@ addNewRecordings band@Band {collection = c} = do
   case result of
     [] -> putStrLn $ "No recent recordings found for " <> c <> ". Skipping."
     recentRecordings -> do
-      records <- mapM (makeRecordingRecord' band) recentRecordings >>= createMany
+      records <- mapM (makeRecordingRecord' band) recentRecordings
+      mapM_
+        (\record -> do
+          result <- try (create record)
+          case result of
+            Left (e :: SomeException) ->
+              putStrLn $ "failed to insert recent recording "
+                <> get #identifier record
+                <> ": " <> show e
+            Right _ -> pure ())
+        records
       putStrLn $ "Created " <> show (List.length records) <> " new recordings for " <> c
 
 updateRecentlyReviewedRecordings :: Band -> Script

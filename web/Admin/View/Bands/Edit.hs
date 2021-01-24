@@ -21,5 +21,6 @@ renderForm band = formFor band [hsx|
     {(textField #name)}
     {(textField #url)}
     {(textField #logoUrl)}
+    {(textField #updatedAt)}
     {submitButton}
 |]

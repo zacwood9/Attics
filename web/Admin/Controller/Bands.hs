@@ -32,7 +32,7 @@ instance Controller BandsController where
     action UpdateBandAction { bandId } = do
         band <- fetch bandId
         band
-            |> buildBand
+            |> buildBand'
             |> ifValid \case
                 Left band -> render EditView { .. }
                 Right band -> do
@@ -59,3 +59,6 @@ instance Controller BandsController where
 
 buildBand band = band
     |> fill @["collection","name","url","logoUrl"]
+
+buildBand' band = band
+    |> fill @["collection","name","url","logoUrl","updatedAt"]
