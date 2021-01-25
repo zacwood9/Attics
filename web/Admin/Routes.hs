@@ -7,3 +7,6 @@ import Admin.Types
 instance AutoRoute StaticController
 instance AutoRoute BandsController
 
+
+instance AutoRoute NightlyScrapeJobController
+

@@ -5,12 +5,10 @@ import IHP.ModelSupport
 import IHP.Prelude
 import GHC.Generics
 
-
 type Collection = Text
 type Date = Text
 type Identifier = Text
 type Year = Text
-
 
 data PerformanceWithMetadata = PerformanceWithMetadata {
   performance :: Performance,

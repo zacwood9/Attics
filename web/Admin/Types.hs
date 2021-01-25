@@ -3,6 +3,7 @@ module Admin.Types (
     AdminApplication(..),
     StaticController(..),
     BandsController(..),
+    NightlyScrapeJobController(..),
 ) where
 
 import           Application.Types
@@ -22,4 +23,10 @@ data BandsController
     | EditBandAction { bandId :: !(Id Band) }
     | UpdateBandAction { bandId :: !(Id Band) }
     | DeleteBandAction { bandId :: !(Id Band) }
+    deriving (Eq, Show, Data)
+
+data NightlyScrapeJobController
+    = JobsAction
+    | NewJobAction { bandId :: !(Id Band) }
+    | ShowJobAction { jobId :: !(Id NightlyScrapeJob) }
     deriving (Eq, Show, Data)

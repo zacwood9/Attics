@@ -9,7 +9,7 @@ data PerformancesView = PerformancesView
   }
 
 instance View PerformancesView where
-  html PerformancesView {band, performances} = comingSoon
+  html PerformancesView {band, performances} = error "not accesible"
   json PerformancesView {band, performances} =
     toJSON $ object ["band" .= band, "performances" .= performances]
 
@@ -19,6 +19,6 @@ data TopPerformancesView = TopPerformancesView
   }
 
 instance View TopPerformancesView where
-  html TopPerformancesView {band, topPerformances} = comingSoon
+  html TopPerformancesView {band, topPerformances} = error "not accesible"
   json TopPerformancesView {band, topPerformances} =
     toJSON $ object ["band" .= band, "top_performances" .= topPerformances]

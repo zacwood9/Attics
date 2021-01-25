@@ -7,4 +7,6 @@ p: with p; [
   p.ihp
   hspec
   raw-strings-qq
+  ip
+  fast-logger
 ]

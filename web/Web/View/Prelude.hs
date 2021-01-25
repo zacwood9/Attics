@@ -4,7 +4,7 @@ module Web.View.Prelude
     module Generated.Types,
     module Web.Types,
     module Application.Helper.View,
-    comingSoon,
+    HomeView(..),
   )
 where
 
@@ -14,29 +14,81 @@ import IHP.ViewPrelude
 import Web.Routes ()
 import Web.Types
 import Web.View.Layout
+import IHP.ControllerPrelude (render, fetchCount)
 
-comingSoon :: Html
-comingSoon =
-  [hsx|
-         <div style="background-color: #657b83; padding-top: 2rem; padding-bottom: 2rem; color:hsla(196, 13%, 96%, 1); border-radius: 4px">
-              <div style="max-width: 800px; margin-left: auto; margin-right: auto">
-                  <h1 style="margin-bottom: 2rem; font-size: 2rem; font-weight: 300; border-bottom: 1px solid white; padding-bottom: 0.25rem; border-color: hsla(196, 13%, 60%, 1)">
-                      Attics Web
-                  </h1>
+data HomeView = HomeView {
+  bands :: Int,
+  shows :: Int
+}
 
-                  <h2 style="margin-top: 0; margin-bottom: 0rem; font-weight: 900; font-size: 3rem">
-                      Coming soon.
-                  </h2>
+instance View HomeView where
+  html HomeView { .. } = [hsx|
 
-                  <p style="margin-top: 1rem; font-size: 1.75rem; font-weight: 600; color:hsla(196, 13%, 80%, 1)">
-                     For now, download Attics on your iOS device!
-                  </p>
+<div class="jumbotron jumbotron-fluid">
 
-                  <a href="https://apps.apple.com/us/app/attics/id1434981632"><img src="/app-store.svg" height="50"></a>
-              </div>
-         </div>
+  <div class="container-md">
 
-         <div style="max-width: 800px; margin-left: auto; margin-right: auto; margin-top: 4rem">
-              <img src="/ihp-welcome-icon.svg" alt="/ihp-welcome-icon">
-         </div>
+  <header class="row" style="margin-bottom: 4em">
+    <div class="col">
+      <div class="d-flex align-items-center">
+        <img class="mr-4" src="/icon.png" height="128" style="border-radius: 16px">
+        <div class="d-flex flex-column">
+          <h1 class="text-white display-3 ">Attics</h1>
+          <span class="lead">{bands} bands, {shows} concerts, on the go.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg">
+      <div class="download-button" style="color: white">
+          <a href="https://apps.apple.com/us/app/attics/id1434981632"><img src="/app-store.svg" height="50"></a>
+      </div>
+    </div>
+  </header>
+
+  </div>
+
+  <div class="container-md">
+    <div class="row">
+
+      <div class="col-12 col-lg">
+        <div class="d-flex flex-column align-items-center">
+          <img src="/iphone-1.png" width="300px">
+          <h4 class="text-center">Find the best shows.</h4>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg">
+        <div class="d-flex flex-column align-items-center">
+          <img src="/iphone-myshows.png" width="300px">
+          <h4 class="text-center">Save and download your favorites.</h4>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg">
+        <div class="d-flex flex-column align-items-center">
+          <img src="/iphone-player.png" width="300px">
+          <h4 class="text-center">Gapless playback makes it feel like you're there.</h4>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container-md" style="margin-top: 12em;">
+    <div class="d-flex justify-content-center">
+      <a href="mailto:zac.wood@hey.com"><button class="btn btn-primary" type="submit">Send feedback</button></a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <span class="text-muted">
+        Attics is created by Zachary Wood. View the source code on <a href="https://github.com/zacwood9/Attics">GitHub</a>.
+      </span>
+    </div>
+  </footer>
+
+</div>
+
 |]

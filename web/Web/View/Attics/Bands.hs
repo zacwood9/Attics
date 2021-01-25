@@ -6,6 +6,6 @@ import Data.Aeson
 data BandsView = BandsView {bands :: [BandWithMetadata ]}
 
 instance View BandsView where
-  html BandsView { .. } = comingSoon
+  html BandsView { .. } = error "not accessible"
 
   json BandsView { bands } = toJSON bands

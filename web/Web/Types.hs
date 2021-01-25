@@ -15,7 +15,8 @@ import           IHP.Prelude
 data WebApplication = WebApplication deriving (Eq, Show)
 
 data AtticsController
-  = BandsAction
+  = HomeAction
+  | BandsAction
   | TopPerformancesAction { collection :: !Collection }
   | ShowBandAction {collection :: !Collection, year :: !Year}
   | RecordingsAction {collection :: !Collection, date :: !Date}

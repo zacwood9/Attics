@@ -1,0 +1,38 @@
+html {
+  height: 100vh;
+  background-color: #04080a;
+}
+
+.jumbotron {
+  color: white;
+  background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)), url('/background.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* height: 100vh; */
+}
+
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    line-height: 1.5em;
+}
+
+
+.download-button {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2em;
+}
+
+@media (min-width: 992px) {
+  .download-button {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}

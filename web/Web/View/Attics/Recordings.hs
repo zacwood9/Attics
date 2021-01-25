@@ -11,7 +11,7 @@ data RecordingsView = RecordingsView
 
 
 instance View RecordingsView where
-  html RecordingsView {..} = comingSoon
+  html RecordingsView {..} = error "not accesible"
   json RecordingsView {..} =
     toJSON $
       object
@@ -28,7 +28,7 @@ data ShowRecordingView = ShowRecordingView
   }
 
 instance View ShowRecordingView where
-  html ShowRecordingView {..} = comingSoon
+  html ShowRecordingView {..} = error "not accesible"
   json ShowRecordingView {..} =
     toJSON $
       object
@@ -42,7 +42,7 @@ newtype MigrationView = MigrationView
   { items :: [MigrationItem] }
 
 instance View MigrationView where
-  html MigrationView { .. } = comingSoon
+  html MigrationView { .. } = error "not accesible"
   json MigrationView { .. } = toJSON items
 
 instance ToJSON MigrationItem where
