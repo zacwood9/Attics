@@ -35,7 +35,7 @@ stylesheets = do
     [hsx|
         <link rel="stylesheet" href="/vendor/bootstrap.min.css"/>
         <link rel="stylesheet" href="/vendor/flatpickr.min.css"/>
-        <link rel="stylesheet" href="/app.css"/>
+        <link rel="stylesheet" href="/app-v1.css"/>
     |]
 
 scripts :: Html

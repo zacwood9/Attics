@@ -22,7 +22,9 @@ data HomeView = HomeView {
 }
 
 instance View HomeView where
-  html HomeView { .. } = [hsx|
+  html HomeView { .. } = let
+    headerLine = show bands <> " bands, " <> show shows <> " concerts, on the go."
+    in [hsx|
 
 <div class="jumbotron jumbotron-fluid">
 
@@ -34,7 +36,7 @@ instance View HomeView where
         <img class="mr-4" src="/icon.png" height="128" style="border-radius: 16px">
         <div class="d-flex flex-column">
           <h1 class="text-white display-3 ">Attics</h1>
-          <span class="lead">{bands} bands, {shows} concerts, on the go.</span>
+          <span class="lead">{headerLine}</span>
         </div>
       </div>
     </div>
@@ -83,9 +85,15 @@ instance View HomeView where
 
   <footer class="footer">
     <div class="container">
-      <span class="text-muted">
+      <p class="text-muted">
         Attics is created by Zachary Wood. View the source code on <a href="https://github.com/zacwood9/Attics">GitHub</a>.
-      </span>
+      </p>
+      <p class="text-muted">
+        All music on Attics is streamed with permission from the <a href="https://archive.org/details/etree">Live Music Archive</a>.
+      </p>
+      <p class="text-muted">
+        <span>Photo by <a href="https://unsplash.com/@spencerdavis?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Spencer Davis</a> on <a href="https://unsplash.com/s/photos/concert?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+      </p>
     </div>
   </footer>
 
