@@ -17,7 +17,7 @@ defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
     {stylesheets}
     {scripts}
 
-    <title>App</title>
+    <title>Attics</title>
 </head>
 <body>
     {inner}
@@ -53,6 +53,7 @@ metaTags = [hsx|
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://attics.io"/>
     <meta property="og:description" content="Stream thousands of live concerts"/>
+    <meta property="og:image" content="/icon.png" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

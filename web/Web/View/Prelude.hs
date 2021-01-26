@@ -86,7 +86,7 @@ instance View HomeView where
   <footer class="footer">
     <div class="container">
       <p class="text-muted">
-        Attics is created by Zachary Wood. View the source code on <a href="https://github.com/zacwood9/Attics">GitHub</a>.
+        Attics is created by Zachary Wood. Powered by <a href="https://ihp.digitallyinduced.com">IHP</a>. View the source code on <a href="https://github.com/zacwood9/Attics">GitHub</a>.
       </p>
       <p class="text-muted">
         All music on Attics is streamed with permission from the <a href="https://archive.org/details/etree">Live Music Archive</a>.
