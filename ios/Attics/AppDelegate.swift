@@ -15,12 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, NSUserActivityDelegate {
     var window: UIWindow?
  
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Ensure the app is in a proper state if necessary
-        runMigrations()
-                
         if let window = window {
             App.shared.attachToWindow(window)
         }
+        
+        // Ensure the app is in a proper state if necessary
+        runMigrations(success: App.shared.presentMigrationSuccess, failure: App.shared.presentMigrationError)
+        
         return true
     }
     
@@ -73,7 +74,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, NSUserActivityDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         AppStorageManager.shared.saveToDisk()
+        AppStorageManager.shared.clearCache()
     }
+    
 }
 
 

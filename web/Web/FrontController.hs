@@ -10,7 +10,7 @@ import Web.View.Layout (defaultLayout)
 
 instance FrontController WebApplication where
   controllers =
-    [ startPage BandsAction,
+    [ startPage HomeAction,
       -- Generator Marker
       parseRoute @AtticsController,
       parseRoute @AppleController

@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import CoreData
 import Network
+import SwiftUI
 
 // App is the top level view coordinator. It holds the main TabBarController which
 // is the highest level view and contains the different navigators for all the tabs.
@@ -17,7 +18,7 @@ final class App: NSObject {
     static var shared = App()
     
     var storyboard: UIStoryboard!
-    var tabBarController: ATSTabBarController!
+    var tabBarController: UITabBarController!
     
     var browseNavigator: BrowseNavigator!
     var myShowsNavigator: MyShowsNavigator!
@@ -32,7 +33,7 @@ final class App: NSObject {
     var tabState = UserDefaultStore<Int>(withKey: "tabIndex", defaultValue: 0)
     
     /// Is the app being launched for the first time? Key changes with each update
-    var firstLaunch = UserDefaultStore<Bool>(withKey: "v1.5update", defaultValue: true)
+    var firstLaunch = UserDefaultStore<Bool>(withKey: "v1.5-needs-migration", defaultValue: true)
     
     lazy var musicPlayer = MusicPlayer.shared
     
@@ -44,8 +45,13 @@ final class App: NSObject {
     func attachToWindow(_ window: UIWindow) {
         configureNavigators()
         configureGlobalNavigation()
-        
+        loadBands()
         window.rootViewController = tabBarController
+    }
+    
+    private lazy var bandVm = BandsViewModel(apiClient: api, storage: storage, onBandClick: { _ in })
+    private func loadBands() {
+        bandVm.load()
     }
     
     func networkStatus() -> NWPath.Status {
@@ -68,13 +74,7 @@ final class App: NSObject {
             networkStatus: networkStatus
         )
         
-        self.tabBarController = ATSTabBarController()
-        self.tabBarController.shouldPresentUpdate = { [unowned self] in
-            self.firstLaunch.item!
-        }
-        self.tabBarController.didPresentUpdate = { [unowned self] in
-            self.firstLaunch.item = false
-        }
+        self.tabBarController = UITabBarController()
         self.tabBarController.setViewControllers(
             [browseNavigator.navigationController, myShowsNavigator.navigationController, settingsNavigator.navigationController],
             animated: true
@@ -107,7 +107,23 @@ final class App: NSObject {
         }
     }
     
+    func presentMigrationSuccess() {
+        if let firstLaunch = firstLaunch.item, firstLaunch {
+            self.firstLaunch.item = false
+            print("show update")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.tabBarController.viewControllers?.first?.present(UpdateVC(), animated: true, completion: nil)
+            }
+            
+        }
+        
+    }
     
+    func presentMigrationError() {
+        let vc = UIHostingController(rootView: MigrationErrorView())
+        tabBarController.viewControllers?.first?.present(vc, animated: true, completion: nil)
+        print("migration error")
+    }
 }
 
 struct NavigationState {
@@ -129,3 +145,4 @@ extension App: UITabBarControllerDelegate {
 public extension Notification.Name {
     static let BandDidChange = Notification.Name("BandDidChange")
 }
+

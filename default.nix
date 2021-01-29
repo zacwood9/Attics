@@ -2,8 +2,8 @@
 
 let
   ihp = builtins.fetchGit {
-      url = "https://github.com/digitallyinduced/haskellframework.git";
-      ref = "refs/tags/v0.8.0";
+      url = "https://github.com/zacwood9/ihp.git";
+      branchName = "ihp-logging";
   };
 in
   import ./build.nix {

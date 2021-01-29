@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import Combine
 
 typealias YearWithTopShows = (year: Year, shows: [Show])
@@ -74,7 +75,7 @@ struct APIClient {
         let url = baseUrl
             .appendingPath("TopPerformances")
             .appendingQuery(key: "collection", value: band.collection)
-            .appendingQuery(key: "numPerformances", value: "5")
+            .appendingQuery(key: "numPerformances", value: UIDevice.current.userInterfaceIdiom == .pad ? "10": "5")
         return get(url: url.toURL())
     }
     

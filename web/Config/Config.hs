@@ -6,14 +6,21 @@ import           IHP.FrameworkConfig
 import           IHP.Prelude
 import           System.Environment
 
+import qualified IHP.Log as Log
+import IHP.Log.Types
+
 newtype AdminPassword = AdminPassword Text
 
 config :: ConfigBuilder
 config = do
-    result <- liftIO $ lookupEnv "ATTICS_ENVIRONMENT"
-    case result of
-        Just "production" -> prod
-        _                 -> dev
+    option Development
+    logger <- liftIO $ newLogger def { level = Debug, formatter = defaultFormatter }
+    option logger
+
+    -- result <- liftIO $ lookupEnv "ATTICS_ENVIRONMENT"
+    -- case result of
+    --     Just "production" -> prod
+    --     _                 -> dev
 
 dev :: ConfigBuilder
 dev = do

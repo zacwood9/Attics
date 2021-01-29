@@ -58,6 +58,7 @@ struct RemoteImage: View {
     @State var cancellable: AnyCancellable?
     
     func load() {
+        print(name)
         if let image = try? loadFromFile() {
             state = .loaded(image)
         } else {
@@ -99,7 +100,7 @@ struct RemoteImage: View {
     func _body() -> some View {
         switch state {
         case .loading: LoadingComponent(retry: nil)
-        case .loaded(let image): Image(uiImage: image).resizable().scaledToFit()
+        case .loaded(let image): Image(uiImage: image).resizable().scaledToFill()
         }
     }
 }

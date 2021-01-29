@@ -12,9 +12,9 @@
 import Foundation
 import Combine
 
-func runMigrations() {
+func runMigrations(success: @escaping () -> (), failure: @escaping () -> ()) {
     migrateToApplicationSupport()
-    migrateToV2({}, {})
+    migrateToV2(success, failure)
 }
 
 /// Migrates storage from Library/Caches to Library/Applicatiion Support.
@@ -45,14 +45,17 @@ fileprivate func migrateToApplicationSupport() {
 fileprivate var bandsSub: AnyCancellable?
 
 fileprivate func migrateToV2(_ completion: @escaping () -> (), _ error: @escaping () -> ()) -> Bool {
-    guard !UserDefaults.standard.bool(forKey: "v1.5-update") else { return true }
+    guard let needsMigration = App.shared.firstLaunch.item, needsMigration else { completion(); return true }
+    
     let downloadsFile = FileSystemSourceStore(named: "downloads.json")
     let favoritesFile = FileSystemSourceStore(named: "favorites.json")
     
-    print("\(downloadsFile.favs.count) downloads")
-    print("\(favoritesFile.favs.count) favorites")
-    
     let uniqueIds = Set(downloadsFile.favs.union(favoritesFile.favs).map(\.identifier))
+    
+    if uniqueIds.count == 0 {
+        completion()
+        return true
+    }
     
     let api = APIClient()
     bandsSub = api.getMigrationItems(Array(uniqueIds))
@@ -70,7 +73,6 @@ fileprivate func migrateToV2(_ completion: @escaping () -> (), _ error: @escapin
                 isDownloaded: { downloadsFile.favs.map(\.identifier).contains($0.recording.identifier) },
                 isFavorite: { favoritesFile.favs.map(\.identifier).contains($0.recording.identifier) }
             )
-            UserDefaults.standard.setValue(true, forKey: "v1.5-update")
             completion()
         }
 

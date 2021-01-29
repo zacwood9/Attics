@@ -79,9 +79,9 @@ class AppStorageManager {
     /// All recordings persisted on system.
     private lazy var _recordings: CurrentValueSubject<[StoredRecording], Never> = {
         let folder = Folder.applicationSupport
-        if let file = try? folder.file(named: "storage.json") {
-            let data = try! file.read()
-            let value = try! JSONDecoder().decode([StoredRecording].self, from: data)
+        if let file = try? folder.file(named: "storage.json"),
+            let data = try? file.read(),
+            let value = try? JSONDecoder().decode([StoredRecording].self, from: data) {
             var newValues = [StoredRecording]()
             for stored in value {
                 var copy = stored
@@ -98,7 +98,7 @@ class AppStorageManager {
     }()
     
     private lazy var _band: CurrentValueSubject<Band, Never> = {
-        let band: Band = readFromFile("band.json", defaultValue: Band(collection: "GratefulDead", name: "Grateful Dead", logoUrl: ""))
+        let band: Band = readFromFile("band.json", defaultValue: Band(collection: "GratefulDead", name: "Grateful Dead", logoUrl: "https://glide-assets-media.s3.amazonaws.com/wp-content/uploads/2013/11/21154607/gratefuldeadsteal.jpg"))
         return CurrentValueSubject(band)
     }()
     
@@ -321,6 +321,12 @@ class AppStorageManager {
         saveToFile("browseState.json", value: browseState)
         saveToFile("musicPlayer.json", value: MusicPlayer.shared.state)
         print("saved to disk")
+    }
+    
+    func clearCache() {
+        if let cache = try? Folder.applicationSupport.createSubfolderIfNeeded(withName: "Cache") {
+            cache.subfolders.forEach { try? $0.delete() }
+        }
     }
     
     func getLocalSongUrl(recording: Source, song: Song) -> URL? {

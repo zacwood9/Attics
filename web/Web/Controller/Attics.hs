@@ -6,6 +6,7 @@ import Web.View.Attics.Performances
 import Web.View.Attics.Recordings
 import Data.Text
 import Web.View.Prelude (HomeView (..))
+import qualified IHP.Log as Log
 
 renderHome :: forall controller. (?context::ControllerContext, ?theAction :: controller, ?modelContext :: ModelContext) => IO ()
 renderHome = do
@@ -17,7 +18,8 @@ isJsonRequest :: (?context :: ControllerContext) => Bool
 isJsonRequest = getHeader "Accept" == "application/json"
 
 instance Controller AtticsController where
-  action HomeAction = renderHome
+  action HomeAction = do
+    renderHome
 
   action BandsAction = do
     if isJsonRequest

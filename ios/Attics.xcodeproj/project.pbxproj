@@ -15,6 +15,7 @@
 		1103750223960A7900572DAD /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1103750123960A7900572DAD /* AppState.swift */; };
 		110D8299230DC8010087F5A0 /* UserDefaultStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D8298230DC8010087F5A0 /* UserDefaultStore.swift */; };
 		110D829B230F66B60087F5A0 /* AtticsNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D829A230F66B60087F5A0 /* AtticsNavigator.swift */; };
+		1112A62925C06D9100FC0C94 /* MigrationErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1112A62825C06D9100FC0C94 /* MigrationErrorView.swift */; };
 		1127BA0823BED8FF00AFE138 /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1127BA0723BED8FF00AFE138 /* FileCache.swift */; };
 		112CEDA023A17E2C00E9F72C /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112CED9F23A17E2C00E9F72C /* DownloadManager.swift */; };
 		113C3C5D23CD40BE00FF481D /* LoadingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C3C5C23CD40BE00FF481D /* LoadingVC.swift */; };
@@ -99,6 +100,7 @@
 		1103750123960A7900572DAD /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		110D8298230DC8010087F5A0 /* UserDefaultStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultStore.swift; sourceTree = "<group>"; };
 		110D829A230F66B60087F5A0 /* AtticsNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtticsNavigator.swift; sourceTree = "<group>"; };
+		1112A62825C06D9100FC0C94 /* MigrationErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationErrorView.swift; sourceTree = "<group>"; };
 		1127BA0723BED8FF00AFE138 /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
 		112CED9F23A17E2C00E9F72C /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		113C3C5C23CD40BE00FF481D /* LoadingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVC.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				113ECD10259E561800C3DD77 /* PlayerViewController.swift */,
 				114483B625A4B40A00813D48 /* BandsView.swift */,
 				1145B1E525A92BE30091B6E5 /* SettingsView.swift */,
+				1112A62825C06D9100FC0C94 /* MigrationErrorView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				C58DCE3420F03B3100F0B289 /* Network.swift in Sources */,
 				11BEA57523C2B80700C86EED /* ATSProgressCircle.swift in Sources */,
 				C529DC0220FA8E98009F399A /* App.swift in Sources */,
+				1112A62925C06D9100FC0C94 /* MigrationErrorView.swift in Sources */,
 				C5BE2FA82107AEAA00E8E18E /* SourceInfoTableViewCell.swift in Sources */,
 				C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */,
 				C5ED3A8A20D4531A0019F0EF /* APIClient.swift in Sources */,
@@ -692,7 +696,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 24;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -720,7 +724,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -8,16 +8,16 @@
 
 import UIKit
 
-class ATSTabBarController: UITabBarController {
-    var shouldPresentUpdate: () -> Bool = { true }
-    var didPresentUpdate: () -> () = { }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if shouldPresentUpdate() {
-            viewControllers?.first?.present(UpdateVC(), animated: true, completion: nil)
-            didPresentUpdate()
-        }
-    }
-}
+//class ATSTabBarController: UITabBarController {
+//    var shouldPresentUpdate: () -> Bool = { true }
+//    var didPresentUpdate: () -> () = { }
+//    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        
+//        if shouldPresentUpdate() {
+//            viewControllers?.first?.present(UpdateVC(), animated: true, completion: nil)
+//            didPresentUpdate()
+//        }
+//    }
+//}
