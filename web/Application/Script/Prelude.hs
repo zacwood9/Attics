@@ -11,10 +11,11 @@ import IHP.Prelude
 import IHP.ControllerPrelude
 import Generated.Types
 import IHP.ScriptSupport
+import qualified Data.List as List
 
 mapIOLog_ :: (Int -> Int -> a -> Text) -> (a -> IO b) -> [a] -> IO ()
 mapIOLog_ logF f as =
-  let total = L.length as
+  let total = List.length as
    in mapIOLog' 1 total logF f as
   where
     mapIOLog' _ _ _ _ [] = pure ()

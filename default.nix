@@ -3,7 +3,7 @@
 let
   ihp = builtins.fetchGit {
       url = "https://github.com/zacwood9/ihp.git";
-      branchName = "ihp-logging";
+      ref = "ihp-logging";
   };
 in
   import ./build.nix {

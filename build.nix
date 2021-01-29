@@ -22,6 +22,7 @@ in
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/InitialScrape
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/NightlyScrape
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/ScrapeSingle
+          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/FixSongs
         '';
         installPhase = ''
           mkdir -p $out
