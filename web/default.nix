@@ -1,9 +1,9 @@
 let
-    # ihp = builtins.fetchGit {
-    #     url = "https://github.com/zacwood9/ihp.git";
-    #     ref = "ihp-logging";
-    # };
-    ihp = ./IHP;
+    ihp = builtins.fetchGit {
+        url = "https://github.com/zacwood9/ihp.git";
+        ref = "ihp-logging";
+    };
+    # ihp = ./IHP;
     haskellEnv = import "${ihp}/NixSupport/default.nix" {
         ihp = ihp;
         haskellDeps = import ./haskellDeps.nix;

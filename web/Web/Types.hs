@@ -18,8 +18,8 @@ data AtticsController
   = HomeAction
   | BandsAction
   | TopPerformancesAction { collection :: !Collection }
-  | ShowBandAction {collection :: !Collection, year :: !Year}
-  | RecordingsAction {collection :: !Collection, date :: !Date}
+  | ShowBandAction { collection :: !Collection, year :: !Year }
+  | RecordingsAction { collection :: !Collection, date :: !Date }
   | ShowRecordingAction { identifier:: !Identifier }
   | MigrationAction { identifiers :: ![Identifier] }
   deriving (Eq, Show, Data)

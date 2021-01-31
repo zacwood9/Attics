@@ -13,14 +13,13 @@ newtype AdminPassword = AdminPassword Text
 
 config :: ConfigBuilder
 config = do
-    option Development
     logger <- liftIO $ newLogger def { formatter = withTimeAndLevelFormatter }
     option logger
 
-    -- result <- liftIO $ lookupEnv "ATTICS_ENVIRONMENT"
-    -- case result of
-    --     Just "production" -> prod
-    --     _                 -> dev
+    result <- liftIO $ lookupEnv "ATTICS_ENVIRONMENT"
+    case result of
+        Just "production" -> prod
+        _                 -> dev
 
 dev :: ConfigBuilder
 dev = do
