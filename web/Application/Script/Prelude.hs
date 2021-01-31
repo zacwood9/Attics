@@ -3,6 +3,8 @@ module Application.Script.Prelude
 , module Generated.Types
 , module IHP.Prelude
 , module IHP.ScriptSupport
+, module Database.PostgreSQL.Simple
+, module Database.PostgreSQL.Simple.SqlQQ
 , mapIOLog_
 )
 where
@@ -12,6 +14,8 @@ import IHP.ControllerPrelude
 import Generated.Types
 import IHP.ScriptSupport
 import qualified Data.List as List
+import Database.PostgreSQL.Simple (Only(..), Query)
+import Database.PostgreSQL.Simple.SqlQQ
 
 mapIOLog_ :: (Int -> Int -> a -> Text) -> (a -> IO b) -> [a] -> IO ()
 mapIOLog_ logF f as =

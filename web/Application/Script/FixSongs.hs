@@ -4,8 +4,6 @@ module Application.Script.FixSongs where
 import Application.Script.Prelude
 import qualified IHP.Log as Log
 import qualified Data.List as List
-import Database.PostgreSQL.Simple (Only(..), Query)
-import Database.PostgreSQL.Simple.SqlQQ
 import Application.Helper.Archive
 
 run :: Script

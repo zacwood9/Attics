@@ -1,16 +1,9 @@
 { ... }:
+with (import ./web/common.nix);
 
-let
-  ihp = builtins.fetchGit {
-      url = "https://github.com/zacwood9/ihp.git";
-      ref = "ihp-logging";
-  };
-in
-  import ./build.nix {
-    ihp = ihp;
-    haskellDeps = import ./web/haskellDeps.nix;
-    otherDeps = p: with p; [
-        # Native dependencies, e.g. imagemagick
-    ];
-    projectPath = ./web;
-  }
+import ./build.nix {
+  inherit ihp;
+  inherit haskellDeps;
+  inherit otherDeps;
+  projectPath = ./web;
+}

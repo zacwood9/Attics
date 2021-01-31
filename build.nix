@@ -2,27 +2,29 @@
 , ihp
 , haskellDeps ? (p: [])
 , otherDeps ? (p: [])
-, projectPath ? ./. 
+, projectPath ? ./.
 }:
 
 let
     pkgs = import "${toString projectPath}/Config/nix/nixpkgs-config.nix" { ihp = ihp; };
     ghc = pkgs.haskell.packages.${compiler};
-    allHaskellPackages = ghc.ghcWithPackages 
+    allHaskellPackages = ghc.ghcWithPackages
       (p: builtins.concatLists [ [p.haskell-language-server] (haskellDeps p) ] );
-    allNativePackages = builtins.concatLists [ 
-      (otherDeps pkgs) 
-      [pkgs.postgresql] 
+    allNativePackages = builtins.concatLists [
+      (otherDeps pkgs)
+      [pkgs.postgresql]
     ];
+
+    buildScript = name: "make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/${name}"
 in
     pkgs.stdenv.mkDerivation {
         name = "attics";
         buildPhase = ''
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/RunOptimizedProdServer
-          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/InitialScrape
-          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/NightlyScrape
-          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/ScrapeSingle
-          make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/FixSongs
+          ${buildScript "InitialScrape"}
+          ${buildScript "NightlyScrape"}
+          ${buildScript "ScrapeSingle"}
+          ${buildScript "FixSongs"}
         '';
         installPhase = ''
           mkdir -p $out
