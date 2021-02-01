@@ -1,4 +1,8 @@
-module Config (AdminPassword(..), config) where
+module Config
+( AdminPassword(..)
+, config
+, test
+) where
 
 import           Data.Functor        ((<&>))
 import           IHP.Environment
@@ -6,16 +10,10 @@ import           IHP.FrameworkConfig
 import           IHP.Prelude
 import           System.Environment
 
-import qualified IHP.Log as Log
-import IHP.Log.Types
-
 newtype AdminPassword = AdminPassword Text
 
 config :: ConfigBuilder
 config = do
-    logger <- liftIO $ newLogger def { formatter = withTimeAndLevelFormatter }
-    option logger
-
     result <- liftIO $ lookupEnv "ATTICS_ENVIRONMENT"
     case result of
         Just "production" -> prod
@@ -30,3 +28,8 @@ prod :: ConfigBuilder
 prod = do
     option Production
     option (BaseUrl "https://attics.io")
+
+test :: ConfigBuilder
+test = do
+    option Development
+    option (AppHostname "localhost")

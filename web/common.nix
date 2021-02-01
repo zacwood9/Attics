@@ -1,7 +1,7 @@
 rec {
     ihp = builtins.fetchGit {
         url = "https://github.com/digitallyinduced/ihp.git";
-        ref = "master";
+        ref = "refs/tags/v0.8.0";
     };
 
     haskellDeps = p: with p; [
@@ -14,7 +14,6 @@ rec {
       hspec
       raw-strings-qq
       ip
-      fast-logger
     ];
 
     otherDeps = p: with p; [

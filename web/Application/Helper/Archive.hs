@@ -5,22 +5,27 @@ module Application.Helper.Archive
     AdvancedSearchSort (..),
     AdvancedSearchResult(..),
     ItemFiles(..),
-    getItemFiles,
     scrape,
     advancedSearch,
+    getSongsForRecording,
   )
 where
 
 import Data.Aeson
 import Data.Aeson.Types
-import qualified Data.HashMap.Strict as HM
-import qualified Data.Text as T
-import qualified Data.Vector as V
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.Text as Text
+import qualified Data.Vector as Vector
+import qualified Data.List as List
 import GHC.Generics
 import IHP.Prelude
 import Network.HTTP.Simple
 import System.IO.Unsafe
 import Control.Exception
+import Data.Default
+import Data.Maybe
+import Generated.Types
+import IHP.ModelSupport
 
 data Source = Single Text | Multi [Text]
 
@@ -54,12 +59,15 @@ instance FromJSON ArchiveItem where
       <*> obj .:? "coverage"
       <*> obj .:? "venue"
 
+instance Default ArchiveItem where
+    def = ArchiveItem "" "" Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
+
 parseSource :: Object -> Parser (Maybe Text)
 parseSource o = do
-  let source = o HM.!? "source"
+  let source = o HashMap.!? "source"
   case source of
     Just (String single) -> pure $ pure single
-    Just (Array multiple) -> pure $ multiple V.!? 0
+    Just (Array multiple) -> pure $ multiple Vector.!? 0
       |> \case
         Just (String first) -> pure first
         _ -> Nothing
@@ -136,7 +144,7 @@ instance FromJSON ArchiveFile where
       parseOriginal :: Object -> Parser (Maybe Text)
       parseOriginal p = do
         return $
-          HM.lookup "original" p
+          HashMap.lookup "original" p
             >>= \case
               String t -> Just t
               _ -> Nothing
@@ -160,7 +168,7 @@ getArchiveFiles identifier = do
     Just payload -> return $ result payload
     Nothing -> error "unable to parse files"
   where
-    url = "https://archive.org/metadata/" ++ T.unpack identifier ++ "/files"
+    url = "https://archive.org/metadata/" ++ Text.unpack identifier ++ "/files"
 
 -- Recent sources
 
@@ -203,7 +211,7 @@ instance FromJSON AdvancedSearchResult where
     (Object header) <- obj .: "responseHeader"
     (Object params) <- header .: "params"
     (String sort) <- params .: "sort"
-    let sortedField = head $ T.words sort
+    let sortedField = head $ Text.words sort
     case sortedField of
       Just "publicdate" -> PublicDateResponse <$> parsePairs obj "publicdate"
       Just "reviewdate" -> ReviewDateResponse <$> parsePairs obj "reviewdate"
@@ -211,10 +219,10 @@ instance FromJSON AdvancedSearchResult where
     where
       parsePairs obj sortedField = do
         (Object response) <- obj .: "response"
-        let items@(Array arr) = response HM.! "docs"
+        let items@(Array arr) = response HashMap.! "docs"
         srcs <- parseJSON items
-        times <- catMaybes . V.toList <$> mapM (\(Object a) -> a .:? sortedField) arr
-        if length times /= length arr
+        times <- catMaybes . Vector.toList <$> mapM (\(Object a) -> a .:? sortedField) arr
+        if List.length times /= List.length arr
           then pure []
           else pure $ zip srcs times
 
@@ -235,55 +243,78 @@ data ArchiveSong = ArchiveSong
   }
   deriving (Generic, Show)
 
--- | getItemFiles constructs a ItemFiles record for a given recording identifier.
-getItemFiles :: Text -> IO ItemFiles
-getItemFiles identifier = do
-  files <- getArchiveFiles identifier
-  return $ buildFiles identifier files
+getSongsForRecording :: Recording -> (Text -> IO [ArchiveFile]) -> IO [Song]
+getSongsForRecording recording getFiles = do
+    files <- getFiles (get #identifier recording)
+    pure $ buildSongsFromFiles recording files
 
--- | buildFiles constructs a collection of mp3s, originals, and a icon for a given source identifier.
-buildFiles :: Text -> [ArchiveFile] -> ItemFiles
-buildFiles source archiveFiles =
-  ItemFiles
-    { mp3s = mapInd toSong mp3s,
-      originals = catMaybes $ mapInd maybeToSong originals,
-      pic = picUrl
-    }
-  where
-    mp3s =
-      filter
-        (\ArchiveFile {afFileName} -> ".mp3" `T.isSuffixOf` afFileName)
-        archiveFiles
+buildSongsFromFiles :: Recording -> [ArchiveFile] -> [Song]
+buildSongsFromFiles recording files =
+    filesToSongs files
+        |> map (makeSongRecord recording)
 
-    fileMap =
-      foldr
-        (\file acc -> HM.insert (afFileName file) file acc)
-        HM.empty
-        archiveFiles
+makeSongRecord :: Recording -> ArchiveSong -> Song
+makeSongRecord recording ArchiveSong {..} =
+  newRecord @Song
+    |> set #title atticsSongTitle
+    |> set #album atticsSongAlbum
+    |> set #creator atticsSongCreator
+    |> set #length atticsSongLength
+    |> set #track atticsSongTrack
+    |> set #fileName atticsSongFileName
+    |> set #recordingId (get #id recording)
 
-    originals =
-      map
-        (afOriginal >=> \f -> HM.lookup f fileMap)
-        mp3s
+-- | Build a list of songs from files, using data from
+-- originals if possible.
+filesToSongs :: [ArchiveFile] -> [ArchiveSong]
+filesToSongs files =
+    let
+        mp3s = filter
+            (\ArchiveFile {afFileName} -> ".mp3" `Text.isSuffixOf` afFileName)
+            files
 
-    toSong ArchiveFile {..} i =
-      ArchiveSong
-        { atticsSongFileName = afFileName,
-          atticsSongTitle = fromMaybe afFileName afTitle,
-          atticsSongTrack = i + 1,
-          atticsSongCreator = fromMaybe "Unknown" afCreator,
-          atticsSongLength = fromMaybe "0:00" afLength,
-          atticsSongAlbum = fromMaybe "Unknown" afAlbum
-        }
+        mp3sPairedWithOriginals = map
+            (\mp3 -> (mp3, afOriginal mp3 >>= \f -> HashMap.lookup f fileMap))
+            mp3s
+    in
 
-    maybeToSong (Just file) i =
-      Just $ toSong file i
-    maybeToSong Nothing _ = Nothing
+        mapInd toSong mp3sPairedWithOriginals
 
-    -- variant of map that passes each element's index as a second argument to f
-    mapInd :: (a -> Int -> b) -> [a] -> [b]
-    mapInd f l = zipWith f l [0 ..]
+    where
+        -- | Hash Map of all files by file name
+        fileMap =
+            foldr
+                (\file acc -> HashMap.insert (afFileName file) file acc)
+                HashMap.empty
+                files
 
-    picUrl = case filter (\ArchiveFile {afFileName} -> afFileName == "__ia_thumb.jpg") archiveFiles of
-      [] -> "https://archive.org/images/notfound.png"
-      (file : _) -> "https://archive.org/download/" <> source <> "/" <> afFileName file
+        toSong (mp3, original) i =
+            ArchiveSong {
+                atticsSongFileName = afFileName mp3,
+                atticsSongTitle = pluckFromPair mp3 original afFileName afTitle,
+                atticsSongTrack = i + 1,
+                atticsSongCreator = pluckFromPair mp3 original (\_ -> "Unknown") afCreator,
+                atticsSongLength = pluckFromPair mp3 original (\_ -> "0:00") afLength,
+                atticsSongAlbum = pluckFromPair mp3 original (\_ -> "Unknown") afAlbum
+                }
+
+        mapInd :: (a -> Int -> b) -> [a] -> [b]
+        mapInd f l = zipWith f l [0 ..]
+
+pluckFromPair
+    :: ArchiveFile
+    -> Maybe ArchiveFile
+    -> (ArchiveFile -> a)
+    -> (ArchiveFile -> Maybe a)
+    -> a
+pluckFromPair mp3 mbOriginal getDefault getPreferred =
+    case mbOriginal of
+        Just original -> fromMaybe
+            (getDefault mp3)
+            (firstJust [getPreferred original, getPreferred mp3])
+        Nothing -> fromMaybe (getDefault mp3) (getPreferred mp3)
+
+firstJust :: [Maybe a] -> Maybe a
+firstJust xs = case filter isJust xs of
+    [] -> Nothing
+    (a:_) -> a

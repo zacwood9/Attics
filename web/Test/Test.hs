@@ -12,7 +12,10 @@ import Web.Types
 
 import qualified Test.TestScrape
 import qualified Test.TestFixSongs
+import qualified Test.TestNightlyScrape
 
 main = hspec do
     Test.TestScrape.spec
     Test.TestFixSongs.spec
+    Test.TestNightlyScrape.spec
+    Test.TestNightlyScrape.integration

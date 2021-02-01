@@ -4,7 +4,7 @@ module Application.Helper.Scrape
     archiveToAttics,
     buildPerformanceFromRecordings,
     makeRecordingRecord,
-    makeRecordingRecord',
+    getOrCreateRecordingFromData,
     makeSongRecord,
   )
 where
@@ -43,7 +43,7 @@ data RecordingData = RecordingData
     numReviews :: Int,
     atticsDownloads :: Int
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 archiveToAttics :: Text -> ArchiveItem -> RecordingData
 archiveToAttics defaultCollection ArchiveItem {..} =
@@ -125,9 +125,9 @@ makeRecordingRecord performanceId RecordingData {..} =
     |> set #avgRating avgRating
     |> set #numReviews numReviews
 
-makeRecordingRecord' :: (?modelContext :: ModelContext) => Band -> RecordingData -> IO Recording
-makeRecordingRecord' band recording = do
-  performanceId <- sqlQuery performanceIdQuery [get #identifier recording, get #date recording]
+getOrCreateRecordingFromData :: (?modelContext :: ModelContext) => Band -> RecordingData -> IO Recording
+getOrCreateRecordingFromData  band recording = do
+  performanceId <- sqlQuery performanceIdQuery [get #collection recording, get #date recording]
 
   -- if the performance is found, return its ID,
   -- else create the performance from the recording data and use the new id

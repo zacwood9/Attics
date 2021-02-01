@@ -14,7 +14,7 @@ import qualified Data.List as List
 
 run :: Script
 run = do
-  putStrLn "starting nightly scrape"
+  Log.info "starting nightly scrape"
   bands <- query @Band |> fetch
   mapM_ runBand bands
 
@@ -25,7 +25,7 @@ runBand band = do
     updateRecentlyReviewedRecordings band
     addUpdate band
   case result of
-    Left (e :: SomeException) -> putStrLn $ "failed to update "
+    Left (e :: SomeException) -> Log.error $ "failed to update "
       <> get #collection band
       <> ": " <> show e
     Right _ -> pure ()
@@ -34,7 +34,7 @@ addNewRecordings :: Band -> Script
 addNewRecordings band@Band {collection = c} = do
   result <- scrapeRecentRecordings band PublicDate
   case result of
-    [] -> putStrLn $ "No recent recordings found for " <> c <> ". Skipping."
+    [] -> Log.info $ "No recent recordings found for " <> c <> ". Skipping."
     recentRecordings -> do
       records <- mapM (makeRecordingRecord' band) recentRecordings
       mapM_

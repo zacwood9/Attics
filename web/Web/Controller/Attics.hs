@@ -6,7 +6,6 @@ import Web.View.Attics.Performances
 import Web.View.Attics.Recordings
 import Data.Text
 import Web.View.Prelude (HomeView (..))
-import qualified IHP.Log as Log
 
 renderHome :: forall controller. (?context::ControllerContext, ?theAction :: controller, ?modelContext :: ModelContext) => IO ()
 renderHome = do
