@@ -21,8 +21,9 @@ instance Job NightlyScrapeJob where
 
 runBand :: Band -> Script
 runBand band = do
-    addNewRecordings band advancedSearch
-    updateRecentlyReviewedRecordings band
+    recordings <- addNewRecordings band advancedSearch
+    addSongsForRecordings recordings getArchiveFiles
+    updateRecentlyReviewedRecordings band advancedSearch
     addUpdate band
 
 addNewRecordings
@@ -83,15 +84,22 @@ addSongsForRecording recording getFiles = do
     songs <- getSongsForRecording recording getFiles
     mapM createRecord songs
 
-updateRecentlyReviewedRecordings :: Band -> Script
-updateRecentlyReviewedRecordings band = do
-  result <- scrapeRecentRecordings band ReviewDate
+updateRecentlyReviewedRecordings
+    :: (?modelContext :: ModelContext)
+    => Band
+    -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
+    -> IO [Recording]
+updateRecentlyReviewedRecordings band searchArchive = do
+  result <- getNewRecordingsFromArchive band ReviewDate searchArchive
   case result of
-    [] -> putStrLn $ "No recent reviews found for " <> get #collection band <> ". Skipping."
+    [] -> do
+        putStrLn $ "No recent reviews found for " <> get #collection band <> ". Skipping."
+        pure []
     recentlyReviewed -> do
       recordings <- mapM getRecording recentlyReviewed
       updated <- mapM updateRecording (zip recordings recentlyReviewed)
       putStrLn $ "Updated " <> show (List.length updated) <> " recordings for " <> get #collection band
+      pure updated
 
 addUpdate :: Band -> Script
 addUpdate band = do

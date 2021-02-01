@@ -15,16 +15,15 @@ let
       [pkgs.postgresql]
     ];
 
-    buildScript = name: "make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/${name}"
+    buildScript = name: "make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/Script/${name}";
+    make = file: "make -f ${ihp}/lib/IHP/Makefile.dist -B ${file}";
 in
     pkgs.stdenv.mkDerivation {
         name = "attics";
         buildPhase = ''
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/RunOptimizedProdServer
-          ${buildScript "InitialScrape"}
           ${buildScript "NightlyScrape"}
-          ${buildScript "ScrapeSingle"}
-          ${buildScript "FixSongs"}
+          ${buildScript "build/bin/RunJobs"}
         '';
         installPhase = ''
           mkdir -p $out

@@ -17,7 +17,7 @@ import Application.Helper.Scrape
 import qualified Admin.Job.NightlyScrape as Job
 import IHP.ModelSupport
 import IHP.FetchRelated
-import Control.Exception (bracket)
+import Control.Exception (bracket,evaluate, SomeException(..))
 
 spec :: Spec
 spec = describe "Nightly Scrape" $ do
@@ -115,6 +115,38 @@ integration = describe "Nightly Scrape (Integration tests)" $ do
                         get #length song `shouldBe` "1:23"
                         )
 
+    describe "#updateRecentlyReviewedRecordings" $ do
+        beforeAll (Config.test |> mockContext WebApplication) $ do
+            it "updates recording with new info" $ withContext do
+                bracket
+                    (do
+                        band <- gdBand time2 |> createRecord
+                        p <- testPerformance band |> createRecord
+                        testRecording p |> createRecord
+                        pure band
+                        )
+                    (cleanupBand)
+                    (\band -> do
+                        recordings <- Job.updateRecentlyReviewedRecordings band mockSearch
+                        List.length recordings `shouldBe` 1
+                        let (r:_) = recordings
+                        get #archiveDownloads r `shouldBe` 12345
+                        get #avgRating r `shouldBe` 5
+                        get #numReviews r `shouldBe` 123
+                        )
+            it "fails for unknown recording" $ withContext do
+                bracket
+                    (do
+                        band <- gdBand time2 |> createRecord
+                        p <- testPerformance band |> createRecord
+                        pure band
+                        )
+                    (cleanupBand)
+                    (\band -> do
+                        Job.updateRecentlyReviewedRecordings band mockSearch `shouldThrow` anyException
+                        )
+
+
 
 gdBand :: UTCTime -> Band
 gdBand time = newRecord @Band
@@ -127,10 +159,10 @@ item3 = ArchiveItem {
     date = "2020-01-03",
     collection = Just "GratefulDead",
     transferer = Nothing,
-    downloads = Just 123,
+    downloads = Just 12345,
     source = Nothing,
-    avgRating = Just "4.5",
-    numReviews = Just 4,
+    avgRating = Just "5",
+    numReviews = Just 123,
     lineage = Nothing,
     coverage = Just "Fairfax, VA",
     venue = Just "Eagle Bank Arena"
@@ -185,6 +217,16 @@ testPerformance band = newRecord @Performance
     |> set #venue "Eagle Bank Arena"
     |> set #city "Fairfax"
     |> set #state "VA"
+
+testRecording performance = newRecord @Recording
+    |> set #performanceId (get #id performance)
+    |> set #identifier "item3"
+    |> set #transferer "transferer"
+    |> set #source ""
+    |> set #lineage ""
+    |> set #avgRating 0
+    |> set #numReviews 0
+    |> set #archiveDownloads 0
 
 
 mockSearch :: Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)]

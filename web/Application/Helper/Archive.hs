@@ -8,6 +8,7 @@ module Application.Helper.Archive
     scrape,
     advancedSearch,
     getSongsForRecording,
+    getArchiveFiles,
   )
 where
 
