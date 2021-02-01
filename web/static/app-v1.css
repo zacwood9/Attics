@@ -1,6 +1,6 @@
-html {
-  height: 100vh;
+.home-page {
   background-color: #04080a;
+  height: 100%;
 }
 
 .jumbotron {

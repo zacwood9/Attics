@@ -26,6 +26,7 @@ instance View HomeView where
     headerLine = show bands <> " bands, " <> show shows <> " concerts, on the go."
     in [hsx|
 
+<div class="home-page">
 <div class="jumbotron jumbotron-fluid">
 
   <div class="container-md">
@@ -97,6 +98,7 @@ instance View HomeView where
     </div>
   </footer>
 
+</div>
 </div>
 
 |]
