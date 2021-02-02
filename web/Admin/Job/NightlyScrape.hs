@@ -8,13 +8,15 @@ import Control.Exception
 import Control.Monad
 import qualified Control.Monad.Trans.State as State
 import qualified Data.List as List
-import System.Log.FastLogger
+import System.IO (hFlush, stdout)
 
 instance Job NightlyScrapeJob where
     perform NightlyScrapeJob { .. } = do
         band <- fetch bandId
         putStrLn $ "Performing nightly scrape job for " <> get #collection band <> "..."
         runBand band
+        hFlush stdout
+        pure ()
 
     maxAttempts = 2
 
