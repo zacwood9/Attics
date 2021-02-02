@@ -22,7 +22,7 @@ instance View JobView where
                 </tbody>
             </table>
         </div>
-        <form action={job |> get #bandId |> get #id |> NewJobAction}>
+        <form action={NewJobAction}>
             <button class="btn btn-primary" type="submit">Run new job</button>
         </form>
     |]

@@ -1,5 +1,3 @@
-{-# LANGUAGE GADTs #-}
-
 module Admin.View.Jobs.Index where
 import Admin.View.Prelude hiding (fetch)
 import IHP.ControllerPrelude (fetch, FilterPrimaryKey)
@@ -13,7 +11,10 @@ instance View IndexView where
                 <li class="breadcrumb-item active"><a href={JobsAction}>Jobs</a></li>
             </ol>
         </nav>
-        <h1>Nightly Scrape Jobs</h1>
+
+        <div class="d-flex flex-direction-row">
+            <h1>Nightly Scrape Jobs <a href={NewJobAction} class="btn btn-primary ml-4">+ New</a></h1>
+        </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -42,7 +43,6 @@ renderJob job = let
       <td>{job |> get #bandId |> get #name}</td>
       <td>{get #status job}</td>
       <td>{get #updatedAt job}</td>
-      <td><a href={ShowJobAction $ get #id job} class="text-muted">Show</a></td>
-      <td><a href={NewJobAction bandId}>Retry</a></td>
+      <td><a href={ShowJobAction $ get #id job} class="text-primary">Show</a></td>
     </tr>
 |]

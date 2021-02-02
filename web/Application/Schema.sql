@@ -48,7 +48,7 @@ CREATE TABLE nightly_scrape_jobs (
     locked_by UUID DEFAULT NULL,
     band_id UUID NOT NULL
 );
-ALTER TABLE nightly_scrape_jobs ADD CONSTRAINT nightly_scrape_jobs_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE NO ACTION;
+ALTER TABLE nightly_scrape_jobs ADD CONSTRAINT nightly_scrape_jobs_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE performances ADD CONSTRAINT performances_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE recordings ADD CONSTRAINT recordings_ref_performance_id FOREIGN KEY (performance_id) REFERENCES performances (id) ON DELETE CASCADE;
 ALTER TABLE songs ADD CONSTRAINT songs_ref_recording_id FOREIGN KEY (recording_id) REFERENCES recordings (id) ON DELETE CASCADE;

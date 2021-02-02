@@ -10,7 +10,6 @@ import qualified Control.Monad.Trans.State as State
 import qualified Data.List as List
 import System.Log.FastLogger
 
-
 instance Job NightlyScrapeJob where
     perform NightlyScrapeJob { .. } = do
         band <- fetch bandId
@@ -26,6 +25,8 @@ runBand band = do
     updateRecentlyReviewedRecordings band advancedSearch
     addUpdate band
 
+-- | Gets latest recordings added, then adds them to the database.
+-- Creates performance for recording if necessary.
 addNewRecordings
     :: (?modelContext :: ModelContext)
     => Band
@@ -54,17 +55,8 @@ addNewRecordings band archiveSearch = do
                 recordingDatas
             pure (catMaybes created)
 
-getNewRecordingsFromArchive
-    :: Band
-    -> AdvancedSearchSort
-    -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
-    -> IO [RecordingData]
-getNewRecordingsFromArchive band sort searchArchive = do
-    result <- searchArchive (get #collection band) sort
-    filterSinceTime result (get #updatedAt band)
-        |> map (archiveToAttics (get #collection band))
-        |> pure
 
+-- | Given a list of recordings, fetch their songs and add them to the database.
 addSongsForRecordings
     :: (?modelContext :: ModelContext)
     => [Recording]
@@ -128,24 +120,18 @@ updateRecording (recording, newData) = do
     |> set #archiveDownloads (get #downloads newData)
     |> updateRecord
 
--- For the given band, get all recent recordings from archive by the sort parameter
-scrapeRecentRecordings :: Band -> AdvancedSearchSort -> IO [RecordingData]
-scrapeRecentRecordings band sort = do
-  recentRecordings <- advancedSearch (get #collection band) sort
-  filterSinceTime recentRecordings (get #updatedAt band)
-    |> map (archiveToAttics (get #collection band))
-    |> pure
-
-scrapeRecentRecordingsFromArchive
+-- | Given a band and a way to sort, use AdvancedSearch
+-- to get the latest recordings and return them as RecordingData.
+getNewRecordingsFromArchive
     :: Band
     -> AdvancedSearchSort
     -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
     -> IO [RecordingData]
-scrapeRecentRecordingsFromArchive band sort archiveSearch = do
-  recentRecordings <- archiveSearch (get #collection band) sort
-  filterSinceTime recentRecordings (get #updatedAt band)
-    |> map (archiveToAttics (get #collection band))
-    |> pure
+getNewRecordingsFromArchive band sort searchArchive = do
+    result <- searchArchive (get #collection band) sort
+    filterSinceTime result (get #updatedAt band)
+        |> map (archiveToAttics (get #collection band))
+        |> pure
 
 filterSinceTime :: [(ArchiveItem, UTCTime)] -> UTCTime -> [ArchiveItem]
 filterSinceTime recordingsWithTimes updatedAt =

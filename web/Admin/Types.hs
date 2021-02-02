@@ -27,6 +27,7 @@ data BandsController
 
 data NightlyScrapeJobController
     = JobsAction
-    | NewJobAction { bandId :: !(Id Band) }
+    | NewJobAction
+    | CreateNightlyScrapeJobAction
     | ShowJobAction { jobId :: !(Id NightlyScrapeJob) }
     deriving (Eq, Show, Data)
