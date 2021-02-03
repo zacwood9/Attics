@@ -1,8 +1,9 @@
 module Admin.Job.FixSong where
 import Admin.Controller.Prelude
 import Application.Helper.Archive
-import System.IO (hFlush, stdout)
+import System.IO (hFlush, stdout, hSetEncoding)
 import Application.Script.Prelude
+import GHC.IO.Encoding
 
 instance Job FixSongJob where
     perform FixSongJob { .. } = do
@@ -18,6 +19,7 @@ fixSongsForBand
     -> Band
     -> IO ()
 fixSongsForBand searchArchive band = do
+    hSetEncoding stdout utf8
     badRecordings <- getRecordingsWithBadSongNames band
     forEach badRecordings (fixRecording searchArchive)
 
