@@ -12,5 +12,6 @@ instance View ShowView where
             </ol>
         </nav>
         <h1>Show Band</h1>
-        <p>{band}</p>
+        <p>{get #name band}</p>
+        <p>{get #updatedAt band}</p>
     |]

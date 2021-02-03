@@ -20,29 +20,30 @@ import IHP.FetchRelated
 import Control.Exception (bracket,evaluate, SomeException(..))
 
 spec :: Spec
-spec = describe "TestFixSongs" $ do
-    describe "#addNewRecordings" $ do
-        beforeAll (Config.test |> mockContext WebApplication) $ do
-            it "creates new performance and recording" $ withContext do
-                bracket
-                    (do
-                        band <- testBand |> createRecord
-                        p <- testPerformance band |> createRecord
-                        r <- testRecording p |> createRecord
-                        mapM_ createRecord (testSongs r)
-                        pure (band,r))
-                    (cleanupBand)
-                    (\(band, r) -> do
-                        Job.fixSongsForBand mockGetFiles band
-                        songs <- query @Song
-                            |> filterWhere (#recordingId, get #id r)
-                            |> orderBy #track
-                            |> fetch
-                        List.length songs `shouldBe` 2
-                        let (a:b:_) = songs
-                        get #title a `shouldBe` "File 1"
-                        get #title b `shouldBe` "File 2"
-                        )
+spec = describe "Fix Songs Job" $ do
+    beforeAll (Config.test |> mockContext WebApplication) $ do
+        it "updates songs with bad titles" $ withContext do
+            bracket
+                (do
+                    band <- testBand |> createRecord
+                    p <- testPerformance band |> createRecord
+                    r <- testRecording p |> createRecord
+                    mapM_ createRecord (testSongs r)
+                    pure (band,r))
+                (cleanupBand)
+                (\(band, r) -> do
+                    Job.fixSongsForBand mockGetFiles band
+                    songs <- query @Song
+                        |> filterWhere (#recordingId, get #id r)
+                        |> orderBy #track
+                        |> fetch
+                    List.length songs `shouldBe` 2
+                    let (a:b:_) = songs
+                    get #title a `shouldBe` "File 1"
+                    get #fileName a `shouldBe` "file1.mp3"
+                    get #title b `shouldBe` "File 2"
+                    get #fileName b `shouldBe` "file2.mp3"
+                    )
 
 cleanupBand :: (?modelContext :: ModelContext) => (Band, Recording) -> IO ()
 cleanupBand (band, _) = do
