@@ -9,6 +9,8 @@ import Admin.Controller.Jobs
 import Admin.Controller.Bands
 import Admin.Controller.Static
 
+import IHP.AutoRefresh
+
 instance FrontController AdminApplication where
     controllers =
         [ startPage BandsAction
@@ -20,3 +22,4 @@ instance FrontController AdminApplication where
 instance InitControllerContext AdminApplication where
     initContext = do
         setLayout defaultLayout
+        initAutoRefresh

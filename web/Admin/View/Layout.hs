@@ -20,7 +20,7 @@ defaultLayout inner =
     {stylesheets}
     {scripts}
 
-    <title>App</title>
+    <title>Attics Admin</title>
 </head>
 <body>
     <div class="container mt-4">
@@ -49,6 +49,7 @@ scripts = do
         <script src="/vendor/flatpickr.js"></script>
         <script src="/helpers.js"></script>
         <script src="/vendor/morphdom-umd.min.js"></script>
+        <script src="/ihp-auto-refresh.js"></script>
     |]
 
 metaTags :: Html
@@ -60,4 +61,5 @@ metaTags =
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://attics.io/admin/"/>
     <meta property="og:description" content="Attics Admin"/>
+    {autoRefreshMeta}
 |]

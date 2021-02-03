@@ -1,15 +1,15 @@
-module Admin.Worker where
+module Web.Worker where
 
 import IHP.Prelude
-import Admin.Types
+import Web.Types
 import Generated.Types
 import IHP.Job.Runner
 import IHP.Job.Types
 
-import Admin.Job.NightlyScrape
+import Web.Job.FixSong
 
-instance Worker AdminApplication where
+instance Worker WebApplication where
     workers _ =
-        [
+        [ worker @FixSongJob
         -- Generator Marker
         ]

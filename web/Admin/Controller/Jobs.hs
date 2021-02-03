@@ -12,7 +12,7 @@ import qualified Database.PostgreSQL.Simple.Types as PG
 import qualified Database.PostgreSQL.Simple.FromField as PG
 
 instance Controller NightlyScrapeJobController where
-    action JobsAction = do
+    action JobsAction = autoRefresh do
         result <- query @NightlyScrapeJob
             |> orderByDesc #updatedAt
             |> fetch
