@@ -39,13 +39,15 @@ getRecordingsWithBadSongNames
     => Band
     -> IO [Recording]
 getRecordingsWithBadSongNames band =
-    sqlQuery query ()
+    sqlQuery query (Only (get #id band))
     where
         query = [sql|
             SELECT DISTINCT ON (recordings.identifier) recordings.*
             FROM songs
             INNER JOIN recordings ON recordings.id = songs.recording_id
-            WHERE songs.title = songs.file_name
+            INNER JOIN performances ON performances.id = recordings.performance_id
+            INNER JOIN bands ON bands.id = performances.band_id
+            WHERE songs.title = songs.file_name AND bands.id = ?
         |]
 
 getCurrentSongs
