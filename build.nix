@@ -23,6 +23,7 @@ in
         buildPhase = ''
           make -f ${ihp}/lib/IHP/Makefile.dist -B build/bin/RunOptimizedProdServer
           ${buildScript "NightlyScrape"}
+          ${buildScript "FixSongs"}
           ${make "build/bin/RunJobs"}
         '';
         installPhase = ''

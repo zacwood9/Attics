@@ -31,6 +31,7 @@ FROM scratch
 COPY --from=builder /tmp/nix-store-closure /nix/store
 COPY --from=builder /app/result /app
 COPY --from=builder /app/web/IHP /app/IHP
+COPY --from=builder /app/web/Application/Migration /app/Migration
 
 # certs for HTTPS requests
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt

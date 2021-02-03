@@ -18,16 +18,30 @@ instance Controller NightlyScrapeJobController where
             |> fetch
             >>= collectionFetchRelated #bandId
 
-        render $ IndexView result
+        fixSongs <- query @FixSongJob
+            |> orderByDesc #updatedAt
+            |> fetch
+            >>= collectionFetchRelated #bandId
+
+        render $ IndexView result fixSongs
 
     action NewJobAction = do
         let job = newRecord
         bands <- query @Band |> fetch
         render NewView { .. }
 
+    action NewFixSongJobAction = do
+        let job = newRecord
+        bands <- query @Band |> fetch
+        render NewFixSongJobView { .. }
+
     action ShowJobAction { jobId } = do
         job <- fetch jobId >>= fetchRelated #bandId
         render JobView { job }
+
+    action ShowFixSongJobAction { fixSongJobId } = do
+        job <- fetch fixSongJobId >>= fetchRelated #bandId
+        render FixSongJobView { job }
 
     action CreateNightlyScrapeJobAction = do
         let job = newRecord @NightlyScrapeJob
@@ -39,6 +53,18 @@ instance Controller NightlyScrapeJobController where
                     job <- job |> createRecord
                     setSuccessMessage "Job created"
                     redirectTo JobsAction
+
+    action CreateFixSongJobAction = do
+        let job = newRecord @FixSongJob
+        job
+            |> buildJob
+            |> ifValid \case
+                Left job -> redirectTo NewJobAction
+                Right job -> do
+                    job <- job |> createRecord
+                    setSuccessMessage "Job created"
+                    redirectTo JobsAction
+
 
 --     action EditJobAction { jobId } = do
 --         job <- fetch jobId

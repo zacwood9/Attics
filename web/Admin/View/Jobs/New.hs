@@ -21,6 +21,25 @@ renderForm job bands = formFor job [hsx|
     {submitButton}
 |]
 
+data NewFixSongJobView = NewFixSongJobView  { job :: FixSongJob, bands :: [Band] }
+instance View NewFixSongJobView  where
+    html NewFixSongJobView   { .. } = [hsx|
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href={JobsAction}>Jobs</a></li>
+                <li class="breadcrumb-item active">New Job</li>
+            </ol>
+        </nav>
+        <h1>New Job</h1>
+        {renderForm' job bands}
+    |]
+
+renderForm' :: FixSongJob -> [Band] -> Html
+renderForm' job bands = formFor job [hsx|
+    {(selectField #bandId bands)}
+    {submitButton}
+|]
+
 instance CanSelect Band where
     -- Here we specify that the <option> value should contain a `Id User`
     type SelectValue Band = Id Band
