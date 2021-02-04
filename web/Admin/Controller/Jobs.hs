@@ -11,7 +11,7 @@ import qualified Database.PostgreSQL.Simple as PG
 import qualified Database.PostgreSQL.Simple.Types as PG
 import qualified Database.PostgreSQL.Simple.FromField as PG
 
-instance Controller NightlyScrapeJobController where
+instance Controller JobsController where
     action JobsAction = autoRefresh do
         result <- query @NightlyScrapeJob
             |> orderByDesc #updatedAt
@@ -35,6 +35,11 @@ instance Controller NightlyScrapeJobController where
         bands <- query @Band |> fetch
         render NewFixSongJobView { .. }
 
+    action NewInitialScrapeJobAction = do
+        let job = newRecord
+        bands <- query @Band |> fetch
+        render NewInitialScrapeJobView { .. }
+
     action ShowJobAction { jobId } = do
         job <- fetch jobId >>= fetchRelated #bandId
         render JobView { job }
@@ -42,6 +47,10 @@ instance Controller NightlyScrapeJobController where
     action ShowFixSongJobAction { fixSongJobId } = do
         job <- fetch fixSongJobId >>= fetchRelated #bandId
         render FixSongJobView { job }
+
+    action ShowInitialScrapeJobAction { initialScrapeJobId } = do
+        job <- fetch initialScrapeJobId  >>= fetchRelated #bandId
+        render InitialScrapeJobView { job }
 
     action CreateNightlyScrapeJobAction = do
         let job = newRecord @NightlyScrapeJob
@@ -64,6 +73,18 @@ instance Controller NightlyScrapeJobController where
                     job <- job |> createRecord
                     setSuccessMessage "Job created"
                     redirectTo JobsAction
+
+    action CreateInitialScrapeJobAction = do
+        let job = newRecord @InitialScrapeJob
+        job
+            |> buildJob
+            |> ifValid \case
+                Left job -> redirectTo NewJobAction
+                Right job -> do
+                    job <- job |> createRecord
+                    setSuccessMessage "Job created"
+                    redirectTo JobsAction
+
 
 
 --     action EditJobAction { jobId } = do

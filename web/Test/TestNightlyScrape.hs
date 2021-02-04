@@ -195,7 +195,7 @@ item3Files = [
         afTitle = Nothing,
         afTrack = Nothing,
         afAlbum = Nothing,
-        afLength = Just "123123",
+        afLength = Just "1:23",
         afOriginal = "file2.flac",
         afFormat = Nothing
     },
@@ -205,7 +205,7 @@ item3Files = [
         afTitle = Just "File 2",
         afTrack = Just "2",
         afAlbum = Nothing,
-        afLength = Just "1:23",
+        afLength = Just "123:23",
         afOriginal = Nothing,
         afFormat = Nothing
     }

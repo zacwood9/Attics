@@ -295,7 +295,7 @@ filesToSongs files =
                 atticsSongTitle = pluckFromPair mp3 original afFileName afTitle,
                 atticsSongTrack = i + 1,
                 atticsSongCreator = pluckFromPair mp3 original (\_ -> "Unknown") afCreator,
-                atticsSongLength = pluckFromPair mp3 original (\_ -> "0:00") afLength,
+                atticsSongLength = fromMaybe "0:00" $ afLength mp3,
                 atticsSongAlbum = pluckFromPair mp3 original (\_ -> "Unknown") afAlbum
                 }
 

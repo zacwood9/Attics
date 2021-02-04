@@ -19,6 +19,7 @@ instance View IndexView where
             <h1>Jobs
                 <a href={NewJobAction} class="btn btn-primary ml-4">+ New Scrape</a>
                 <a href={NewFixSongJobAction} class="btn btn-primary ml-4">+ New Fix Songs</a>
+                <a href={NewInitialScrapeJobAction} class="btn btn-primary ml-4">+ New Initial Scrape</a>
             </h1>
         </div>
         <div class="table-responsive">

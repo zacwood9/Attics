@@ -3,8 +3,8 @@ module Application.Helper.Scrape
     RecordingData (..),
     archiveToAttics,
     buildPerformanceFromRecordings,
-    makeRecordingRecord,
     getOrCreateRecordingFromData,
+    makeRecordingRecord,
     makeSongRecord,
   )
 where
@@ -18,15 +18,6 @@ import qualified Data.List as List (length)
 import qualified Data.Text as Text
 import Database.PostgreSQL.Simple.SqlQQ
 import Text.Read (readMaybe)
-
--- data PerformanceData = PerformanceData
---   { showCollection :: Text,
---     showDate :: Text,
---     showVenue :: Text,
---     showCity :: Text,
---     showState :: Text
---   }
---   deriving (Show)
 
 data RecordingData = RecordingData
   { identifier :: Text,
@@ -114,17 +105,6 @@ buildPerformanceFromRecordings band (firstRecording : recordings) =
                 State.put (Builder band date nextVenue nextCity nextState rest)
                 helper firstSrc
 
-makeRecordingRecord performanceId RecordingData {..} =
-  newRecord @Recording
-    |> set #identifier identifier
-    |> set #performanceId performanceId
-    |> set #transferer transferer
-    |> set #source source
-    |> set #lineage lineage
-    |> set #archiveDownloads downloads
-    |> set #avgRating avgRating
-    |> set #numReviews numReviews
-
 getOrCreateRecordingFromData :: (?modelContext :: ModelContext) => Band -> RecordingData -> IO Recording
 getOrCreateRecordingFromData  band recording = do
   performanceId <- sqlQuery performanceIdQuery [get #collection recording, get #date recording]
@@ -140,7 +120,9 @@ getOrCreateRecordingFromData  band recording = do
           |> create
           <&> get #id
 
-  pure $ makeRecordingRecord id recording
+  makeRecordingRecord recording
+    |> set #performanceId id
+    |> pure
   where
     performanceIdQuery =
       [sql|
@@ -149,6 +131,16 @@ getOrCreateRecordingFromData  band recording = do
           inner join bands on performances.band_id = bands.id
           where bands.collection = ? and performances.date = ?
       |]
+
+makeRecordingRecord RecordingData {..} =
+  newRecord @Recording
+    |> set #identifier identifier
+    |> set #transferer transferer
+    |> set #source source
+    |> set #lineage lineage
+    |> set #archiveDownloads downloads
+    |> set #avgRating avgRating
+    |> set #numReviews numReviews
 
 makeSongRecord :: Recording -> ArchiveSong -> Song
 makeSongRecord recording ArchiveSong {..} =

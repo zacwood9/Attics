@@ -8,5 +8,5 @@ instance AutoRoute StaticController
 instance AutoRoute BandsController
 
 
-instance AutoRoute NightlyScrapeJobController
+instance AutoRoute JobsController
 

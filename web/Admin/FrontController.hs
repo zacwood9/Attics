@@ -15,7 +15,7 @@ instance FrontController AdminApplication where
     controllers =
         [ startPage BandsAction
         -- Generator Marker
-        , parseRoute @NightlyScrapeJobController
+        , parseRoute @JobsController
         , parseRoute @BandsController
         ]
 

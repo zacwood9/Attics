@@ -19,7 +19,7 @@ fixSongsForBand
     -> Band
     -> IO ()
 fixSongsForBand searchArchive band = do
-    hSetEncoding stdout utf8
+    hSetEncoding stdout utf8 -- fixes weird crash while running in docker?
     badRecordings <- getRecordingsWithBadSongNames band
     forEach badRecordings (fixRecording searchArchive)
 
@@ -33,7 +33,7 @@ fixRecording getArchiveFiles recording  = do
     archiveSongs <- getSongsForRecording recording getArchiveFiles
     zip currentSongs archiveSongs
         |> mapM_ updateSong
-    hFlush stdout
+    hFlush stdout -- force logs to be printed in docker logs
     pure ()
 
 getRecordingsWithBadSongNames

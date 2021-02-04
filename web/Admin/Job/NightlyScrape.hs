@@ -38,12 +38,13 @@ addNewRecordings band archiveSearch = do
     -- get recently uploaded recordings
     result <- getNewRecordingsFromArchive band PublicDate archiveSearch
 
+
     case result of
         [] -> do
             putStrLn $ "No recent recordings found for " <> get #collection band <> ". Skipping."
             pure []
         recentRecordingData -> do
-            recordingDatas <- mapM (getOrCreateRecordingFromData band) recentRecordingData
+            records <- mapM (getOrCreateRecordingFromData band) recentRecordingData
             created <- mapM
                 (\record -> do
                     result <- try (create record)
@@ -54,7 +55,7 @@ addNewRecordings band archiveSearch = do
                                 <> ": " <> show e
                             pure Nothing
                         Right r -> pure $ Just r)
-                recordingDatas
+                records
             pure (catMaybes created)
 
 
@@ -135,6 +136,16 @@ getNewRecordingsFromArchive band sort searchArchive = do
         |> map (archiveToAttics (get #collection band))
         |> pure
 
+getNewItemsFromArchive
+    :: Band
+    -> AdvancedSearchSort
+    -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
+    -> IO [ArchiveItem]
+getNewItemsFromArchive band sort searchArchive = do
+    result <- searchArchive (get #collection band) sort
+    filterSinceTime result (get #updatedAt band)
+        |> pure
+
 filterSinceTime :: [(ArchiveItem, UTCTime)] -> UTCTime -> [ArchiveItem]
 filterSinceTime recordingsWithTimes updatedAt =
   let newIds = filter (\(_, time) -> time > updatedAt) recordingsWithTimes
@@ -142,4 +153,3 @@ filterSinceTime recordingsWithTimes updatedAt =
 
 mapFst :: (a -> b) -> (a, c) -> (b, c)
 mapFst f (a, c) = (f a, c)
-
