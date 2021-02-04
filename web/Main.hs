@@ -11,11 +11,14 @@ import Web.Types
 import Admin.FrontController
 import Admin.Types
 import Admin.Worker
+import Health.FrontController
+import Health.Types
 
 instance FrontController RootApplication where
     controllers = [
             mountFrontController WebApplication
             , mountFrontController AdminApplication
+            , mountFrontController HealthApplication
         ]
 
 instance Worker RootApplication where

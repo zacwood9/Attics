@@ -5,8 +5,8 @@ import Application.Helper.Scrape
 import System.IO (hFlush, stdout, hSetEncoding)
 import Application.Script.Prelude
 import GHC.IO.Encoding
-import qualified Data.HashMap.Strict        as HashMap
-import qualified Data.List        as List
+import qualified Data.HashMap.Strict as HashMap
+import qualified Data.List as List
 
 instance Job InitialScrapeJob where
     perform InitialScrapeJob  { .. } = do
@@ -86,7 +86,7 @@ addSongsForRecording getFiles recording = do
 getPerformanceOrNothing
     :: (?modelContext :: ModelContext)
     => Band
-    -> Text
+    -> Date
     -> IO (Maybe Performance)
 getPerformanceOrNothing band date = do
     queryResult <- sqlQuery performanceIdQuery [get #collection band, date]
@@ -104,8 +104,8 @@ getPerformanceOrNothing band date = do
 
 buildDateList :: [ArchiveItem] -> [(Text, [ArchiveItem])]
 buildDateList items =
-  foldr
-    (\item -> HashMap.insertWith (++) (get #date item) [item])
-    HashMap.empty
     items
-    |> HashMap.toList
+        |> foldr
+            (\item -> HashMap.insertWith (++) (get #date item) [item])
+            HashMap.empty
+        |> HashMap.toList
