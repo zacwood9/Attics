@@ -27,6 +27,7 @@ import IHP.ControllerPrelude
 import Network.HTTP.Types.Status
 import Network.Wai
 import Application.Types
+import Control.Exception (try)
 
 badRequest :: IO ()
 badRequest = respondAndExit $ responseLBS status403 [] "bad request"
@@ -188,23 +189,26 @@ fetchBand' id = sqlQuery bandsQuery (Only id) >>= \case
   |]
 
 
-instance FromRow MigrationItem where
-  fromRow = MigrationItem <$> fromRow <*> fromRow <*> fromRow
-
 fetchMigrationItems :: (?modelContext :: ModelContext) => [Identifier] -> IO [MigrationItem]
 fetchMigrationItems ids = do
-  recordings <- mapM
-    (\id -> query @Recording |> filterWhere (#identifier, id) |> fetchOne)
-    ids
+    recordings <- catMaybes <$> mapM
+        (\id -> tryMaybe (query @Recording |> filterWhere (#identifier, id) |> fetchOne))
+        ids
 
-  perfs <- mapM
-    (fetchPerformance' . get #performanceId)
-    recordings
+    perfs <- mapM
+        (fetchPerformance' . get #performanceId)
+        recordings
 
-  bands <- mapM
-    (fetchBand' . get #bandId . get #performance)
-    perfs
+    bands <- mapM
+        (fetchBand' . get #bandId . get #performance)
+        perfs
 
-  pure $ zip3 bands perfs recordings
-    |> map (\(a, b, c) -> MigrationItem a b c)
+    pure $ zip3 bands perfs recordings
+        |> map (\(a, b, c) -> MigrationItem a b c)
 
+tryMaybe :: IO a -> IO (Maybe a)
+tryMaybe action = do
+    result <- try action
+    case result of
+        Right success -> pure $ Just success
+        Left (e :: SomeException) -> pure Nothing
