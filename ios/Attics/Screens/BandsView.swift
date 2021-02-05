@@ -33,7 +33,12 @@ class BandsViewModel : ObservableObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    self.bands = .error(error)
+                    switch self.bands {
+                    case .success(_):
+                        break
+                    default:
+                        self.bands = .error(error)
+                    }
                 default:
                     break
                 }

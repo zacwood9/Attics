@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class ErrorVC: UIViewController {
     
@@ -67,5 +68,15 @@ class ErrorVC: UIViewController {
             
             label.widthAnchor.constraint(equalToConstant: 200),
         ])
+    }
+}
+
+struct ErrorComponent: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> ErrorVC {
+        return ErrorVC()
+    }
+    
+    func updateUIViewController(_ uiViewController: ErrorVC, context: Context) {
+        
     }
 }

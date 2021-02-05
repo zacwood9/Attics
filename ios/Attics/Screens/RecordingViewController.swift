@@ -476,6 +476,7 @@ struct SongList: View {
                 leadingView
                     .font(.footnote)
                     .foregroundColor(Color.init(.tertiaryLabel))
+                    .frame(minWidth: 14, alignment: .trailing)
                 title.lineLimit(1)
                 Spacer()
                 trailingView(song)

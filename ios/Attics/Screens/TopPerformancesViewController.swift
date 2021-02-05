@@ -58,6 +58,7 @@ class TopPerformancesViewController: UIViewController {
     
     // MARK: View Controller Lifecycle
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()

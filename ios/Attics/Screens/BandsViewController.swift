@@ -29,6 +29,8 @@ struct BandsView : View {
                             .padding([.leading, .trailing], 12)
                     }
                 }.background(Color(.systemBackground)).padding(.top, 12)
+            case .error(let error):
+                Text("An error occurred. \(error.message)")
             default: LoadingComponent(retry: nil).onAppear(perform: viewModel.load)
             }
         }
