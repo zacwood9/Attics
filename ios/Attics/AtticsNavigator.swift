@@ -94,7 +94,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     
     func presentNowPlayingController(stored: StoredRecording, song: Song) {
         let playlist = Playlist(band: stored.band, show: stored.performance, source: stored.recording, songs: stored.songs)
-        musicPlayer.play(song, playlist)
+        musicPlayer.start(song, playlist)
         
         let vm = RecordingViewModel(
             band: stored.band,
@@ -102,7 +102,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
             recording: stored.recording,
             api: apiClient,
             storage: storage,
-            songTapped: { [weak self] _,song in self?.musicPlayer.play(song, playlist) }
+            songTapped: { [weak self] _,song in self?.musicPlayer.start(song, playlist) }
         )
         nowPlayingVC = PlayerViewController(viewModel: vm, musicPlayer: musicPlayer)
         
@@ -132,7 +132,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
             recording: state.playlist.source,
             api: apiClient,
             storage: storage,
-            songTapped: { [weak self] _,song in self?.musicPlayer.play(song, state.playlist) }
+            songTapped: { [weak self] _,song in self?.musicPlayer.start(song, state.playlist) }
         )
         nowPlayingVC = PlayerViewController(viewModel: vm, musicPlayer: musicPlayer)
         

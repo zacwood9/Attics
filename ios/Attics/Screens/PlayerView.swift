@@ -28,7 +28,7 @@ struct PlayerView: View {
                 SongList(
                     viewModel: viewModel,
                     musicPlayer: player,
-                    songClick: { player.play($0, state.playlist) }
+                    songClick: { player.start($0, state.playlist) }
                 ).environmentObject(player)
             }
             Slider(value: $player.percentFinished, in: 0...1, onEditingChanged: player.seekStateDidChange)
@@ -87,7 +87,7 @@ struct MediaControls : View {
                         }
                     Image(systemName: "forward.fill")
                         .onTapGesture {
-                            player.nextTrackForce()
+                            player.nextTrack()
                         }
                 }
                 .padding(.bottom)
