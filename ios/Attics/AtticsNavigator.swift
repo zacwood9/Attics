@@ -94,7 +94,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     
     func presentNowPlayingController(stored: StoredRecording, song: Song) {
         let playlist = Playlist(band: stored.band, show: stored.performance, source: stored.recording, songs: stored.songs)
-        musicPlayer.dispatch(action: .play(song, playlist))
+        musicPlayer.play(song, playlist)
         
         let vm = RecordingViewModel(
             band: stored.band,
@@ -102,7 +102,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
             recording: stored.recording,
             api: apiClient,
             storage: storage,
-            songTapped: { [weak self] _,song in self?.musicPlayer.dispatch(action: .play(song, playlist)) }
+            songTapped: { [weak self] _,song in self?.musicPlayer.play(song, playlist) }
         )
         nowPlayingVC = PlayerViewController(viewModel: vm, musicPlayer: musicPlayer)
         
@@ -132,7 +132,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
             recording: state.playlist.source,
             api: apiClient,
             storage: storage,
-            songTapped: { [weak self] _,song in self?.musicPlayer.dispatch(action: .play(song, state.playlist)) }
+            songTapped: { [weak self] _,song in self?.musicPlayer.play(song, state.playlist) }
         )
         nowPlayingVC = PlayerViewController(viewModel: vm, musicPlayer: musicPlayer)
         
@@ -154,7 +154,7 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.navigationController.tabBarController?.presentPopupBar(withContentViewController: self.nowPlayingVC, animated: true, completion: nil)
-            self.musicPlayer.dispatch(action: .restore(state))
+            self.musicPlayer.restore(state)
         }
     }
     
@@ -199,14 +199,14 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     }
     
     @objc func _play() {
-        musicPlayer.dispatch(action: .resume)
+        musicPlayer.resume()
     }
     
     @objc func _pause() {
-        musicPlayer.dispatch(action: .pause)
+        musicPlayer.pause()
     }
     
     @objc func _nextTrack() {
-        musicPlayer.dispatch(action: .nextTrack)
+        musicPlayer.nextTrack()
     }
 }

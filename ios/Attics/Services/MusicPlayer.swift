@@ -18,16 +18,6 @@ struct Playlist: Codable {
 }
 
 class MusicPlayer : ObservableObject {
-    enum Action {
-        case play(Song, Playlist)
-        case nextTrack
-        case previousTrack
-        case seek(Double)
-        case pause
-        case resume
-        case restore(State)
-    }
-    
     struct State: Codable {
         var song: Song
         var playlist: Playlist
@@ -69,49 +59,60 @@ class MusicPlayer : ObservableObject {
     @Published var state: State? = nil
     @Published var showPopup: Bool = false
     
-    func dispatch(action: Action) {
-        switch action {
-        case .play(let song, let playlist):
-            state = State(song: song, playlist: playlist, time: 0, duration: 0, playing: true)
-            startPlayer()
-            
-        case .resume:
-            guard state != nil else { fatalError(".resume action called without state") }
-            guard state!.playing == false else { return }
-            state!.playing = true
-            player.play()
-            
-        case .nextTrack:
-            guard state != nil else { fatalError(".nextTrack action called without state") }
-            state!.nextTrack()
-            state!.playing = true
-            startPlayer()
-            
-        case .previousTrack:
-            guard state != nil else { fatalError(".previousTrack action called without state") }
-            state!.previousTrack()
-            state!.playing = true
-            startPlayer()
-            
-        case .seek(let time):
-            guard state != nil else { fatalError(".seek action called without state") }
-            state!.seek(to: time)
-            
-        case .pause:
-            guard state != nil else { fatalError(".pause action called without state") }
-            state!.playing = false
-            player.pause()
-            
-        case .restore(let s):
-            guard state == nil else { return }
-            state = s
-            startPlayer()
-            player.pause()
-            player.seek(to: CMTime(seconds: s.time, preferredTimescale: 100))
-        }
+    func play(_ song: Song, _ playlist: Playlist) {
+        state = State(song: song, playlist: playlist, time: 0, duration: 0, playing: true)
+        initializePlayer()
     }
     
-    private var player: AVPlayer = AVPlayer(playerItem: nil)
+    func resume() {
+        guard state != nil else { fatalError(".resume action called without state") }
+        guard state!.playing == false else { return }
+        state!.playing = true
+        player.play()
+    }
+    
+    func nextTrack() {
+        guard state != nil else { fatalError(".nextTrack action called without state") }
+        state!.nextTrack()
+        state!.playing = true
+        advancePlayer()
+    }
+    
+    func nextTrackForce() {
+        guard state != nil else { fatalError(".nextTrackForce action called without state") }
+        state!.nextTrack()
+        state!.playing = true
+        initializePlayer()
+    }
+    
+    func previousTrack() {
+        guard state != nil else { fatalError(".previousTrack action called without state") }
+        state!.previousTrack()
+        state!.playing = true
+        initializePlayer()
+    }
+    
+    func seek(_ time: Double) {
+        guard state != nil else { fatalError(".seek action called without state") }
+        state!.seek(to: time)
+    }
+    
+    func pause() {
+        guard state != nil else { fatalError(".pause action called without state") }
+        state!.playing = false
+        player.pause()
+        
+    }
+    
+    func restore(_ s: State) {
+        guard state == nil else { return }
+        state = s
+        initializePlayer()
+        player.pause()
+        player.seek(to: CMTime(seconds: s.time, preferredTimescale: 100))
+    }
+    
+    private var player: AVQueuePlayer = AVQueuePlayer(playerItem: nil)
     private var item: AVPlayerItem? = nil
     private var storage: AppStorageManager
     
@@ -126,27 +127,31 @@ class MusicPlayer : ObservableObject {
     private init(storage: AppStorageManager) {
         self.storage = storage
         setupRemoteControls()
+        
+        itemStarted = player.publisher(for: \.currentItem, options: .new)
+            .sink(receiveValue: { _ in
+                self.setupNowPlayingOther()
+            })
     }
     
     static var shared = MusicPlayer(storage: AppStorageManager.shared)
     
     private var songEndedObserver: AnyCancellable?
     private var interruptionObserver: AnyCancellable?
-    
-    private func startPlayer() {
+    private var observer: Any? = nil
+    private func initializePlayer() {
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
         UIApplication.shared.beginReceivingRemoteControlEvents()
         player.pause()
+        player.removeAllItems()
         
         guard let state = state else { fatalError("Attempted to start player without state") }
         // at this point, we have a new state, nothing is loaded
         
-        // try to get the song from disk
         if let url = storage.getLocalSongUrl(recording: state.playlist.source, song: state.song) {
             print("LOG: Playing from disk")
             item = AVPlayerItem(url: url)
-            player = AVPlayer(playerItem: item)
-            player.automaticallyWaitsToMinimizeStalling = false
+            player.insert(item!, after: nil)
             player.play()
         } else {
             let identifier = state.playlist.source.identifier
@@ -154,17 +159,81 @@ class MusicPlayer : ObservableObject {
             let downloadUrl = "https://archive.org/download/\(identifier)/\(fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             
             item = AVPlayerItem(url: URL(string: downloadUrl)!)
-            player = AVPlayer(playerItem: item)
+            player.insert(item!, after: nil)
             player.automaticallyWaitsToMinimizeStalling = false
             player.play()
         }
         
         setupNowPlaying(state.song)
         
-        player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { [weak self] time in
+        if let observer = observer {
+            player.removeTimeObserver(observer)
+        }
+        observer = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { [weak self] time in
             guard let self = self, time.isValid, !self.viewIsSeeking else { return }
             self.updateSeeker()
-            self.setupNowPlaying(state.song)
+            self.setupNowPlayingOther()
+        }
+        
+        showPopup = true
+        percentFinished = 0
+        
+        let nc = NotificationCenter.default
+        if let current = songEndedObserver {
+            current.cancel()
+        }
+        songEndedObserver = nc.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
+            self?.state?.nextTrack()
+        }
+        if let current = interruptionObserver {
+            current.cancel()
+        }
+        interruptionObserver = nc.publisher(for: AVAudioSession.interruptionNotification).sink { [weak self] _ in
+            self?.pause()
+        }
+        
+        cacheNextSong()
+    }
+    
+    var newPlayerItemSubscription: AnyCancellable?
+    
+    var itemStarted: AnyCancellable?
+    private func advancePlayer() {
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
+        guard let state = state else { fatalError("Attempted to start player without state") }
+        // at this point, we have a new state, nothing is loaded
+        
+        
+        
+        if storage.getLocalSongUrl(recording: state.playlist.source, song: state.song) == nil {
+            print("asdf")
+            newPlayerItemSubscription?.cancel()
+            
+            let identifier = state.playlist.source.identifier
+            let fileName = state.song.fileName
+            let downloadUrl = "https://archive.org/download/\(identifier)/\(fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            
+            item = AVPlayerItem(url: URL(string: downloadUrl)!)
+            player.insert(item!, after: nil)
+            
+            newPlayerItemSubscription = item?.publisher(for: \.status).sink(receiveValue: { status in
+                if status == .readyToPlay {
+                    self.player.advanceToNextItem()
+                }
+            })
+        }
+        
+        setupNowPlaying(state.song)
+        
+        if let observer = observer {
+            player.removeTimeObserver(observer)
+        }
+        observer = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { [weak self] time in
+            guard let self = self, time.isValid, !self.viewIsSeeking else { return }
+            self.updateSeeker()
+            self.setupNowPlayingOther()
         }
         
         showPopup = true
@@ -176,20 +245,21 @@ class MusicPlayer : ObservableObject {
             current.cancel()
         }
         songEndedObserver = nc.publisher(for: .AVPlayerItemDidPlayToEndTime).sink { [weak self] _ in
-            self?.dispatch(action: .nextTrack)
+            self?.state?.nextTrack()
         }
         
         if let current = interruptionObserver {
             current.cancel()
         }
         interruptionObserver = nc.publisher(for: AVAudioSession.interruptionNotification).sink { [weak self] _ in
-            self?.dispatch(action: .pause)
+            self?.pause()
         }
         
         cacheNextSong()
     }
     
     var nextSongTask: DownloadTask_?
+
     func cacheNextSong() {
         guard let state = state else { return }
         
@@ -202,11 +272,15 @@ class MusicPlayer : ObservableObject {
             task.cancel()
         }
         
-        guard storage.getLocalSongUrl(recording: state.playlist.source, song: nextSong) == nil else { return }
-        
+        if let url = storage.getLocalSongUrl(recording: state.playlist.source, song: nextSong) {
+            player.insert(AVPlayerItem(url: url), after: nil)
+            return
+        }
+            
         nextSongTask = DownloadTask_(url: URL(string: downloadUrl)!) { url in
-            print("got url")
-            self.storage.moveDownloadToCache(url, state.playlist.source.identifier, nextSong)
+            if let cacheUrl = self.storage.moveDownloadToCache(url, state.playlist.source.identifier, nextSong) {
+                self.player.insert(AVPlayerItem(url: cacheUrl), after: nil)
+            }
         }
         nextSongTask?.resume()
     }
@@ -233,7 +307,7 @@ class MusicPlayer : ObservableObject {
     }
     
     var currentTime: String {
-        if let item = item {
+        if let item = player.currentItem {
             if viewIsSeeking && item.duration.isNumeric {
                 return (item.duration.seconds * percentFinished).timeString
             }
@@ -249,7 +323,7 @@ class MusicPlayer : ObservableObject {
     }
     
     var duration: String {
-        if let item = item, item.duration.isNumeric {
+        if let item = player.currentItem, item.duration.isNumeric {
             return item.duration.seconds.timeString
         } else {
             return "..."
@@ -277,7 +351,7 @@ class MusicPlayer : ObservableObject {
             guard let self = self, let state = self.state else { return .noActionableNowPlayingItem }
             
             if !state.playing {
-                self.dispatch(action: .resume)
+                self.resume()
                 return .success
             }
             return .commandFailed
@@ -287,7 +361,7 @@ class MusicPlayer : ObservableObject {
             guard let self = self, let state = self.state else { return .noActionableNowPlayingItem }
             
             if state.playing {
-                self.dispatch(action: .pause)
+                self.pause()
                 return .success
             }
             return .commandFailed
@@ -295,13 +369,13 @@ class MusicPlayer : ObservableObject {
         
         commandCenter.nextTrackCommand.addTarget { [weak self] _ in
             guard let self = self else { return .noActionableNowPlayingItem }
-            self.dispatch(action: .nextTrack)
+            self.nextTrackForce()
             return .success
         }
         
         commandCenter.previousTrackCommand.addTarget { [weak self] _ in
             guard let self = self else { return .noActionableNowPlayingItem }
-            self.dispatch(action: .previousTrack)
+            self.previousTrack()
             return .success
         }
         
@@ -323,6 +397,22 @@ class MusicPlayer : ObservableObject {
             duration: player.currentItem?.duration.seconds ?? 0.0,
             rate: player.rate,
             artist: state!.playlist.band.name,
+            album: song.album
+        )
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info.toNowPlayingInfo()
+    }
+    
+    func setupNowPlayingOther() {
+        guard let state = state else { return }
+        let song = state.song
+        
+        let info = Info(
+            title: song.title,
+            currentTime: player.currentTime().seconds,
+            duration: player.currentItem?.duration.seconds ?? 0.0,
+            rate: player.rate,
+            artist: state.playlist.band.name,
             album: song.album
         )
         

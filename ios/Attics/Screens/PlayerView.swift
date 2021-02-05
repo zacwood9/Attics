@@ -28,7 +28,7 @@ struct PlayerView: View {
                 SongList(
                     viewModel: viewModel,
                     musicPlayer: player,
-                    songClick: { player.dispatch(action: .play($0, state.playlist))}
+                    songClick: { player.play($0, state.playlist) }
                 ).environmentObject(player)
             }
             Slider(value: $player.percentFinished, in: 0...1, onEditingChanged: player.seekStateDidChange)
@@ -43,15 +43,15 @@ struct PlayerView: View {
             HStack(alignment: .center, spacing: 40) {
                 Image(systemName: "backward.fill")
                     .onTapGesture {
-                        player.dispatch(action: .previousTrack)
+                        player.previousTrack()
                     }
                 Image(systemName: state.playing ? "pause.fill" : "play.fill")
                     .onTapGesture {
-                        player.dispatch(action: state.playing ? .pause : .resume)
+                        state.playing ? player.pause() : player.resume()
                     }
                 Image(systemName: "forward.fill")
                     .onTapGesture {
-                        player.dispatch(action: .nextTrack)
+                        player.nextTrack()
                     }
             }
             .font(.system(size: 40))
@@ -79,15 +79,15 @@ struct MediaControls : View {
                 HStack(alignment: .center, spacing: 40) {
                     Image(systemName: "backward.fill")
                         .onTapGesture {
-                            player.dispatch(action: .previousTrack)
+                            player.previousTrack()
                         }
                     Image(systemName: state.playing ? "pause.fill" : "play.fill")
                         .onTapGesture {
-                            player.dispatch(action: state.playing ? .pause : .resume)
+                            state.playing ? player.pause() : player.resume()
                         }
                     Image(systemName: "forward.fill")
                         .onTapGesture {
-                            player.dispatch(action: .nextTrack)
+                            player.nextTrackForce()
                         }
                 }
                 .padding(.bottom)

@@ -26,7 +26,7 @@ class BandsViewModel : ObservableObject {
     func load() {
         let stored = storage.bands
         if !stored.isEmpty {
-            bands = .success(stored)
+            bands = .success(stored.sorted(by: { $0.name < $1.name }))
         }
         request = apiClient.getBands()
             .receive(on: DispatchQueue.main)
@@ -58,25 +58,45 @@ struct RemoteImage: View {
     @State var cancellable: AnyCancellable?
     
     func load() {
-        print(name)
-        if let image = try? loadFromFile() {
-            state = .loaded(image)
-        } else {
-            print("loading from url")
-            cancellable = URLSession.shared.dataTaskPublisher(for: url)
-                .map(\.data)
-                .map(UIImage.init)
-                .sink(receiveCompletion: { _ in }, receiveValue: { image in
-                    if let image = image {
-                        if (try? writeFile(image: image)) == nil {
-                            print("failed to write image")
-                        }
-                        self.state = .loaded(image)
-                    } else {
-                        print("wat")
-                    }
-                })
+        guard asyncFileLoad({ image in
+            self.state = .loaded(image)
+        }, failure: loadFromUrl) else {
+            loadFromUrl()
+            return
         }
+    }
+    
+    private func loadFromUrl() {
+        print("loading from url")
+        cancellable = URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .map(UIImage.init)
+            .sink(receiveCompletion: { _ in }, receiveValue: { image in
+                if let image = image {
+                    if (try? writeFile(image: image)) == nil {
+                        print("failed to write image")
+                    }
+                    self.state = .loaded(image)
+                } else {
+                    print("wat")
+                }
+            })
+    }
+    
+    func asyncFileLoad(_ completion: @escaping (UIImage) -> (), failure: @escaping () -> ()) -> Bool {
+        let folder = try! Folder.applicationSupport.createSubfolderIfNeeded(withName: "Images")
+        guard let file = try? folder.file(named: name + ".jpeg") else { return false }
+        DispatchQueue.init(label: "background", qos: .userInteractive).async {
+            if let data = try? file.read(),
+               let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            } else {
+                failure()
+            }
+        }
+        return true
     }
     
     func loadFromFile() throws -> UIImage? {

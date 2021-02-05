@@ -23,7 +23,7 @@ struct BandsView : View {
                     ? bands
                     : bands.filter { $0.name.lowercased().contains(searchString) }
                 
-                VStack(spacing: 12) {
+                LazyVStack(spacing: 12) {
                     ForEach(displayedBands, id: \.collection) { band in
                         BandView(band: band, onClick: viewModel.onBandClick)
                             .padding([.leading, .trailing], 12)

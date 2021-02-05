@@ -21,7 +21,7 @@ class PlayerViewController : UIViewController {
             musicPlayer: musicPlayer,
             songClick: { [weak self] song in
                 guard let self = self else { return }
-                self.musicPlayer.dispatch(action: .play(song, self.musicPlayer.state!.playlist))
+                self.musicPlayer.play(song, self.musicPlayer.state!.playlist)
             }
         )
     )
