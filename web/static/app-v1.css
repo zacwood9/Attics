@@ -5,7 +5,7 @@
 
 .jumbotron {
   color: white;
-  background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)), url('/background.jpg');
+  /* background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)), url('/background.jpg'); */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -35,4 +35,94 @@ footer {
     align-items: center;
     justify-content: flex-end;
   }
+}
+
+.nav-logo {
+    margin-right: 8px;
+}
+
+.bg-attics-blue {
+    background-color: #33448C;
+}
+
+.btn-primary {
+    background-color: #33448C;
+}
+
+.text-lightgray {
+    color: #D3D3D3;
+}
+
+.rating {
+  unicode-bidi: bidi-override;
+  direction: ltr;
+  color: orange;
+  font-weight: lighter;
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  font-size: 1.3em;
+}
+.rating > span.filled:before {
+   content: "\2605";
+   color: orange;
+   position: absolute;
+}
+
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    font-size: 1em;
+    justify-content: flex-start;
+}
+
+.back-stars {
+    display: inline-flex;
+    color: orange;
+    position: relative;
+}
+.front-stars {
+    content: "\2605";
+    display: inline-flex;
+    color: orange;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+}
+
+.recording-card {
+    color: black;
+}
+
+.recording-card-selected {
+    background-color: rgba(0, 0, 120, 0.2);
+}
+
+
+.song-card:hover {
+    background-color: rgba(0, 0, 120, 0.2);
+    text-decoration: none;
+}
+
+.song-card hr {
+    margin: 0;
+    margin-top: 1em;
+    padding: 0;
+}
+
+.song-card .song {
+    color: black;
+    margin-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#audio-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+  padding-right: 16;
+  padding-bottom: 16;
 }

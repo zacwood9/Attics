@@ -5,7 +5,7 @@ import           IHP.Test.Mocking
 import           IHP.FrameworkConfig (ConfigBuilder(..))
 import           IHP.Prelude
 import           IHP.QueryBuilder
-
+import           IHP.Fetch
 import           Web.Types
 import           Web.Routes
 import           Generated.Types

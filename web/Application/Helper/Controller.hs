@@ -1,13 +1,11 @@
 module Application.Helper.Controller
   ( -- To use the built in login:
     -- module IHP.LoginSupport.Helper.Controller
-    badRequest,
-    fetchBand,
     fetchBands,
     fetchTopPerformances,
     fetchMigrationItems,
     fetchPerformance,
-    fetchPerformance',
+    fetchPerformanceWithMetadataFromId,
     fetchPerformances,
     fetchRecordings,
   )
@@ -29,12 +27,6 @@ import Network.Wai
 import Application.Types
 import Control.Exception (try)
 
-badRequest :: IO ()
-badRequest = respondAndExit $ responseLBS status403 [] "bad request"
-
-fetchBand :: (?modelContext :: ModelContext) => Collection -> IO Band
-fetchBand collection =
-  query @Band |> filterWhere (#collection, collection) |> fetchOne
 
 fetchTopPerformances :: (?modelContext :: ModelContext) => Collection -> Int -> IO (HashMap Year [PerformanceWithMetadata])
 fetchTopPerformances collection n = do
@@ -64,8 +56,8 @@ fetchPerformance collection date = do
     [] -> error "performance not found"
     (performance : _) -> pure performance
 
-fetchPerformance' :: (?modelContext :: ModelContext) => Id Performance -> IO PerformanceWithMetadata
-fetchPerformance' id = do
+fetchPerformanceWithMetadataFromId :: (?modelContext :: ModelContext) => Id Performance -> IO PerformanceWithMetadata
+fetchPerformanceWithMetadataFromId id = do
   result <- sqlQuery performanceQuery [id]
   case result of
     [] -> error "performance not found"
@@ -147,6 +139,7 @@ recordingsQuery =
         INNER JOIN performances ON recordings.performance_id = performances.id
         INNER JOIN bands ON performances.band_id = bands.id
         WHERE bands.collection = ? AND performances.date = ?
+        ORDER BY recordings.archive_downloads DESC;
     |]
 
 
@@ -196,7 +189,7 @@ fetchMigrationItems ids = do
         ids
 
     perfs <- mapM
-        (fetchPerformance' . get #performanceId)
+        (fetchPerformanceWithMetadataFromId . get #performanceId)
         recordings
 
     bands <- mapM

@@ -36,6 +36,18 @@ struct SettingsView: View {
                 Divider()
                 
                 
+                HStack(alignment: .bottom) {
+                    Text("Migrate from v1.4")
+                        .foregroundColor(.orange)
+                        .padding(.leading)
+                    Spacer()
+                }.contentShape(Rectangle())
+                .onTapGesture {
+                    // Ensure the app is in a proper state if necessary
+                    runMigrations(success: App.shared.presentMigrationSuccess, failure: App.shared.presentMigrationError, useGuard: false)
+                }
+                Divider()
+                
                 archive
                     .padding(.top, 32)
                     .padding([.leading, .trailing])

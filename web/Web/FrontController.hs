@@ -6,11 +6,11 @@ import IHP.RouterPrelude
 import Web.Controller.Apple
 import Web.Controller.Attics
 import Web.Controller.Prelude
-import Web.View.Layout (defaultLayout)
+import Web.View.Layout
 
 instance FrontController WebApplication where
   controllers =
-    [ startPage HomeAction,
+    [ startPage BandsAction,
       -- Generator Marker
       parseRoute @AtticsController,
       parseRoute @AppleController

@@ -1,4 +1,4 @@
-module Web.View.Layout (defaultLayout, Html) where
+module Web.View.Layout (defaultLayout, homeLayout, Html) where
 
 import IHP.ViewPrelude
 import IHP.Environment
@@ -11,6 +11,31 @@ import Web.Routes
 
 defaultLayout :: Html -> Html
 defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
+<head>
+    {metaTags}
+
+    {stylesheets}
+    {scripts}
+
+    <title>Attics</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-attics-blue">
+        <a class="navbar-brand" href={BandsAction}>
+            <img src="/icon.png" width="30" height="30" class="d-inline-block align-top mr-2" style="border-radius: 8px" alt="">
+            Attics
+        </a>
+    </nav>
+    {renderFlashMessages}
+    {inner}
+    <div id="audio-container">
+        <audio id="audio" controls/>
+    </div>
+</body>
+|]
+
+homeLayout :: Html -> Html
+homeLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
 <head>
     {metaTags}
 
@@ -43,6 +68,12 @@ scripts = do
         <script src="/vendor/flatpickr.js"></script>
         <script src="/helpers.js"></script>
         <script src="/vendor/morphdom-umd.min.js"></script>
+        <script src="/ihp-auto-refresh.js"></script>
+        <script src="/vendor/turbolinks.js"></script>
+        <script src="/vendor/morphdom-umd.min.js"></script>
+        <script src="/vendor/turbolinksMorphdom.js"></script>
+        <script src="/vendor/turbolinksInstantClick.js"></script>
+        <script src="/app-v1.js"></script>
     |]
 
 metaTags :: Html

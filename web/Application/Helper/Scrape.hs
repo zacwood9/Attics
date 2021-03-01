@@ -3,7 +3,7 @@ module Application.Helper.Scrape
     RecordingData (..),
     archiveToAttics,
     buildPerformanceFromRecordings,
-    getOrCreateRecordingFromData,
+    getOrBuildRecordingFromData,
     makeRecordingRecord,
     makeSongRecord,
   )
@@ -105,32 +105,36 @@ buildPerformanceFromRecordings band (firstRecording : recordings) =
                 State.put (Builder band date nextVenue nextCity nextState rest)
                 helper firstSrc
 
-getOrCreateRecordingFromData :: (?modelContext :: ModelContext) => Band -> RecordingData -> IO Recording
-getOrCreateRecordingFromData  band recording = do
-  performanceId <- sqlQuery performanceIdQuery [get #collection recording, get #date recording]
+-- | Given a recording data, attempt to get the performance it should belong to
+-- if it doesn't exist, create a performance
+--
+-- otherwise return a recording ready to be inserted
+getOrBuildRecordingFromData :: (?modelContext :: ModelContext) => Band -> RecordingData -> IO Recording
+getOrBuildRecordingFromData  band recording = do
+    performanceId <- sqlQuery performanceIdQuery [get #collection recording, get #date recording]
 
-  -- if the performance is found, return its ID,
-  -- else create the performance from the recording data and use the new id
-  id <- case performanceId of
-    (Only id : _) -> pure id
-    _ -> case buildPerformanceFromRecordings band [recording] of
-      Nothing -> error "unable to build performance from recordings"
-      Just performance -> do
-        performance
-          |> create
-          <&> get #id
+    -- if the performance is found, return its ID,
+    -- else create the performance from the recording data and use the new id
+    id <- case performanceId of
+        (Only id : _) -> pure id
+        _ -> case buildPerformanceFromRecordings band [recording] of
+            Nothing -> error "unable to build performance from recordings"
+            Just performance -> do
+                performance
+                    |> create
+                    <&> get #id
 
-  makeRecordingRecord recording
-    |> set #performanceId id
-    |> pure
-  where
-    performanceIdQuery =
-      [sql|
-        select
-          performances.id from performances
-          inner join bands on performances.band_id = bands.id
-          where bands.collection = ? and performances.date = ?
-      |]
+    makeRecordingRecord recording
+        |> set #performanceId id
+        |> pure
+
+    where
+        performanceIdQuery = [sql|
+            select
+                performances.id from performances
+            inner join bands on performances.band_id = bands.id
+            where bands.collection = ? and performances.date = ?
+        |]
 
 makeRecordingRecord RecordingData {..} =
   newRecord @Recording

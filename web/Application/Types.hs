@@ -17,13 +17,13 @@ data PerformanceWithMetadata = PerformanceWithMetadata {
   numRecordings :: Int,
   archiveDownloads :: Int,
   atticsDownloads :: Int
-} deriving (Generic)
+} deriving (Generic, Show)
 
 data BandWithMetadata = BandWithMetadata {
   band :: Band,
   numPerformances :: Int,
   numRecordings :: Int
-} deriving (Generic)
+} deriving (Generic, Show)
 
 data MigrationItem = MigrationItem BandWithMetadata PerformanceWithMetadata Recording
   deriving (Generic)

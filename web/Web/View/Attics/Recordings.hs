@@ -11,7 +11,17 @@ data RecordingsView = RecordingsView
 
 
 instance View RecordingsView where
-  html RecordingsView {..} = error "not accesible"
+  html RecordingsView { .. } = let
+    date = performance |> get #performance |> get #date
+    in [hsx|
+    <div class="container mt-4">
+        <span class="display-4">{date <> " Recordings"}</span>
+
+        <section class="my-4">
+            {forEach recordings renderRecording}
+        </section>
+    </div>
+  |]
   json RecordingsView {..} =
     toJSON $
       object
@@ -20,9 +30,26 @@ instance View RecordingsView where
           "recordings" .= recordings
         ]
 
+
+renderRecording recording = [hsx|
+    <a href=""
+       class="card bg-attics-blue d-flex justify-content-between px-2 py-1 mx-2 my-2"
+       style="height: 8em; width: 20em"
+    >
+        <div>
+            <div class="rating">
+                {rating $ get #avgRating recording}
+            </div>
+        </div>
+        <div>
+            <span class="text-white font-weight-bold">{get #transferer recording}</span>
+        </div>
+    </a>
+|]
+
 data ShowRecordingView = ShowRecordingView
   { band :: Band,
-    performance :: PerformanceWithMetadata,
+    performanceWithMetadata :: PerformanceWithMetadata,
     recording :: Recording,
     songs :: [Song]
   }
@@ -33,7 +60,7 @@ instance View ShowRecordingView where
     toJSON $
       object
         [ "band" .= band,
-          "performance" .= performance,
+          "performance" .= performanceWithMetadata,
           "recording" .= recording,
           "songs" .= songs
         ]

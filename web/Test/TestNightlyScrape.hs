@@ -5,6 +5,7 @@ import           IHP.Test.Mocking
 import           IHP.FrameworkConfig (ConfigBuilder(..))
 import           IHP.Prelude
 import           IHP.QueryBuilder
+import IHP.Fetch
 
 import           Web.Types
 import           Web.Routes
@@ -14,6 +15,7 @@ import qualified Config
 import qualified Data.List as List
 import Application.Helper.Archive
 import Application.Helper.Scrape
+import Application.Helper.Queries
 import qualified Admin.Job.NightlyScrape as Job
 import IHP.ModelSupport
 import IHP.FetchRelated
@@ -30,90 +32,26 @@ spec = describe "Nightly Scrape" $ do
         it "returns empty list if no items found" $ do
             newRecordings <- Job.getNewRecordingsFromArchive (gdBand time4) PublicDate mockSearch
             newRecordings `shouldBe` []
-
-
-cleanupBand :: (?modelContext :: ModelContext) => Band -> IO ()
-cleanupBand band = do
-    perfs <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
-    recs <- mapM (\p -> query @Recording |> filterWhere (#performanceId, get #id p) |> fetch) perfs
-    perfs |> deleteRecords
-    mapM_ (\rs -> deleteRecords rs) recs
-    band |> deleteRecord
-
-integration :: Spec
-integration = describe "Nightly Scrape (Integration tests)" $ do
-    describe "#addNewRecordings" $ do
+    describe "job" $ do
         beforeAll (Config.test |> mockContext WebApplication) $ do
             it "creates new performance and recording" $ withContext do
                 bracket
-                    (gdBand time2 |> createRecord)
-                    (cleanupBand)
-                    (\band -> do
-                        rAll@(r:_) <- Job.addNewRecordings band mockSearch
-                        pAll@(p:_) <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
-                        List.length pAll `shouldBe` 1
-                        List.length rAll `shouldBe` 1
-
-                        get #identifier r `shouldBe` "item3"
-                        get #performanceId r `shouldBe` get #id p
-                        get #bandId p `shouldBe` get #id band
-                        )
-            it "creates recording and reuses performance" $ withContext do
-                bracket
                     (do
-                        band <- gdBand time2 |> createRecord
-                        newRecord @Performance
-                            |> set #bandId (get #id band)
-                            |> set #date (get #date item3)
-                            |> createRecord
-                        pure band
-                        )
+                        band <- newRecord @Band
+                            |> set #collection "GratefulDead"
+                            |> set #name "GD"
+                            |> create
+                        p <- newRecord @Performance |> set #bandId (get #id band) |> set #date "1234-12-31" |> create
+                        r <- newRecord @Recording |> set #identifier "item1" |> set #performanceId (get #id p) |> create
+                        pure band)
                     (cleanupBand)
                     (\band -> do
-                        rAll@(r:_) <- Job.addNewRecordings band mockSearch
-                        pAll@(p:_) <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
-                        List.length pAll `shouldBe` 1
-                        List.length rAll `shouldBe` 1
-
-                        get #identifier r `shouldBe` "item3"
-                        get #performanceId r `shouldBe` get #id p
-                        get #bandId p `shouldBe` get #id band
-                        )
-
-    describe "#addSongsForRecording" $ do
-        beforeAll (Config.test |> mockContext WebApplication) $ do
-            it "creates songs" $ withContext do
-                bracket
-                    (do
-                        band <- gdBand time2 |> createRecord
-                        testPerformance band |> createRecord
-                        pure band
-                        )
-                    (cleanupBand)
-                    (\band -> do
-                        rAll@(r:_) <- Job.addNewRecordings band mockSearch
-                        List.length rAll `shouldBe` 1
-                        songs <- Job.addSongsForRecordings rAll mockGetFiles
-                        List.length songs `shouldBe` 2
-                        )
-            it "gets info from originals" $ withContext do
-                bracket
-                    (do
-                        band <- gdBand time2 |> createRecord
-                        testPerformance band |> createRecord
-                        pure band
-                        )
-                    (cleanupBand)
-                    (\band -> do
-                        rAll@(r:_) <- Job.addNewRecordings band mockSearch
-                        List.length rAll `shouldBe` 1
-                        songs <- Job.addSongsForRecordings rAll mockGetFiles
-                        song <- query @Song |> filterWhere (#fileName, "file2.mp3") |> fetchOne
-                        get #recordingId song `shouldBe` get #id r
-                        get #title song `shouldBe` "File 2"
-                        get #track song `shouldBe` 2
-                        get #length song `shouldBe` "1:23"
-                        )
+                        newR <- Job.addNewRecordings band mockSearch
+                        allR <- identifiersForBand band
+                        pAll <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
+                        List.length newR `shouldBe` 1
+                        List.length allR `shouldBe` 2
+                        List.length pAll `shouldBe` 2)
 
     describe "#updateRecentlyReviewedRecordings" $ do
         beforeAll (Config.test |> mockContext WebApplication) $ do
@@ -134,7 +72,7 @@ integration = describe "Nightly Scrape (Integration tests)" $ do
                         get #avgRating r `shouldBe` 5
                         get #numReviews r `shouldBe` 123
                         )
-            it "fails for unknown recording" $ withContext do
+            it "should be empty for unknown recording" $ withContext do
                 bracket
                     (do
                         band <- gdBand time2 |> createRecord
@@ -143,8 +81,16 @@ integration = describe "Nightly Scrape (Integration tests)" $ do
                         )
                     (cleanupBand)
                     (\band -> do
-                        Job.updateRecentlyReviewedRecordings band mockSearch `shouldThrow` anyException
-                        )
+                        result <- Job.updateRecentlyReviewedRecordings band mockSearch
+                        result `shouldBe` [])
+
+cleanupBand :: (?modelContext :: ModelContext) => Band -> IO ()
+cleanupBand band = do
+    perfs <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
+    recs <- mapM (\p -> query @Recording |> filterWhere (#performanceId, get #id p) |> fetch) perfs
+    perfs |> deleteRecords
+    mapM_ (\rs -> deleteRecords rs) recs
+    band |> deleteRecord
 
 
 
@@ -218,6 +164,13 @@ testPerformance band = newRecord @Performance
     |> set #city "Fairfax"
     |> set #state "VA"
 
+testPerformance' band date = newRecord @Performance
+    |> set #bandId (get #id band)
+    |> set #date date
+    |> set #venue "Eagle Bank Arena"
+    |> set #city "Fairfax"
+    |> set #state "VA"
+
 testRecording performance = newRecord @Recording
     |> set #performanceId (get #id performance)
     |> set #identifier "item3"
@@ -232,7 +185,7 @@ testRecording performance = newRecord @Recording
 mockSearch :: Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)]
 mockSearch c _ =
     pure [
-        (def { collection = pure c } :: ArchiveItem, time1),
+        (def { identifier = "item1", collection = pure c } :: ArchiveItem, time1),
         (item3, time3)
         ]
 

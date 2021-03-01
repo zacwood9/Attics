@@ -6,9 +6,36 @@ import Data.Aeson
 data BandsView = BandsView { bands :: [BandWithMetadata] }
 
 instance View BandsView where
-  html BandsView { bands } = error "not accessible"
+  html BandsView { bands } = [hsx|
+    <div class="container mt-4">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="mx-auto" style="width: 100%;">
+                    <div class="jumbotron">
+                        <h1 class="display-4 text-center">Bands</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {forEach bands renderBand}
+        </div>
+    </div>
+  |]
 
   json BandsView { bands } = toJSON bands
 
 renderBand :: BandWithMetadata -> Html
-renderBand band = [hsx||]
+renderBand BandWithMetadata { .. } = [hsx|
+    <div class="col-md-6 col-lg-4">
+        <div class="card mx-auto" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{get #name band}</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href={TopPerformancesAction $ get #collection band} class="btn btn-primary">View Shows</a>
+            </div>
+        </div>
+    </div>
+|]

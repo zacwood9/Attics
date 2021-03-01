@@ -3,17 +3,22 @@ module Admin.Job.NightlyScrape where
 import Admin.Controller.Prelude
 import Application.Helper.Archive
 import Application.Helper.Scrape
+import Application.Helper.Queries
 import Application.Script.Prelude
 import Control.Exception
 import Control.Monad
 import qualified Control.Monad.Trans.State as State
+import qualified Data.Set as Set
 import qualified Data.List as List
+import IHP.Log.Types
+import qualified IHP.Log as Log
 import System.IO (hFlush, stdout)
 
 instance Job NightlyScrapeJob where
     perform NightlyScrapeJob { .. } = do
         band <- fetch bandId
         putStrLn $ "Performing nightly scrape job for " <> get #collection band <> "..."
+
         runBand band
         hFlush stdout
         pure ()
@@ -35,29 +40,14 @@ addNewRecordings
     -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
     -> IO [Recording]
 addNewRecordings band archiveSearch = do
-    -- get recently uploaded recordings
-    result <- getNewRecordingsFromArchive band PublicDate archiveSearch
-
-
-    case result of
-        [] -> do
-            putStrLn $ "No recent recordings found for " <> get #collection band <> ". Skipping."
-            pure []
-        recentRecordingData -> do
-            records <- mapM (getOrCreateRecordingFromData band) recentRecordingData
-            created <- mapM
-                (\record -> do
-                    result <- try (create record)
-                    case result of
-                        Left (e :: SomeException) -> do
-                            putStrLn $ "failed to insert recent recording "
-                                <> get #identifier record
-                                <> ": " <> show e
-                            pure Nothing
-                        Right r -> pure $ Just r)
-                records
-            pure (catMaybes created)
-
+    -- get recently uploaded recordings, as RecordingData
+    recordingDatas <- (map (archiveToAttics (get #collection band)) . map fst) <$> archiveSearch (get #collection band) PublicDate
+    currentIdentifiers <- Set.fromList <$> identifiersForBand band
+    filterNew recordingDatas currentIdentifiers
+        |> mapM (getOrBuildRecordingFromData band)
+        >>= createMany
+    where
+        filterNew datas ids = filter (\d -> not $ Set.member (get #identifier d) ids) datas
 
 -- | Given a list of recordings, fetch their songs and add them to the database.
 addSongsForRecordings
@@ -85,16 +75,18 @@ updateRecentlyReviewedRecordings
     -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
     -> IO [Recording]
 updateRecentlyReviewedRecordings band searchArchive = do
-  result <- getNewRecordingsFromArchive band ReviewDate searchArchive
-  case result of
-    [] -> do
-        putStrLn $ "No recent reviews found for " <> get #collection band <> ". Skipping."
-        pure []
-    recentlyReviewed -> do
-      recordings <- mapM getRecording recentlyReviewed
-      updated <- mapM updateRecording (zip recordings recentlyReviewed)
-      putStrLn $ "Updated " <> show (List.length updated) <> " recordings for " <> get #collection band
-      pure updated
+    let ?context = ?modelContext
+    recordingDatas <- map (archiveToAttics (get #collection band)) . map fst <$> searchArchive (get #collection band) PublicDate
+    case recordingDatas of
+        [] -> do
+            Log.info $ "No recent reviews found for " <> get #collection band <> ". Skipping."
+            pure []
+        recentlyReviewed -> do
+            recordings <- mapM getRecording recentlyReviewed
+            let zipped = catMaybes $ map (\(a, b) -> a >>= \a' -> pure (a', b)) (zip recordings recentlyReviewed)
+            updated <- mapM updateRecording zipped
+            Log.info $ "Updated " <> show (List.length updated) <> " recordings for " <> get #collection band
+            pure updated
 
 addUpdate :: Band -> Script
 addUpdate band = do
@@ -104,16 +96,11 @@ addUpdate band = do
       |> set #updatedAt now
       |> updateRecord
 
-getRecording :: (?modelContext :: ModelContext) => RecordingData -> IO Recording
+getRecording :: (?modelContext :: ModelContext) => RecordingData -> IO (Maybe Recording)
 getRecording recording = do
-  recording <-
     query @Recording
       |> filterWhere (#identifier, get #identifier recording)
       |> fetchOneOrNothing
-
-  case recording of
-    Nothing -> error "could not find recording for given data"
-    Just recording -> pure recording
 
 updateRecording :: (?modelContext :: ModelContext) => (Recording, RecordingData) -> IO Recording
 updateRecording (recording, newData) = do
@@ -136,20 +123,11 @@ getNewRecordingsFromArchive band sort searchArchive = do
         |> map (archiveToAttics (get #collection band))
         |> pure
 
-getNewItemsFromArchive
-    :: Band
-    -> AdvancedSearchSort
-    -> (Text -> AdvancedSearchSort -> IO [(ArchiveItem, UTCTime)])
-    -> IO [ArchiveItem]
-getNewItemsFromArchive band sort searchArchive = do
-    result <- searchArchive (get #collection band) sort
-    filterSinceTime result (get #updatedAt band)
-        |> pure
+    where
+        filterSinceTime :: [(ArchiveItem, UTCTime)] -> UTCTime -> [ArchiveItem]
+        filterSinceTime recordingsWithTimes updatedAt =
+            let newIds = filter (\(_, time) -> time > updatedAt) recordingsWithTimes
+            in map fst newIds
 
-filterSinceTime :: [(ArchiveItem, UTCTime)] -> UTCTime -> [ArchiveItem]
-filterSinceTime recordingsWithTimes updatedAt =
-  let newIds = filter (\(_, time) -> time > updatedAt) recordingsWithTimes
-   in map fst newIds
-
-mapFst :: (a -> b) -> (a, c) -> (b, c)
-mapFst f (a, c) = (f a, c)
+        mapFst :: (a -> b) -> (a, c) -> (b, c)
+        mapFst f (a, c) = (f a, c)

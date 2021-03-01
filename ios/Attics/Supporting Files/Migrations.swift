@@ -12,9 +12,9 @@
 import Foundation
 import Combine
 
-func runMigrations(success: @escaping () -> (), failure: @escaping () -> ()) {
+func runMigrations(success: @escaping () -> (), failure: @escaping () -> (), useGuard: Bool = true) {
     migrateToApplicationSupport()
-    migrateToV2(success, failure)
+    migrateToV2(success, failure, useGuard: useGuard)
 }
 
 /// Migrates storage from Library/Caches to Library/Applicatiion Support.
@@ -44,8 +44,10 @@ fileprivate func migrateToApplicationSupport() {
 
 fileprivate var bandsSub: AnyCancellable?
 
-fileprivate func migrateToV2(_ completion: @escaping () -> (), _ error: @escaping () -> ()) -> Bool {
-    guard let needsMigration = App.shared.firstLaunch.item, needsMigration else { completion(); return true }
+func migrateToV2(_ completion: @escaping () -> (), _ error: @escaping () -> (), useGuard: Bool = true) -> Bool {
+    if useGuard {
+        guard let needsMigration = App.shared.firstLaunch.item, needsMigration else { completion(); return true }
+    }
     
     let downloadsFile = FileSystemSourceStore(named: "downloads.json")
     let favoritesFile = FileSystemSourceStore(named: "favorites.json")

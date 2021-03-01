@@ -19,5 +19,5 @@ main = hspec do
     Test.TestScrape.spec
     Test.TestFixSongs.spec
     Test.TestNightlyScrape.spec
-    Test.TestNightlyScrape.integration
+    -- Test.TestNightlyScrape.integration
     Test.TestInitialScrape.spec

@@ -49,7 +49,7 @@ getRecordingsWithBadSongNames band =
             INNER JOIN recordings ON recordings.id = songs.recording_id
             INNER JOIN performances ON performances.id = recordings.performance_id
             INNER JOIN bands ON bands.id = performances.band_id
-            WHERE songs.title = songs.file_name AND bands.id = ?
+            WHERE bands.id = ?
         |]
 
 getCurrentSongs
@@ -75,6 +75,6 @@ updateSong (current, new) =
         |> set #track (get #track new)
         |> set #fileName (get #fileName new)
         |> updateRecord
-        >> (putStrLn $ oldFileName <> " --> " <> get #title new)
+        >> pure ()
 
 

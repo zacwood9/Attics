@@ -5,6 +5,7 @@ import           IHP.Test.Mocking
 import           IHP.FrameworkConfig (ConfigBuilder(..))
 import           IHP.Prelude
 import           IHP.QueryBuilder
+import IHP.Fetch
 
 import           Web.Types
 import           Web.Routes
@@ -14,10 +15,11 @@ import qualified Config
 import qualified Data.List as List
 import Application.Helper.Archive
 import Application.Helper.Scrape
+import Application.Helper.Controller
 import qualified Admin.Job.InitialScrape as Job
 import IHP.ModelSupport
 import IHP.FetchRelated
-import Control.Exception (bracket,evaluate, SomeException(..))
+import Control.Exception (try, bracket,evaluate, SomeException(..))
 
 spec :: Spec
 spec = describe "Initial Scrape Job" $ do
@@ -38,6 +40,14 @@ spec = describe "Initial Scrape Job" $ do
                         |> fetch
                     List.length ps `shouldBe` 3
 
+                    let (p:_) = filter (\p -> get #date p == "2020-01-01") ps
+                    pWithMeta <- fetchPerformanceWithMetadataFromId (get #id p)
+                    get #avgRating pWithMeta `shouldBe` (4.5 :: Double)
+
+                    let (p1:_) = filter (\p -> get #date p == "2020-01-02") ps
+                    p1WithMeta <- fetchPerformanceWithMetadataFromId (get #id p1)
+                    get #avgRating p1WithMeta `shouldBe` (0 :: Double)
+
                     -- test recording added for each item
                     rs <- mapM
                         (\p -> query @Recording
@@ -51,6 +61,7 @@ spec = describe "Initial Scrape Job" $ do
                         (\recording -> do
                             songs <- query @Song
                                 |> filterWhere (#recordingId, get #id recording)
+                                |> orderBy #track
                                 |> fetch
                             case get #identifier recording of
                                 "3" -> do
@@ -84,8 +95,8 @@ testPerformance band = newRecord @Performance
 
 
 items :: [ArchiveItem] = [
-    def { identifier = "1", date = "2020-01-01", collection = "GratefulDead" },
-    def { identifier = "2", date = "2020-01-01", collection = "GratefulDead" },
+    def { identifier = "1", date = "2020-01-01", collection = "GratefulDead", numReviews = Just 1, avgRating = Just "5.0" },
+    def { identifier = "2", date = "2020-01-01", collection = "GratefulDead", numReviews = Just 1, avgRating = Just "4.0" },
     def { identifier = "3", date = "2020-01-01", collection = "GratefulDead" },
     def { identifier = "4", date = "2020-01-02", collection = "GratefulDead" },
     def { identifier = "5", date = "2020-01-03", collection = "GratefulDead" }
@@ -145,7 +156,6 @@ item3Files = [
         afOriginal = Nothing,
         afFormat = Nothing
     }
-
     ]
 
 mockGetFiles :: Text -> IO [ArchiveFile]

@@ -22,6 +22,12 @@ data AtticsController
   | RecordingsAction { collection :: !Collection, date :: !Date }
   | ShowRecordingAction { identifier:: !Identifier }
   | MigrationAction { identifiers :: ![Identifier] }
+  | PlayerAction {
+        collection :: !Collection,
+        date :: !Date,
+        selectedIdentifier :: !(Maybe Identifier),
+        selectedTrack :: !(Maybe Int)
+    }
   deriving (Eq, Show, Data)
 
 data AppleController = AppSiteAssociationAction

@@ -5,6 +5,8 @@ module Web.View.Prelude
     module Web.Types,
     module Application.Helper.View,
     HomeView(..),
+    rating,
+    recordingType
   )
 where
 
@@ -15,6 +17,58 @@ import Web.Routes ()
 import Web.Types
 import Web.View.Layout
 import IHP.ControllerPrelude (render, fetchCount)
+import qualified Text.Show
+
+rating value =
+    let frontStyle = "width: " <> show value <> "%" in [hsx|
+    <div class="star-rating">
+        <div class="back-stars">
+            {emptyStar}
+            {emptyStar}
+            {emptyStar}
+            {emptyStar}
+            {emptyStar}
+
+            <div class="front-stars" style={frontStyle}>
+                {fullStar}
+                {fullStar}
+                {fullStar}
+                {fullStar}
+                {fullStar}
+            </div>
+        </div>
+    </div>
+|]
+
+emptyStar = [hsx|<span>☆</span>|]
+fullStar = [hsx|<span>★</span>|]
+
+-- var type: RecordingType {
+--         let s = source.lowercased()
+--         for type in ["mtx", "matrix"] {
+--             if s.contains(type) { return .matrix }
+--         }
+--         for type in ["aud"] {
+--             if s.contains(type) { return .aud }
+--         }
+--         for type in ["sbd", "soundboard"] {
+--             if s.contains(type) { return .sbd }
+--         }
+--         return .unknown
+--     }
+--
+
+data RecordingType = Matrix | Audience | Soundboard | Unknown
+
+recordingType' :: RecordingType -> Text
+recordingType' Matrix = "MTX"
+recordingType' Audience = "AUD"
+recordingType' Soundboard = "SBD"
+recordingType' _ = ""
+
+recordingType :: Recording -> Text
+recordingType Recording { source } = recordingType' Matrix
+
 
 data HomeView = HomeView {
   bands :: Int,
@@ -102,3 +156,5 @@ instance View HomeView where
 </div>
 
 |]
+
+

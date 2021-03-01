@@ -20,31 +20,31 @@ enum ViewState {
 class RecordingViewController : UIViewController, ObservableObject {
     let viewModel: RecordingViewModel
     private let musicPlayer: MusicPlayer
-    
+
     private lazy var scrollView = UIScrollView()
-    
+
     private lazy var hostingController = UIHostingController(
         rootView: RecordingView(viewModel: viewModel, musicPlayer: musicPlayer)
     )
-    
+
     init(viewModel: RecordingViewModel, musicPlayer: MusicPlayer) {
         self.viewModel = viewModel
         self.musicPlayer = musicPlayer
         super.init(nibName: nil, bundle: nil)
-        
+
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = ""
     }
-    
+
     override func viewDidLoad() {
         view.addSubview(scrollView)
         scrollView.backgroundColor = .systemBackground
         view.backgroundColor = .systemBackground
-        
+
         addChild(hostingController)
         scrollView.addSubview(hostingController.view)
         hostingController.didMove(toParent: self)
-        
+
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -52,22 +52,22 @@ class RecordingViewController : UIViewController, ObservableObject {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
+
             hostingController.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
-        
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(share))
-                
+
         viewModel.load()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+
     @objc func share() {
         guard let stored = viewModel.storage.getStoredRecording(for: viewModel.recording) else { return }
         let item = ShareItem(stored)
@@ -83,19 +83,19 @@ class RecordingViewController : UIViewController, ObservableObject {
 
 class ShareItem: NSObject, UIActivityItemSource {
     let stored: StoredRecording
-    
+
     init(_ stored: StoredRecording) {
         self.stored = stored
     }
-    
+
     var urlString: String {
         "https://attics.io/ShowRecording?identifier=\(stored.recording.identifier)"
     }
-    
+
     func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
         return URL(string: "https://attics.io/ShowRecording?identifier=\(stored.recording.identifier)")!
     }
-    
+
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
         switch activityType {
         case .some(.postToTwitter):
@@ -105,8 +105,8 @@ class ShareItem: NSObject, UIActivityItemSource {
         default: return URL(string: urlString)!
         }
     }
-    
-    
+
+
 }
 
 enum WarningState {
@@ -123,25 +123,25 @@ class RecordingViewModel: ObservableObject {
     let api: APIClient
     let monitor: NWPathMonitor
     private let _songTapped: (StoredRecording, Song) -> ()
-    
+
     @Published var favorite: Bool
     @Published var state: ViewState = .loading
     @Published var downloadState: DownloadState
     var warningState: WarningState = .notWarned
     @Published var modalOpen = false
     var isWarningModal = false
-    
+
     var songs: [Song] {
         switch state {
         case .success(let songs): return songs
         default: return []
         }
     }
-    
+
     private var downloadStateCancellable: AnyCancellable?
     private var favoritesCancellable: AnyCancellable?
     private var networkCancellable: AnyCancellable?
-    
+
     init(band: Band,
          performance: Show,
          recording: Source,
@@ -156,10 +156,10 @@ class RecordingViewModel: ObservableObject {
         self.storage = storage
         self.favorite = storage.favorited.map(\.recording).contains(recording)
         self._songTapped = songTapped
-        
+
         self.monitor = NWPathMonitor()
         self.monitor.start(queue: .main)
-        
+
         let alreadyDownloaded = storage.downloaded.map(\.recording).contains(recording)
         if alreadyDownloaded {
             self.downloadState = .downloaded
@@ -168,7 +168,7 @@ class RecordingViewModel: ObservableObject {
         } else {
             self.downloadState = .notDownloaded
         }
-        
+
         downloadStateCancellable = storage.recordingsPublisher
             .map { $0.first(where: { $0.id == recording.id }) }
             .compactMap({ $0 })
@@ -177,14 +177,14 @@ class RecordingViewModel: ObservableObject {
             .sink(receiveValue: { downloadState in
                 self.downloadState = downloadState
             })
-        
+
         favoritesCancellable = storage.favoritedPublisher
             .map { $0.map(\.recording) }
             .map { $0.contains(recording) }
             .receive(on: DispatchQueue.main)
             .assign(to: \.favorite, on: self)
     }
-    
+
     func load() {
         if let stored = storage.getStoredRecording(for: recording), !stored.songs.isEmpty {
             state = .success(stored.songs)
@@ -199,16 +199,16 @@ class RecordingViewModel: ObservableObject {
             })
         }
     }
-    
+
     private func cacheRecording(_ songs: [Song]) {
         storage.addRecording(band: band, performance: performance, recording: recording, songs: songs)
     }
-    
+
     func favoriteClick() {
         storage.addFavorite(band: band, performance: performance, recording: recording)
         UIDevice.vibrate()
     }
-    
+
     func downloadClick() {
         switch warningState {
         case .notWarned:
@@ -228,30 +228,30 @@ class RecordingViewModel: ObservableObject {
             case .notDownloaded: startDownload()
             }
         }
-        
+
     }
-    
+
     private func cancelDownload() {
         storage.cancelDownload(for: recording)
         UIDevice.vibrate()
     }
-    
+
     func removeDownload() {
         storage.removeDownload(for: recording)
         UIDevice.vibrate()
     }
-    
+
     private func startDownload() {
         storage.startDownload(recording: recording)
         UIDevice.vibrate()
     }
-    
+
     func songTapped(_ song: Song) {
         guard let stored = storage.getStoredRecording(for: recording) else { fatalError() }
         _songTapped(stored, song)
         UIDevice.vibrate(style: .select)
     }
-    
+
     deinit {
         print("LOG RecordingViewModel.deinit")
     }
@@ -260,7 +260,7 @@ class RecordingViewModel: ObservableObject {
 struct RecordingView : View {
     @ObservedObject var viewModel: RecordingViewModel
     @ObservedObject var musicPlayer: MusicPlayer
-    
+
     var body: some View {
         VStack {
             PlayerHeader(viewModel: viewModel)
@@ -269,7 +269,7 @@ struct RecordingView : View {
             case .success:
                 VStack {
                     SongList(viewModel: viewModel, musicPlayer: musicPlayer, songClick: viewModel.songTapped)
-                    
+
                     Button(action: {
                         UIApplication.shared.open(URL(string: "https://archive.org/details/\(viewModel.recording.identifier)")!)
                     }, label: {
@@ -309,7 +309,7 @@ struct RecordingView : View {
 
 struct PlayerHeader : View {
     @ObservedObject var viewModel: RecordingViewModel
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -322,13 +322,13 @@ struct PlayerHeader : View {
                         Text("Live at \(viewModel.performance.venue)")
                             .font(.title2)
                     }
-                    
+
                     Text(viewModel.performance.date)
                         .font(.title3)
                 }
                 Spacer()
             }.padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
-            
+
             HStack {
                 FavoriteButton(viewModel: viewModel)
                 DownloadButton(viewModel: viewModel)
@@ -339,7 +339,7 @@ struct PlayerHeader : View {
 
 struct ShareButton: View {
     let onClick: () -> ()
-    
+
     var body: some View {
         Button(action: onClick) {
             HStack {
@@ -361,7 +361,7 @@ struct ShareButton: View {
 struct FavoriteButton: View {
     let onClick: () -> ()
     let isFavorite: Bool
-    
+
     var body: some View {
         return Button(action: onClick) {
             HStack {
@@ -377,14 +377,14 @@ struct FavoriteButton: View {
                 .stroke(Color.red, lineWidth: 1.5)
         )
         .padding()
-        
+
     }
-    
+
     init(onClick: @escaping () -> () = {}, isFavorite: Bool = false) {
         self.onClick = onClick
         self.isFavorite = isFavorite
     }
-    
+
     init(viewModel: RecordingViewModel) {
         self.init(onClick: viewModel.favoriteClick, isFavorite: viewModel.favorite)
     }
@@ -393,7 +393,7 @@ struct FavoriteButton: View {
 struct DownloadButton: View {
     let onClick: () -> ()
     let downloadState: DownloadState
-    
+
     var body: some View {
         switch downloadState {
         case .downloaded: HStack {
@@ -404,7 +404,7 @@ struct DownloadButton: View {
             .background(Color.green)
             .cornerRadius(8)
             .padding()
-            
+
         }
         case .downloading: HStack {
             Button(action: onClick) {
@@ -437,14 +437,14 @@ struct DownloadButton: View {
             )
             .padding()
         }
-        
+
     }
-    
+
     init(onClick: @escaping () -> () = {}, downloadState: DownloadState = .notDownloaded) {
         self.onClick = onClick
         self.downloadState = downloadState
     }
-    
+
     init(viewModel: RecordingViewModel) {
         self.init(onClick: viewModel.downloadClick, downloadState: viewModel.downloadState)
     }
@@ -454,24 +454,24 @@ struct SongList: View {
     @ObservedObject var viewModel: RecordingViewModel
     @ObservedObject var musicPlayer: MusicPlayer
     var songClick: (Song) -> ()
-    
+
     var body: some View {
         switch viewModel.state {
         case .success(let songs): list(songs)
         default: LoadingComponent(retry: nil).padding([.top], 64)
         }
-        
+
     }
-    
+
     func list(_ songs: [Song]) -> some View {
         return ForEach(songs.sorted { $0.track < $1.track }) { song in
             let playing = musicPlayer.state != nil && musicPlayer.state!.song == song
             let leadingView = playing ? AnyView(Image(systemName: "music.note")) : AnyView(Text("\(song.track)"))
-            
+
             let title = Text(song.title)
                 .font(.body)
                 .foregroundColor(Color.init(.label))
-            
+
             HStack {
                 leadingView
                     .font(.footnote)
@@ -487,7 +487,7 @@ struct SongList: View {
             Divider()
         }
     }
-    
+
     @ViewBuilder func trailingView(_ song: Song) -> some View {
         if case .downloading(let progresses) = viewModel.downloadState, let p = progresses[song] {
             ProgressCircle(percentageFinished: p)
@@ -507,7 +507,7 @@ struct Recording_Previews: PreviewProvider {
         Group {
             FavoriteButton().previewLayout(PreviewLayout.sizeThatFits)
             FavoriteButton(onClick: {}, isFavorite: true).previewLayout(PreviewLayout.sizeThatFits)
-            
+
             DownloadButton(onClick: {}, downloadState: .notDownloaded)
                 .previewLayout(PreviewLayout.sizeThatFits)
             DownloadButton(onClick: {}, downloadState: .downloading([ : ]))

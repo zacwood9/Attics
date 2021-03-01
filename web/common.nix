@@ -1,7 +1,7 @@
 rec {
     ihp = builtins.fetchGit {
         url = "https://github.com/digitallyinduced/ihp.git";
-        ref = "refs/tags/v0.8.0";
+        ref = "master";
     };
 
     haskellDeps = p: with p; [
@@ -17,7 +17,6 @@ rec {
     ];
 
     otherDeps = p: with p; [
-        # Native dependencies, e.g. imagemagick
     ];
 
     haskellEnv = import "${ihp}/NixSupport/default.nix" {

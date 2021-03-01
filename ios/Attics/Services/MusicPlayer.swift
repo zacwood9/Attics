@@ -271,6 +271,7 @@ class MusicPlayer : ObservableObject {
                 self.player.seek(to: CMTime(seconds: event.positionTime, preferredTimescale: 100))
                 return .success
             }
+            #colorLiteral(red: 0.2, green: 0.2666666667, blue: 0.5490196078, alpha: 1)
             return .commandFailed
         }
     }

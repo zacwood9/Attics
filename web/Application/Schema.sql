@@ -70,8 +70,8 @@ CREATE TABLE initial_scrape_jobs (
     locked_by UUID DEFAULT NULL,
     band_id UUID NOT NULL
 );
-ALTER TABLE initial_scrape_jobs ADD CONSTRAINT initial_scrape_jobs_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE fix_song_jobs ADD CONSTRAINT fix_song_jobs_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
+ALTER TABLE initial_scrape_jobs ADD CONSTRAINT initial_scrape_jobs_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE nightly_scrape_jobs ADD CONSTRAINT nightly_scrape_jobs_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE performances ADD CONSTRAINT performances_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE recordings ADD CONSTRAINT recordings_ref_performance_id FOREIGN KEY (performance_id) REFERENCES performances (id) ON DELETE CASCADE;
