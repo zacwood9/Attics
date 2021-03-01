@@ -23,7 +23,12 @@ instance Controller JobsController where
             |> fetch
             >>= collectionFetchRelated #bandId
 
-        render $ IndexView result fixSongs
+        initialScrape <- query @InitialScrapeJob
+            |> orderByDesc #updatedAt
+            |> fetch
+            >>= collectionFetchRelated #bandId
+
+        render $ IndexView result fixSongs initialScrape
 
     action NewJobAction = do
         let job = newRecord

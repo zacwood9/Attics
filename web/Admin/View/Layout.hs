@@ -24,6 +24,13 @@ defaultLayout inner =
 </head>
 <body>
     <div class="container mt-4">
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/Bands">Bands</a></li>
+                <li class="breadcrumb-item"><a href="/admin/Jobs">Jobs</a></li>
+            </ol>
+        </nav>
+
         {renderFlashMessages}
         {inner}
     </div>

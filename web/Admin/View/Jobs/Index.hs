@@ -4,7 +4,8 @@ import IHP.ControllerPrelude (fetch, FilterPrimaryKey)
 
 data IndexView = IndexView {
     jobs :: [Include "bandId" NightlyScrapeJob],
-    fixSongJobs :: [Include "bandId" FixSongJob]
+    fixSongJobs :: [Include "bandId" FixSongJob],
+    initialScrapeJobs :: [Include "bandId" InitialScrapeJob]
     }
 
 instance View IndexView where
@@ -34,12 +35,24 @@ instance View IndexView where
                     </tr>
                 </thead>
                 <tbody>
+                  {forEach initialScrapeJobs renderJob''}
                   {forEach fixSongJobs renderJob'}
                   {forEach jobs renderJob}
                </tbody>
             </table>
         </div>
     |]
+
+renderJob'' :: Include "bandId" InitialScrapeJob -> Html
+renderJob'' job = let
+    bandId = job |> get #bandId |> get #id
+    in [hsx|
+    <tr>
+      <td>{job |> get #bandId |> get #name}</td>
+      <td>{get #status job}</td>
+      <td>{get #updatedAt job}</td>
+    </tr>
+|]
 
 renderJob' :: Include "bandId" FixSongJob -> Html
 renderJob' job = let
