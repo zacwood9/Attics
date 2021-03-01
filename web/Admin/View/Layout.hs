@@ -50,6 +50,11 @@ scripts = do
         <script src="/helpers.js"></script>
         <script src="/vendor/morphdom-umd.min.js"></script>
         <script src="/ihp-auto-refresh.js"></script>
+        <script src="/vendor/turbolinks.js"></script>
+        <script src="/vendor/morphdom-umd.min.js"></script>
+        <script src="/vendor/turbolinksMorphdom.js"></script>
+        <script src="/vendor/turbolinksInstantClick.js"></script>
+        <script src="/app-v1.js"></script>
     |]
 
 metaTags :: Html
