@@ -161,6 +161,7 @@ fetchBands = sqlQuery bandsQuery ()
     LEFT JOIN performances ON bands.id = performances.band_id
     LEFT JOIN recordings ON performances.id = recordings.performance_id
     GROUP BY bands.id
+    ORDER BY bands.name
   |]
 
 fetchBand' :: (?modelContext :: ModelContext) => Id Band -> IO BandWithMetadata

@@ -25,9 +25,10 @@ instance Controller AtticsController where
         setLayout homeLayout
         renderHome
 
-    action BandsAction = do
+    action BandsAction = if isJsonRequest then do
         bands <- fetchBands
         render BandsView {..}
+        else renderHome
 
     action TopPerformancesAction {collection} = do
         let n = paramOrDefault 5 "numPerformances"

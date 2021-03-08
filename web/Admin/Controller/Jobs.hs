@@ -1,4 +1,3 @@
-{-# LANGUAGE GADTs, AllowAmbiguousTypes #-}
 module Admin.Controller.Jobs where
 
 import Admin.Controller.Prelude

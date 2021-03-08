@@ -28,8 +28,6 @@ import Data.Maybe
 import Generated.Types
 import IHP.ModelSupport
 
-data Source = Single Text | Multi [Text]
-
 data ArchiveItem = ArchiveItem
   { identifier :: Text,
     date :: Text,
@@ -54,7 +52,7 @@ instance FromJSON ArchiveItem where
       <*> obj .:? "transferer"
       <*> obj .:? "downloads"
       <*> parseSource obj
-      <*> obj .:? "avg_rating"
+      <*> parseAvgRating obj
       <*> obj .:? "num_reviews"
       <*> obj .:? "lineage"
       <*> obj .:? "coverage"
@@ -72,6 +70,14 @@ parseSource o = do
       |> \case
         Just (String first) -> pure first
         _ -> Nothing
+    _ -> pure Nothing
+
+parseAvgRating :: Object -> Parser (Maybe Text)
+parseAvgRating o = do
+  let source = o HashMap.!? "avg_rating"
+  case source of
+    Just (Number num) -> pure $ Just (tshow num)
+    Just (String text) -> pure $ Just text
     _ -> pure Nothing
 
 data ScrapeResponse = ScrapeResponse

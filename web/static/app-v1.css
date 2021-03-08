@@ -6,6 +6,7 @@
 .jumbotron {
   color: white;
   /* background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)), url('/background.jpg'); */
+  background: rgba(25, 25, 25, 0.5);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
