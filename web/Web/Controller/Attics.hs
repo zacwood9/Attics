@@ -25,10 +25,9 @@ instance Controller AtticsController where
         setLayout homeLayout
         renderHome
 
-    action BandsAction = if isJsonRequest then do
+    action BandsAction = do
         bands <- fetchBands
         render BandsView {..}
-        else renderHome
 
     action TopPerformancesAction {collection} = do
         let n = paramOrDefault 5 "numPerformances"
@@ -36,12 +35,10 @@ instance Controller AtticsController where
         topPerformances <- sortBy (\a b -> fst a `compare` fst b) . HashMap.toList <$> fetchTopPerformances collection n
         render TopPerformancesView {..}
 
-    action ShowBandAction {collection, year} = if isJsonRequest
-        then do
+    action ShowBandAction {collection, year} = do
         band <- fetchBandByCollection collection
         performances <- fetchPerformances collection year
         render PerformancesView { .. }
-        else renderHome
 
     action RecordingsAction {collection, date} = do
         unless isJsonRequest (redirectTo (PlayerAction collection date Nothing Nothing))

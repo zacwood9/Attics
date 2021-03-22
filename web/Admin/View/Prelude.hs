@@ -10,5 +10,4 @@ import IHP.ViewPrelude
 import Admin.View.Layout
 import Generated.Types
 import Admin.Types
-import Admin.Routes ()
 import Application.Helper.View
