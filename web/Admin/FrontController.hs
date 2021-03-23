@@ -11,15 +11,15 @@ import Admin.Controller.Static
 
 import IHP.AutoRefresh
 
+import IHP.Job.Dashboard
 import Admin.JobDashboard
 
 instance FrontController AdminApplication where
     controllers =
         [ startPage BandsAction
         -- Generator Marker
-        , parseRoute @JobsController
-        , parseRoute @(GenericJobsController [InitialScrapeJob, NightlyScrapeJob, FixSongJob])
         , parseRoute @BandsController
+        , parseRoute @(JobsDashboardController [InitialScrapeJob, NightlyScrapeJob, TestJob])
         ]
 
 instance InitControllerContext AdminApplication where
