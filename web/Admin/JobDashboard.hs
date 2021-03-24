@@ -19,6 +19,10 @@ import qualified Database.PostgreSQL.Simple.Types as PG
 import qualified Database.PostgreSQL.Simple.FromField as PG
 import IHP.Job.Dashboard
 
+newtype HtmlView = HtmlView Html
+instance View HtmlView where
+    html (HtmlView html) = [hsx|{html}|]
+
 -- INITIAL SCRAPE JOB
 --
 instance TableViewable (IncludeWrapper "bandId" InitialScrapeJob) where
@@ -39,9 +43,6 @@ instance TableViewable (IncludeWrapper "bandId" InitialScrapeJob) where
     |]
 
 
-newtype HtmlView = HtmlView Html
-instance View HtmlView where
-    html (HtmlView html) = [hsx|{html}|]
 
 instance {-# OVERLAPS #-} DisplayableJob InitialScrapeJob where
     makeSection :: (?modelContext :: ModelContext) => IO SomeView
@@ -158,6 +159,88 @@ instance DisplayableJob NightlyScrapeJob where
 data NightlyScrapeJobForm = NightlyScrapeJobForm NightlyScrapeJob
 instance View NightlyScrapeJobForm   where
     html (NightlyScrapeJobForm job) =
+        let
+            table = getTableName job
+        in [hsx|
+            <br>
+                <h5>Viewing Job {get #id job} in </h5>
+            <br>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Updated At</th>
+                        <td>{get #updatedAt job}</td>
+                    </tr>
+                    <tr>
+                        <th>Created At</th>
+                        <td>{get #createdAt job}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Error</th>
+                        <td>{fromMaybe "No error" (get #lastError job)}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form action="/jobs/CreateJob" method="POST">
+                <input type="hidden" id="tableName" name="tableName" value={table}>
+                <input type="hidden" id="bandId" name="bandId" value={tshow $ get #bandId job}>
+                <button type="submit" class="btn btn-primary">Run again</button>
+            </form>
+        |]
+
+instance TableViewable (IncludeWrapper "bandId" FixSongJob) where
+    tableTitle = "Fix Song Job"
+    tableHeaders = ["Band", "Updated at", "Status", ""]
+    createNewForm = newJobFormForTableHeader @FixSongJob
+    renderTableRow (IncludeWrapper job) =
+        let
+            table = tableName @FixSongJob
+            linkToView :: Text = "/jobs/ViewJob?tableName=" <> table <> "&id=" <> tshow (get #id job)
+        in [hsx|
+        <tr>
+            <td>{job |> get #bandId |> get #name}</td>
+            <td>{get #updatedAt job}</td>
+            <td>{statusToBadge $ get #status job}</td>
+            <td><a href={linkToView} class="text-primary">Show</a></td>
+        </tr>
+    |]
+
+
+
+instance {-# OVERLAPS #-} DisplayableJob FixSongJob where
+    makeSection :: (?modelContext :: ModelContext) => IO SomeView
+    makeSection = do
+        jobsWithBand <- query @FixSongJob
+            |> fetch
+            >>= mapM (fetchRelated #bandId)
+            >>= pure . map (IncludeWrapper @"bandId" @FixSongJob)
+        pure (SomeView (TableView jobsWithBand))
+
+    makeDetailView :: (?modelContext :: ModelContext) => FixSongJob -> IO SomeView
+    makeDetailView job = do
+        pure $ SomeView $ FixSongJobForm job
+
+    makeNewJobView = do
+        bands <- query @Band |> fetch
+        pure $ SomeView $ HtmlView $ form newRecord bands
+        where
+            form :: FixSongJob -> [Band] -> Html
+            form job bands = formFor' job "/jobs/CreateJob" [hsx|
+                {selectField #bandId bands}
+                <input type="hidden" id="tableName" name="tableName" value={getTableName job}>
+                <button type="submit" class="btn btn-primary">Run again</button>
+            |]
+
+
+    createNewJob :: (?context::ControllerContext, ?modelContext::ModelContext) => IO ()
+    createNewJob = do
+        let bandId = param "bandId"
+        newRecord @FixSongJob |> set #bandId bandId |> create
+        pure ()
+
+data FixSongJobForm = FixSongJobForm FixSongJob
+instance View FixSongJobForm where
+    html (FixSongJobForm job) =
         let
             table = getTableName job
         in [hsx|

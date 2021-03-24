@@ -14,12 +14,13 @@ import IHP.AutoRefresh
 import IHP.Job.Dashboard
 import Admin.JobDashboard
 
+type AtticsJobDashboard = JobsDashboardController [InitialScrapeJob, NightlyScrapeJob, FixSongJob]
 instance FrontController AdminApplication where
     controllers =
         [ startPage BandsAction
         -- Generator Marker
         , parseRoute @BandsController
-        , parseRoute @(JobsDashboardController [InitialScrapeJob, NightlyScrapeJob])
+        , parseRoute @AtticsJobDashboard
         ]
 
 instance InitControllerContext AdminApplication where
