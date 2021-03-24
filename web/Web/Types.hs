@@ -3,6 +3,7 @@ module Web.Types (
   WebApplication(..),
   AtticsController(..),
   AppleController(..),
+  PlayerState(..),
 )
 where
 
@@ -32,3 +33,12 @@ data AtticsController
 
 data AppleController = AppSiteAssociationAction
   deriving (Eq, Show, Data)
+
+data PlayerState = PlayerState {
+    songTitle :: Text,
+    track :: Text,
+    date :: Text,
+    bandName :: Text,
+    bandCollection :: Text,
+    venue :: Text
+}

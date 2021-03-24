@@ -9,6 +9,7 @@ import IHP.Job.Types
 import Admin.Job.NightlyScrape
 import Admin.Job.FixSong
 import Admin.Job.InitialScrape
+import Admin.Job.Test
 
 instance Worker AdminApplication where
     workers _ =
@@ -16,4 +17,5 @@ instance Worker AdminApplication where
           worker @NightlyScrapeJob,
           worker @InitialScrapeJob
         -- Generator Marker
+        , worker @TestJob
         ]

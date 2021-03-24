@@ -1,3 +1,6 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE GADTs #-}
+
 module Admin.Controller.Jobs where
 
 import Admin.Controller.Prelude
@@ -5,6 +8,12 @@ import Admin.View.Jobs.Index
 import Admin.View.Jobs.Show
 import Admin.View.Jobs.New
 import Admin.Job.NightlyScrape
+import GHC.TypeLits
+import Data.Typeable
+import qualified IHP.Log as Log
+import Admin.JobDashboard
+
+import qualified Data.HashMap.Strict as HM
 
 import qualified Database.PostgreSQL.Simple as PG
 import qualified Database.PostgreSQL.Simple.Types as PG
