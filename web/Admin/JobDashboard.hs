@@ -8,6 +8,7 @@ import Generated.Types
 import IHP.ViewPrelude (Html, View, hsx, html)
 import IHP.ModelSupport
 import IHP.ControllerPrelude
+import Admin.View.Prelude (selectField, formFor', submitButton, hiddenField)
 import Admin.View.Jobs.Index
 import Admin.View.Jobs.Show
 import Admin.View.Jobs.New
@@ -23,6 +24,7 @@ import IHP.Job.Dashboard
 instance TableViewable (IncludeWrapper "bandId" InitialScrapeJob) where
     tableTitle = "Initial Scrape Job"
     tableHeaders = ["Band", "Updated at", "Status", ""]
+    createNewForm = newJobFormForTableHeader @InitialScrapeJob
     renderTableRow (IncludeWrapper job) =
         let
             table = tableName @InitialScrapeJob
@@ -36,6 +38,11 @@ instance TableViewable (IncludeWrapper "bandId" InitialScrapeJob) where
         </tr>
     |]
 
+
+newtype HtmlView = HtmlView Html
+instance View HtmlView where
+    html (HtmlView html) = [hsx|{html}|]
+
 instance {-# OVERLAPS #-} DisplayableJob InitialScrapeJob where
     makeSection :: (?modelContext :: ModelContext) => IO SomeView
     makeSection = do
@@ -48,6 +55,18 @@ instance {-# OVERLAPS #-} DisplayableJob InitialScrapeJob where
     makeDetailView :: (?modelContext :: ModelContext) => InitialScrapeJob -> IO SomeView
     makeDetailView job = do
         pure $ SomeView $ InitialScrapeJobForm job
+
+    makeNewJobView = do
+        bands <- query @Band |> fetch
+        pure $ SomeView $ HtmlView $ form newRecord bands
+        where
+            form :: InitialScrapeJob -> [Band] -> Html
+            form job bands = formFor' job "/jobs/CreateJob" [hsx|
+                {selectField #bandId bands}
+                <input type="hidden" id="tableName" name="tableName" value={getTableName job}>
+                <button type="submit" class="btn btn-primary">Run again</button>
+            |]
+
 
     createNewJob :: (?context::ControllerContext, ?modelContext::ModelContext) => IO ()
     createNewJob = do
@@ -92,6 +111,7 @@ instance View InitialScrapeJobForm where
 instance TableViewable (IncludeWrapper "bandId" NightlyScrapeJob) where
     tableTitle = "Nightly Scrape Job"
     tableHeaders = ["Band", "Updated at", "Status", ""]
+    createNewForm = newJobFormForTableHeader @NightlyScrapeJob
     renderTableRow (IncludeWrapper job) =
         let
             table = tableName @NightlyScrapeJob
@@ -117,6 +137,17 @@ instance DisplayableJob NightlyScrapeJob where
     makeDetailView :: (?modelContext :: ModelContext) => NightlyScrapeJob -> IO SomeView
     makeDetailView job = do
         pure $ SomeView $ NightlyScrapeJobForm job
+
+    makeNewJobView = do
+        bands <- query @Band |> fetch
+        pure $ SomeView $ HtmlView $ form newRecord bands
+        where
+            form :: NightlyScrapeJob -> [Band] -> Html
+            form job bands = formFor' job "/jobs/CreateJob" [hsx|
+                {selectField #bandId bands}
+                <input type="hidden" id="tableName" name="tableName" value={getTableName job}>
+                <button type="submit" class="btn btn-primary">Run again</button>
+            |]
 
     createNewJob :: (?context::ControllerContext, ?modelContext::ModelContext) => IO ()
     createNewJob = do

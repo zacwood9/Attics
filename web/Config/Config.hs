@@ -9,6 +9,7 @@ import           IHP.Environment
 import           IHP.FrameworkConfig
 import           IHP.Prelude
 import           System.Environment
+import IHP.Log.Types
 
 newtype AdminPassword = AdminPassword Text
 
@@ -23,6 +24,11 @@ dev :: ConfigBuilder
 dev = do
     option Development
     option (AppHostname "localhost")
+    logger <- liftIO $ newLogger def {
+        level = Info,
+        formatter = withLevelFormatter
+    }
+    option logger
 
 prod :: ConfigBuilder
 prod = do

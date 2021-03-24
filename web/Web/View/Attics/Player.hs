@@ -22,7 +22,7 @@ instance View PlayerView where
                 <div class="col-xl-9 col-md-7 col-12">
                     {player v archiveLink songLink}
                 </div>
-                <div class="col-xl-3 col-md-5 col">
+                <div class="col-xl-3 col-md-5 col mt-4">
                     {recordingsMenu recordings selectedRecording makeLink}
                 </div>
             </div>
@@ -52,7 +52,9 @@ renderSong archiveLink songLink song =
     <a id={id}
        href={songLink (get #track song)}
        data-url={url}
-       class="song-card">
+       class="song-card"
+       data-turbolinks-preload="false"
+       data-turbolinks-action="replace">
         <div class="d-flex justify-content-between song">
             <div class="flex-column">
                 <span class="text-secondary mr-2" >{get #track song}.</span>
@@ -77,7 +79,7 @@ renderRecording selected makeLink (i, recording) =
         isSelected = selected == recording
         cardClass :: Text = if isSelected then "card recording-card recording-card-selected" else "card recording-card"
     in [hsx|
-    <a href={makeLink recording}>
+    <a href={makeLink recording} data-turbolinks-action="replace">
         <div class={cardClass}>
             <div class="card-body">
                 <h5 class="card-title d-flex justify-content-between">

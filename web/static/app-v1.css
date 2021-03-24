@@ -6,7 +6,7 @@
 .jumbotron {
   color: white;
   /* background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)), url('/background.jpg'); */
-  background: rgba(25, 25, 25, 0.5);
+  background: #33448CC3;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -18,6 +18,10 @@ footer {
     padding: 20px;
     text-align: center;
     line-height: 1.5em;
+}
+
+body {
+    margin-bottom: 5em;
 }
 
 
@@ -121,9 +125,15 @@ footer {
 
 #audio-container {
   position: fixed;
-  bottom: 0;
-  right: 0;
+  background-color: #33448CCC;
+  color: white;
 
-  padding-right: 16;
-  padding-bottom: 16;
+  border-radius: 10px;
+  padding: 16px;
+
+  left: 1em;
+  right: 1em;
+  bottom: 3em;
+  max-width: 500px;
+  margin: auto;
 }
