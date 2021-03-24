@@ -19,7 +19,7 @@ instance FrontController AdminApplication where
         [ startPage BandsAction
         -- Generator Marker
         , parseRoute @BandsController
-        , parseRoute @(JobsDashboardController [InitialScrapeJob, NightlyScrapeJob, TestJob])
+        , parseRoute @(JobsDashboardController [InitialScrapeJob, NightlyScrapeJob])
         ]
 
 instance InitControllerContext AdminApplication where
