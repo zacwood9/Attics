@@ -1,5 +1,10 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE GADTs #-}
+
 module Admin.View.Jobs.Show where
 import Admin.View.Prelude
+
+import Admin.Types
 
 data JobView = JobView { job :: Include "bandId" NightlyScrapeJob }
 

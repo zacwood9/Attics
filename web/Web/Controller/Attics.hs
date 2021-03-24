@@ -10,6 +10,8 @@ import qualified Data.Text as Text
 import Web.View.Prelude (HomeView (..))
 import Web.View.Layout
 import qualified Data.HashMap.Strict as HashMap
+import qualified IHP.Log as Log
+import qualified Data.List as List
 
 renderHome :: _ => IO ()
 renderHome = do
@@ -21,14 +23,29 @@ isJsonRequest :: _ => Bool
 isJsonRequest = getHeader "Accept" == "application/json"
 
 instance Controller AtticsController where
+    beforeAction = do
+        playerStates <- mapM getSession ["title", "track", "date", "bandName", "bandCollection", "venue"]
+        if List.length playerStates == List.length (catMaybes playerStates)
+            then do
+                let s = catMaybes playerStates
+                putContext $ PlayerState {
+                    songTitle = s !! 0,
+                    track = s !! 1,
+                    date = s !! 2,
+                    bandName = s !! 3,
+                    bandCollection = s !! 4,
+                    venue = s !! 5
+                }
+            else
+                pure ()
+
     action HomeAction = do
         setLayout homeLayout
         renderHome
 
-    action BandsAction = if isJsonRequest then do
+    action BandsAction = do
         bands <- fetchBands
         render BandsView {..}
-        else renderHome
 
     action TopPerformancesAction {collection} = do
         let n = paramOrDefault 5 "numPerformances"
@@ -36,12 +53,10 @@ instance Controller AtticsController where
         topPerformances <- sortBy (\a b -> fst a `compare` fst b) . HashMap.toList <$> fetchTopPerformances collection n
         render TopPerformancesView {..}
 
-    action ShowBandAction {collection, year} = if isJsonRequest
-        then do
+    action ShowBandAction {collection, year} = do
         band <- fetchBandByCollection collection
         performances <- fetchPerformances collection year
         render PerformancesView { .. }
-        else renderHome
 
     action RecordingsAction {collection, date} = do
         unless isJsonRequest (redirectTo (PlayerAction collection date Nothing Nothing))
@@ -79,5 +94,32 @@ instance Controller AtticsController where
             let list = filter (\r -> (get #identifier r) == id) recordings
             head list
         songs <- query @Song |> filterWhere (#recordingId, get #id selectedRecording) |> orderByAsc #track |> fetch
+
+        case selectedTrack of
+            -- Just track -> putContext $ SongTitle $ get #title (songs !! track)
+            Just track -> do
+                setSession "title" (get #title $ songs !! (track - 1))
+                setSession "track" (tshow track)
+                setSession "date" (get #date performance)
+                setSession "bandName" (get #name band)
+                setSession "bandCollection" (get #collection band)
+                setSession "venue" (get #venue performance)
+            Nothing -> pure ()
+
+        playerStates <- mapM getSession ["title", "track", "date", "bandName", "bandCollection", "venue"]
+        if List.length playerStates == List.length (catMaybes playerStates)
+            then do
+                let s = catMaybes playerStates
+                putContext $ PlayerState {
+                    songTitle = s !! 0,
+                    track = s !! 1,
+                    date = s !! 2,
+                    bandName = s !! 3,
+                    bandCollection = s !! 4,
+                    venue = s !! 5
+                }
+            else
+                pure ()
+
         render PlayerView { .. }
 

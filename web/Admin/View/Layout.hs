@@ -27,7 +27,7 @@ defaultLayout inner =
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/admin/Bands">Bands</a></li>
-                <li class="breadcrumb-item"><a href="/admin/Jobs">Jobs</a></li>
+                <li class="breadcrumb-item"><a href="/jobs/ListJobs">Jobs</a></li>
             </ol>
         </nav>
 

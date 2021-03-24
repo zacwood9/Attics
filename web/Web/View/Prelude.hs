@@ -13,7 +13,6 @@ where
 import Application.Helper.View
 import Generated.Types
 import IHP.ViewPrelude
-import Web.Routes ()
 import Web.Types
 import Web.View.Layout
 import IHP.ControllerPrelude (render, fetchCount)

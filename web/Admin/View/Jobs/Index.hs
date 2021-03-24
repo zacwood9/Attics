@@ -1,6 +1,8 @@
 module Admin.View.Jobs.Index where
 import Admin.View.Prelude hiding (fetch)
+import Admin.Types
 import IHP.ControllerPrelude (fetch, FilterPrimaryKey)
+
 
 data IndexView = IndexView {
     jobs :: [Include "bandId" NightlyScrapeJob],
