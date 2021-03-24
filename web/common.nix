@@ -1,7 +1,7 @@
 rec {
     ihp = builtins.fetchGit {
-        url = "https://github.com/digitallyinduced/ihp.git";
-        ref = "master";
+        url = "https://github.com/zacwood9/ihp.git";
+        ref = "jobs-dashboard";
     };
 
     haskellDeps = p: with p; [
