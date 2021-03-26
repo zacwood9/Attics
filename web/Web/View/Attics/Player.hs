@@ -7,15 +7,21 @@ data PlayerView = PlayerView {
     performance :: Performance,
     selectedRecording :: Recording,
     recordings :: [Recording],
-    songs :: [Song]
+    songs :: [Song],
+    playerState :: Maybe PlayerState
 }
 
+empty :: Html
+empty = [hsx||]
 instance View PlayerView where
     html v@PlayerView { .. } =
         let
             makeLink recording = pathTo (PlayerAction (get #collection band) (get #date performance) (Just $ get #identifier recording) Nothing)
             songLink track = pathTo (PlayerAction (get #collection band) (get #date performance) (Just $ get #identifier selectedRecording) (Just track))
             archiveLink song = "https://archive.org/download/" <> get #identifier selectedRecording <> "/" <> get #fileName song
+            p = case playerState of
+                Just playerState -> audioPlayer playerState
+                Nothing -> empty
         in [hsx|
         <div class="container-fluid">
             <div class="row mt-4">
@@ -27,6 +33,7 @@ instance View PlayerView where
                 </div>
             </div>
         </div>
+        {p}
     |]
 
 player PlayerView { .. } archiveLink songLink = [hsx|
@@ -94,3 +101,17 @@ renderRecording selected makeLink (i, recording) =
         </div>
     </a>
 |]
+
+audioPlayer :: PlayerState -> Html
+audioPlayer PlayerState { .. } =
+    let
+        album :: Text = bandName <> " - " <> date
+    in [hsx|
+        <div id="audio-container">
+            <div id="audio-container-inner" class="d-flex flex-column align-items-center">
+                <strong>{songTitle}</strong>
+                <span class="mb-2">{album}</span>
+                <audio id="audio" controls/>
+            </div>
+        </div>
+    |]

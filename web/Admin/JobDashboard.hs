@@ -5,7 +5,7 @@ module Admin.JobDashboard where
 
 import IHP.Prelude
 import Generated.Types
-import IHP.ViewPrelude (Html, View, hsx, html)
+import IHP.ViewPrelude (Html, View, hsx, html, timeAgo, columnNameToFieldLabel)
 import IHP.ModelSupport
 import IHP.ControllerPrelude
 import Admin.View.Prelude (selectField, formFor', submitButton, hiddenField)
@@ -19,14 +19,10 @@ import qualified Database.PostgreSQL.Simple.Types as PG
 import qualified Database.PostgreSQL.Simple.FromField as PG
 import IHP.Job.Dashboard
 
-newtype HtmlView = HtmlView Html
-instance View HtmlView where
-    html (HtmlView html) = [hsx|{html}|]
-
 -- INITIAL SCRAPE JOB
 --
 instance TableViewable (IncludeWrapper "bandId" InitialScrapeJob) where
-    tableTitle = "Initial Scrape Job"
+    tableTitle = tableName @InitialScrapeJob |> columnNameToFieldLabel
     tableHeaders = ["Band", "Updated at", "Status", ""]
     createNewForm = newJobFormForTableHeader @InitialScrapeJob
     renderTableRow (IncludeWrapper job) =
@@ -92,7 +88,11 @@ instance View InitialScrapeJobForm where
                     </tr>
                     <tr>
                         <th>Created At</th>
-                        <td>{get #createdAt job}</td>
+                        <td>{get #createdAt job |> timeAgo}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{statusToBadge (get #status job)}</td>
                     </tr>
                     <tr>
                         <th>Last Error</th>
@@ -100,11 +100,17 @@ instance View InitialScrapeJobForm where
                     </tr>
                 </tbody>
             </table>
-            <form action="/jobs/CreateJob" method="POST">
-                <input type="hidden" id="tableName" name="tableName" value={table}>
-                <input type="hidden" id="bandId" name="bandId" value={tshow $ get #bandId job}>
-                <button type="submit" class="btn btn-primary">Run again</button>
-            </form>
+            <div class="d-flex flex-row">
+                <form class="mr-2" action="/jobs/DeleteJob" method="POST">
+                    <input type="hidden" id="tableName" name="tableName" value={table}>
+                    <input type="hidden" id="id" name="id" value={tshow $ get #id job}>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <form action="/jobs/CreateJob" method="POST">
+                    <input type="hidden" id="tableName" name="tableName" value={table}>
+                    <button type="submit" class="btn btn-primary">Run again</button>
+                </form>
+            </div>
         |]
 
 
@@ -174,6 +180,10 @@ instance View NightlyScrapeJobForm   where
                     <tr>
                         <th>Created At</th>
                         <td>{get #createdAt job}</td>
+                    <tr>
+                        <th>Status</th>
+                        <td>{statusToBadge (get #status job)}</td>
+                    </tr>
                     </tr>
                     <tr>
                         <th>Last Error</th>
@@ -181,6 +191,11 @@ instance View NightlyScrapeJobForm   where
                     </tr>
                 </tbody>
             </table>
+            <form action="/jobs/DeleteJob" method="POST">
+                <input type="hidden" id="tableName" name="tableName" value={table}>
+                <input type="hidden" id="id" name="id" value={tshow $ get #id job}>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
             <form action="/jobs/CreateJob" method="POST">
                 <input type="hidden" id="tableName" name="tableName" value={table}>
                 <input type="hidden" id="bandId" name="bandId" value={tshow $ get #bandId job}>
@@ -258,11 +273,20 @@ instance View FixSongJobForm where
                         <td>{get #createdAt job}</td>
                     </tr>
                     <tr>
+                        <th>Status</th>
+                        <td>{statusToBadge (get #status job)}</td>
+                    </tr>
+                    <tr>
                         <th>Last Error</th>
                         <td>{fromMaybe "No error" (get #lastError job)}</td>
                     </tr>
                 </tbody>
             </table>
+            <form action="/jobs/DeleteJob" method="POST">
+                <input type="hidden" id="tableName" name="tableName" value={table}>
+                <input type="hidden" id="id" name="id" value={tshow $ get #id job}>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
             <form action="/jobs/CreateJob" method="POST">
                 <input type="hidden" id="tableName" name="tableName" value={table}>
                 <input type="hidden" id="bandId" name="bandId" value={tshow $ get #bandId job}>

@@ -23,22 +23,6 @@ isJsonRequest :: _ => Bool
 isJsonRequest = getHeader "Accept" == "application/json"
 
 instance Controller AtticsController where
-    beforeAction = do
-        playerStates <- mapM getSession ["title", "track", "date", "bandName", "bandCollection", "venue"]
-        if List.length playerStates == List.length (catMaybes playerStates)
-            then do
-                let s = catMaybes playerStates
-                putContext $ PlayerState {
-                    songTitle = s !! 0,
-                    track = s !! 1,
-                    date = s !! 2,
-                    bandName = s !! 3,
-                    bandCollection = s !! 4,
-                    venue = s !! 5
-                }
-            else
-                pure ()
-
     action HomeAction = do
         setLayout homeLayout
         renderHome
@@ -95,31 +79,22 @@ instance Controller AtticsController where
             head list
         songs <- query @Song |> filterWhere (#recordingId, get #id selectedRecording) |> orderByAsc #track |> fetch
 
-        case selectedTrack of
-            -- Just track -> putContext $ SongTitle $ get #title (songs !! track)
-            Just track -> do
-                setSession "title" (get #title $ songs !! (track - 1))
-                setSession "track" (tshow track)
-                setSession "date" (get #date performance)
-                setSession "bandName" (get #name band)
-                setSession "bandCollection" (get #collection band)
-                setSession "venue" (get #venue performance)
+        playerState <- case selectedTrack of
+                Just track -> do
+                    let songTitle = get #title (songs !! (track - 1))
+                    let state = Just $ PlayerState
+                            songTitle
+                            (tshow track)
+                            (get #date performance)
+                            (get #name band)
+                            (get #collection band)
+                            (get #venue performance)
+                    putContext (PageTitle songTitle)
+                    pure state
+                Nothing -> pure Nothing
+
+        case playerState of
+            Just playerState -> playerState |> get #songTitle |> PageTitle |> putContext
             Nothing -> pure ()
-
-        playerStates <- mapM getSession ["title", "track", "date", "bandName", "bandCollection", "venue"]
-        if List.length playerStates == List.length (catMaybes playerStates)
-            then do
-                let s = catMaybes playerStates
-                putContext $ PlayerState {
-                    songTitle = s !! 0,
-                    track = s !! 1,
-                    date = s !! 2,
-                    bandName = s !! 3,
-                    bandCollection = s !! 4,
-                    venue = s !! 5
-                }
-            else
-                pure ()
-
         render PlayerView { .. }
 

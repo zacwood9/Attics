@@ -11,14 +11,20 @@ import Web.Routes
 
 
 defaultLayout :: (?context :: ControllerContext) => Html -> Html
-defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
+defaultLayout inner =
+    let
+        contextTitle = maybeFromFrozenContext @PageTitle
+        title = case contextTitle of
+            Just (PageTitle title) -> "Attics: " <> title
+            Nothing -> "Attics"
+    in H.docTypeHtml ! A.lang "en" $ [hsx|
 <head>
     {metaTags}
 
     {stylesheets}
     {scripts}
 
-    <title>Attics</title>
+    <title>{title}</title>
 </head>
 <body>
     <nav class="navbar navbar-dark bg-attics-blue">
@@ -29,25 +35,9 @@ defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
     </nav>
     {renderFlashMessages}
     {inner}
-    {audioPlayer}
 </body>
 |]
 
-audioPlayer :: (?context :: ControllerContext) => Html
-audioPlayer = case maybeFromFrozenContext @PlayerState of
-    Just PlayerState { .. } ->
-        let
-            album :: Text = bandName <> " - " <> date
-        in [hsx|
-            <div id="audio-container">
-                <div id="audio-container-inner" class="d-flex flex-column align-items-center">
-                    <strong>{songTitle}</strong>
-                    <span class="mb-2">{album}</span>
-                    <audio id="audio" controls/>
-                </div>
-            </div>
-        |]
-    _ -> [hsx||]
 
 
 homeLayout :: Html -> Html

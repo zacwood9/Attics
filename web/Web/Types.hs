@@ -4,6 +4,7 @@ module Web.Types (
   AtticsController(..),
   AppleController(..),
   PlayerState(..),
+  PageTitle(..),
 )
 where
 
@@ -42,3 +43,5 @@ data PlayerState = PlayerState {
     bandCollection :: Text,
     venue :: Text
 }
+
+newtype PageTitle = PageTitle Text

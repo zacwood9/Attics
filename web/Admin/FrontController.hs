@@ -14,7 +14,10 @@ import IHP.AutoRefresh
 import IHP.Job.Dashboard
 import Admin.JobDashboard
 
-type AtticsJobDashboard = JobsDashboardController [InitialScrapeJob, NightlyScrapeJob, FixSongJob]
+type AtticsJobDashboard = JobsDashboardController
+    (BasicAuthStatic "zac" "jobs")
+    [InitialScrapeJob, NightlyScrapeJob, FixSongJob, MyTestJob]
+
 instance FrontController AdminApplication where
     controllers =
         [ startPage BandsAction
