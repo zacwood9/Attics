@@ -124,16 +124,16 @@ body {
 }
 
 #audio-container {
-  position: fixed;
+  /* position: fixed; */
   background-color: #33448CCC;
   color: white;
 
   border-radius: 10px;
   padding: 16px;
 
-  left: 1em;
-  right: 1em;
-  bottom: 3em;
+  /* left: 1em; */
+  /* right: 1em; */
+  /* bottom: 3em; */
   max-width: 500px;
   margin: auto;
 }

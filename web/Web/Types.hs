@@ -5,8 +5,7 @@ module Web.Types (
   AppleController(..),
   PlayerState(..),
   PageTitle(..),
-)
-where
+) where
 
 import           Application.Types
 import           GHC.Generics

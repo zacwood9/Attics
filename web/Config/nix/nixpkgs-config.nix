@@ -1,5 +1,5 @@
-{ ihp }:
+{ ihp, compiler }:
 import "${toString ihp}/NixSupport/make-nixpkgs-from-options.nix" {
-    ihp = ihp;
+    inherit ihp compiler;
     haskellPackagesDir = ./haskell-packages/.;
 }

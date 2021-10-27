@@ -16,6 +16,5 @@ instance Worker AdminApplication where
         [ worker @FixSongJob
         , worker @NightlyScrapeJob
         -- Generator Marker
-        , worker @MyTestJob
         , worker @InitialScrapeJob
         ]

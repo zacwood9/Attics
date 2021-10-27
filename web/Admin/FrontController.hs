@@ -16,7 +16,7 @@ import Admin.JobDashboard
 
 type AtticsJobDashboard = JobsDashboardController
     (BasicAuthStatic "zac" "jobs")
-    [InitialScrapeJob, NightlyScrapeJob, FixSongJob, MyTestJob]
+    '[InitialScrapeJob, NightlyScrapeJob]
 
 instance FrontController AdminApplication where
     controllers =

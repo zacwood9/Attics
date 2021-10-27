@@ -19,9 +19,6 @@ instance View PlayerView where
             makeLink recording = pathTo (PlayerAction (get #collection band) (get #date performance) (Just $ get #identifier recording) Nothing)
             songLink track = pathTo (PlayerAction (get #collection band) (get #date performance) (Just $ get #identifier selectedRecording) (Just track))
             archiveLink song = "https://archive.org/download/" <> get #identifier selectedRecording <> "/" <> get #fileName song
-            p = case playerState of
-                Just playerState -> audioPlayer playerState
-                Nothing -> empty
         in [hsx|
         <div class="container-fluid">
             <div class="row mt-4">
@@ -33,14 +30,19 @@ instance View PlayerView where
                 </div>
             </div>
         </div>
-        {p}
     |]
 
-player PlayerView { .. } archiveLink songLink = [hsx|
+player PlayerView { .. } archiveLink songLink =
+    let
+        p = case playerState of
+            Just playerState -> audioPlayer playerState
+            Nothing -> empty
+    in [hsx|
     <div class="text-center">
         <h2>{get #name band}</h2>
         <h4>Live at {get #venue performance}</h4>
         <h4>{get #date performance}</h4>
+        {p}
     </div>
     {renderSongs songs archiveLink songLink}
 |]
@@ -109,8 +111,7 @@ audioPlayer PlayerState { .. } =
     in [hsx|
         <div id="audio-container">
             <div id="audio-container-inner" class="d-flex flex-column align-items-center">
-                <strong>{songTitle}</strong>
-                <span class="mb-2">{album}</span>
+                <strong>Now playing: {songTitle}</strong>
                 <audio id="audio" controls/>
             </div>
         </div>

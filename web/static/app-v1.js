@@ -11,6 +11,11 @@ window.addEventListener('turbolinks:load', () => {
             const songUrl = songEl.dataset.url;
             audioPlayer.src = songUrl;
             audioPlayer.play();
+
+            audioPlayer.addEventListener("ended", function() {
+                url.searchParams.set('selectedTrack', `${Number(selectedTrack) + 1}`);
+                window.location = url.href;
+            });
         }
     }
-})
+});

@@ -66,7 +66,7 @@ instance Controller AtticsController where
         render MigrationView { .. }
         else renderHome
 
-    action PlayerAction { .. } = do
+    action playerAction@PlayerAction { .. } = do
         band <- fetchBandByCollection collection
         performance <- query @Performance
             |> filterWhere (#bandId, get #id band)
@@ -79,8 +79,10 @@ instance Controller AtticsController where
             head list
         songs <- query @Song |> filterWhere (#recordingId, get #id selectedRecording) |> orderByAsc #track |> fetch
 
+        -- NOTE: track is indexed by 1!!!!
         playerState <- case selectedTrack of
                 Just track -> do
+                    when (track > List.length songs) (redirectTo playerAction { selectedTrack = Nothing })
                     let songTitle = get #title (songs !! (track - 1))
                     let state = Just $ PlayerState
                             songTitle
