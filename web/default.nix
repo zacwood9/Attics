@@ -22,7 +22,10 @@ let
             # Native dependencies, e.g. imagemagick
         ];
         projectPath = ./.;
-        # optimized = true;
     };
 in
-    haskellEnv
+    haskellEnv.overrideAttrs (oldAttrs: { 
+        installPhase = oldAttrs.installPhase + ''
+            ln -s "$out/lib/build/ihp-lib" "$out/IHP"
+        ''; 
+    })
