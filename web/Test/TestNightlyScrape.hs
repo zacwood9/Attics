@@ -33,7 +33,7 @@ spec = describe "Nightly Scrape" $ do
             newRecordings <- Job.getNewRecordingsFromArchive (gdBand time4) PublicDate mockSearch
             newRecordings `shouldBe` []
     describe "job" $ do
-        beforeAll (Config.test |> mockContext WebApplication) $ do
+        aroundAll (withIHPApp WebApplication Config.test) $ do
             it "creates new performance and recording" $ withContext do
                 bracket
                     (do
@@ -54,7 +54,7 @@ spec = describe "Nightly Scrape" $ do
                         List.length pAll `shouldBe` 2)
 
     describe "#updateRecentlyReviewedRecordings" $ do
-        beforeAll (Config.test |> mockContext WebApplication) $ do
+        aroundAll (withIHPApp WebApplication Config.test) $ do
             it "updates recording with new info" $ withContext do
                 bracket
                     (do
@@ -63,7 +63,7 @@ spec = describe "Nightly Scrape" $ do
                         testRecording p |> createRecord
                         pure band
                         )
-                    (cleanupBand)
+                    cleanupBand
                     (\band -> do
                         recordings <- Job.updateRecentlyReviewedRecordings band mockSearch
                         List.length recordings `shouldBe` 1
@@ -79,7 +79,7 @@ spec = describe "Nightly Scrape" $ do
                         p <- testPerformance band |> createRecord
                         pure band
                         )
-                    (cleanupBand)
+                    cleanupBand
                     (\band -> do
                         result <- Job.updateRecentlyReviewedRecordings band mockSearch
                         result `shouldBe` [])
@@ -89,7 +89,7 @@ cleanupBand band = do
     perfs <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
     recs <- mapM (\p -> query @Recording |> filterWhere (#performanceId, get #id p) |> fetch) perfs
     perfs |> deleteRecords
-    mapM_ (\rs -> deleteRecords rs) recs
+    mapM_ deleteRecords recs
     band |> deleteRecord
 
 

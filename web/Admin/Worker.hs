@@ -9,7 +9,6 @@ import IHP.Job.Types
 import Admin.Job.NightlyScrape
 import Admin.Job.FixSong
 import Admin.Job.InitialScrape
-import Admin.Job.MyTest
 
 instance Worker AdminApplication where
     workers _ =

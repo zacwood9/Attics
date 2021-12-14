@@ -39,7 +39,6 @@
 		11BEA57323BFF5FF00C86EED /* SourceToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BEA57223BFF5FF00C86EED /* SourceToolbar.swift */; };
 		11BEA57523C2B80700C86EED /* ATSProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BEA57423C2B80700C86EED /* ATSProgressCircle.swift */; };
 		11EA56A323C7EA9F00F0F64A /* SFSymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA56A223C7EA9F00F0F64A /* SFSymbolButton.swift */; };
-		11EA56A523C9395600F0F64A /* ATSTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA56A423C9395500F0F64A /* ATSTabBarController.swift */; };
 		11EA56A723C939D800F0F64A /* UpdateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA56A623C939D800F0F64A /* UpdateVC.swift */; };
 		C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */; };
 		C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */; };
@@ -125,7 +124,6 @@
 		11BEA57223BFF5FF00C86EED /* SourceToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceToolbar.swift; sourceTree = "<group>"; };
 		11BEA57423C2B80700C86EED /* ATSProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ATSProgressCircle.swift; path = "Attics/Custom Views/ATSProgressCircle.swift"; sourceTree = SOURCE_ROOT; };
 		11EA56A223C7EA9F00F0F64A /* SFSymbolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolButton.swift; sourceTree = "<group>"; };
-		11EA56A423C9395500F0F64A /* ATSTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATSTabBarController.swift; sourceTree = "<group>"; };
 		11EA56A623C939D800F0F64A /* UpdateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVC.swift; sourceTree = "<group>"; };
 		C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCollectionViewCell.swift; sourceTree = "<group>"; };
 		C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewCell.swift; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 			isa = PBXGroup;
 			children = (
 				1184459523C647ED00DC195C /* Cells */,
-				11EA56A423C9395500F0F64A /* ATSTabBarController.swift */,
 				1184459723C64D7300DC195C /* ErrorVC.swift */,
 				11EA56A623C939D800F0F64A /* UpdateVC.swift */,
 				113C3C5C23CD40BE00FF481D /* LoadingVC.swift */,
@@ -449,7 +446,6 @@
 				C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */,
 				1148E80E230AE79900A0C88A /* Band.swift in Sources */,
 				11AC3C9522D7E6D100956056 /* MyShowsNavigator.swift in Sources */,
-				11EA56A523C9395600F0F64A /* ATSTabBarController.swift in Sources */,
 				C54A166120FAB86700A6EF95 /* ShowCollectionViewCell.swift in Sources */,
 				C5ED3A8820D452380019F0EF /* PerformancesViewController.swift in Sources */,
 				1103750223960A7900572DAD /* AppState.swift in Sources */,
@@ -696,7 +692,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -710,7 +706,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = me.zacwood.Attics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -724,7 +720,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -737,7 +733,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.3;
 				PRODUCT_BUNDLE_IDENTIFIER = me.zacwood.Attics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

@@ -58,13 +58,15 @@ instance Controller AtticsController where
         render ShowRecordingView { .. }
         else renderHome
 
-    action (MigrationAction _) = if isJsonRequest
-        then do
-        let idStr :: Text = param "identifiers"
-        let identifiers = Text.splitOn "," (cs idStr)
-        items <- fetchMigrationItems identifiers
-        render MigrationView { .. }
-        else renderHome
+    action (MigrationAction _) = 
+        if isJsonRequest then 
+            do
+                let idStr :: Text = param "identifiers"
+                let identifiers = Text.splitOn "," (cs idStr)
+                items <- fetchMigrationItems identifiers
+                render MigrationView { .. }
+        else 
+            renderHome
 
     action playerAction@PlayerAction { .. } = do
         band <- fetchBandByCollection collection
@@ -74,9 +76,9 @@ instance Controller AtticsController where
             |> fetchOne
         recordings <- fetchRecordings collection date
         let selectedRecording = fromMaybe (recordings !! 0) $ do
-            id <- selectedIdentifier
-            let list = filter (\r -> (get #identifier r) == id) recordings
-            head list
+                id <- selectedIdentifier
+                let list = filter (\r -> get #identifier r == id) recordings
+                head list
         songs <- query @Song |> filterWhere (#recordingId, get #id selectedRecording) |> orderByAsc #track |> fetch
 
         -- NOTE: track is indexed by 1!!!!
@@ -98,5 +100,13 @@ instance Controller AtticsController where
         case playerState of
             Just playerState -> playerState |> get #songTitle |> PageTitle |> putContext
             Nothing -> pure ()
-        render PlayerView { .. }
+
+        render PlayerView {
+            band=band,
+            performance=performance,
+            selectedRecording=selectedRecording,
+            recordings=recordings,
+            songs=songs,
+            playerState=playerState
+        }
 

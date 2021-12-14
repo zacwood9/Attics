@@ -23,14 +23,14 @@ import Control.Exception (try, bracket,evaluate, SomeException(..))
 
 spec :: Spec
 spec = describe "Initial Scrape Job" $ do
-    beforeAll (Config.test |> mockContext WebApplication) $ do
+    aroundAll (withIHPApp WebApplication Config.test) $ do
         it "adds new performances and recordings and songs" $ withContext do
             bracket
                 (do
                     band <- testBand |> createRecord
                     testPerformance band |> create
                     pure band)
-                (cleanupBand)
+                cleanupBand
                 (\band -> do
                     Job.initialScrape mockScrape mockGetFiles band
 
@@ -79,7 +79,7 @@ cleanupBand band = do
     perfs <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
     recs <- mapM (\p -> query @Recording |> filterWhere (#performanceId, get #id p) |> fetch) perfs
     perfs |> deleteRecords
-    mapM_ (\rs -> deleteRecords rs) recs
+    mapM_ deleteRecords recs
     band |> deleteRecord
 
 testBand = newRecord @Band

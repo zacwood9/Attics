@@ -41,6 +41,7 @@ CREATE TABLE nightly_scrape_jobs (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    run_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     status JOB_STATUS DEFAULT 'job_status_not_started' NOT NULL,
     last_error TEXT DEFAULT NULL,
     attempts_count INT DEFAULT 0 NOT NULL,
@@ -52,6 +53,7 @@ CREATE TABLE fix_song_jobs (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    run_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     status JOB_STATUS DEFAULT 'job_status_not_started' NOT NULL,
     last_error TEXT DEFAULT NULL,
     attempts_count INT DEFAULT 0 NOT NULL,
@@ -63,6 +65,7 @@ CREATE TABLE initial_scrape_jobs (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    run_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
     status JOB_STATUS DEFAULT 'job_status_not_started' NOT NULL,
     last_error TEXT DEFAULT NULL,
     attempts_count INT DEFAULT 0 NOT NULL,
@@ -76,13 +79,3 @@ ALTER TABLE nightly_scrape_jobs ADD CONSTRAINT nightly_scrape_jobs_ref_band_id F
 ALTER TABLE performances ADD CONSTRAINT performances_ref_band_id FOREIGN KEY (band_id) REFERENCES bands (id) ON DELETE CASCADE;
 ALTER TABLE recordings ADD CONSTRAINT recordings_ref_performance_id FOREIGN KEY (performance_id) REFERENCES performances (id) ON DELETE CASCADE;
 ALTER TABLE songs ADD CONSTRAINT songs_ref_recording_id FOREIGN KEY (recording_id) REFERENCES recordings (id) ON DELETE CASCADE;
-CREATE TABLE my_test_jobs (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-    status JOB_STATUS DEFAULT 'job_status_not_started' NOT NULL,
-    last_error TEXT DEFAULT NULL,
-    attempts_count INT DEFAULT 0 NOT NULL,
-    locked_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-    locked_by UUID DEFAULT NULL
-);

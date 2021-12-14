@@ -37,26 +37,27 @@ class RecordingViewController : UIViewController, ObservableObject {
     }
 
     override func viewDidLoad() {
-        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+//        view.addSubview(scrollView)
         scrollView.backgroundColor = .systemBackground
         view.backgroundColor = .systemBackground
 
         addChild(hostingController)
-        scrollView.addSubview(hostingController.view)
+        view.addSubview(hostingController.view)
         hostingController.didMove(toParent: self)
 
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+//            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+//            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            hostingController.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hostingController.view.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(share))
@@ -262,6 +263,7 @@ struct RecordingView : View {
     @ObservedObject var musicPlayer: MusicPlayer
 
     var body: some View {
+        ScrollView {
         VStack {
             PlayerHeader(viewModel: viewModel)
             Divider()
@@ -286,6 +288,7 @@ struct RecordingView : View {
                 LoadingComponent(retry: nil)
                 Spacer()
             }
+        }
         }
         .actionSheet(isPresented: $viewModel.modalOpen) {
             if viewModel.isWarningModal {

@@ -300,9 +300,9 @@ filesToSongs files =
                 atticsSongFileName = afFileName mp3,
                 atticsSongTitle = pluckFromPair mp3 original afFileName afTitle,
                 atticsSongTrack = i + 1,
-                atticsSongCreator = pluckFromPair mp3 original (\_ -> "Unknown") afCreator,
+                atticsSongCreator = pluckFromPair mp3 original (const "Unknown") afCreator,
                 atticsSongLength = fromMaybe "0:00" $ afLength mp3,
-                atticsSongAlbum = pluckFromPair mp3 original (\_ -> "Unknown") afAlbum
+                atticsSongAlbum = pluckFromPair mp3 original (const "Unknown") afAlbum
                 }
 
         mapInd :: (a -> Int -> b) -> [a] -> [b]

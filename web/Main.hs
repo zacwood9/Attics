@@ -15,10 +15,10 @@ import Health.FrontController
 import Health.Types
 
 instance FrontController RootApplication where
-    controllers = [
-            mountFrontController WebApplication
-            , mountFrontController AdminApplication
-            , mountFrontController HealthApplication
+    controllers = 
+        [ mountFrontController WebApplication
+        , mountFrontController AdminApplication
+        , mountFrontController HealthApplication
         ]
 
 instance Worker RootApplication where

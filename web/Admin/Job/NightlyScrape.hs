@@ -41,7 +41,7 @@ addNewRecordings
     -> IO [Recording]
 addNewRecordings band archiveSearch = do
     -- get recently uploaded recordings, as RecordingData
-    recordingDatas <- (map (archiveToAttics (get #collection band)) . map fst) <$> archiveSearch (get #collection band) PublicDate
+    recordingDatas <- map (archiveToAttics (get #collection band) . fst) <$> archiveSearch (get #collection band) PublicDate
     currentIdentifiers <- Set.fromList <$> identifiersForBand band
     filterNew recordingDatas currentIdentifiers
         |> mapM (getOrBuildRecordingFromData band)
@@ -76,14 +76,14 @@ updateRecentlyReviewedRecordings
     -> IO [Recording]
 updateRecentlyReviewedRecordings band searchArchive = do
     let ?context = ?modelContext
-    recordingDatas <- map (archiveToAttics (get #collection band)) . map fst <$> searchArchive (get #collection band) PublicDate
+    recordingDatas <- map (archiveToAttics (get #collection band) . fst) <$> searchArchive (get #collection band) PublicDate
     case recordingDatas of
         [] -> do
             Log.info $ "No recent reviews found for " <> get #collection band <> ". Skipping."
             pure []
         recentlyReviewed -> do
             recordings <- mapM getRecording recentlyReviewed
-            let zipped = catMaybes $ map (\(a, b) -> a >>= \a' -> pure (a', b)) (zip recordings recentlyReviewed)
+            let zipped = mapMaybe (\(a, b) -> a >>= \a' -> pure (a', b)) (zip recordings recentlyReviewed)
             updated <- mapM updateRecording zipped
             Log.info $ "Updated " <> show (List.length updated) <> " recordings for " <> get #collection band
             pure updated

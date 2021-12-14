@@ -136,6 +136,7 @@ getOrBuildRecordingFromData  band recording = do
             where bands.collection = ? and performances.date = ?
         |]
 
+makeRecordingRecord :: RecordingData -> Recording
 makeRecordingRecord RecordingData {..} =
   newRecord @Recording
     |> set #identifier identifier

@@ -21,7 +21,7 @@ import Control.Exception (bracket,evaluate, SomeException(..))
 
 spec :: Spec
 spec = describe "Fix Songs Job" $ do
-    beforeAll (Config.test |> mockContext WebApplication) $ do
+    aroundAll (withIHPApp WebApplication Config.test) $ do
         it "updates songs with bad titles" $ withContext do
             bracket
                 (do
@@ -30,7 +30,7 @@ spec = describe "Fix Songs Job" $ do
                     r <- testRecording p |> createRecord
                     mapM_ createRecord (testSongs r)
                     pure (band,r))
-                (cleanupBand)
+                cleanupBand
                 (\(band, r) -> do
                     Job.fixSongsForBand mockGetFiles band
                     songs <- query @Song
@@ -50,7 +50,7 @@ cleanupBand (band, _) = do
     perfs <- query @Performance |> filterWhere (#bandId, get #id band) |> fetch
     recs <- mapM (\p -> query @Recording |> filterWhere (#performanceId, get #id p) |> fetch) perfs
     perfs |> deleteRecords
-    mapM_ (\rs -> deleteRecords rs) recs
+    mapM_ deleteRecords recs
     band |> deleteRecord
 
 testBand = newRecord @Band

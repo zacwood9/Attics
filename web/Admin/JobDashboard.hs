@@ -28,7 +28,7 @@ instance DisplayableJob InitialScrapeJob where
     makeDetailView job = do
         let table = tableName @InitialScrapeJob
         withRelated <- fetchRelated #bandId job
-        pure $ SomeView $ HtmlView $ [hsx|
+        pure $ SomeView $ HtmlView [hsx|
             <br>
                 <h5>Viewing Job {get #id job} in {table}</h5>
             <br>
@@ -228,7 +228,7 @@ instance TableViewable (IncludeWrapper "bandId" NightlyScrapeJob) where
     renderTableRow (IncludeWrapper job) =
         let
             table = tableName @NightlyScrapeJob
-            linkToView :: Text = "/jobs/ViewJob?tableName=" <> table <> "&id=" <> tshow (get #id job)
+            linkToView = "/jobs/ViewJob?tableName=" <> table <> "&id=" <> tshow (get #id job)
             link = "/jobs/CreateJob?tableName=" <> tableName @NightlyScrapeJob  <> "&bandId=" <> get #bandId job |> get #id |> tshow
         in [hsx|
         <tr>
