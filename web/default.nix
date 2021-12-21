@@ -1,7 +1,7 @@
 let
     ihp = builtins.fetchGit {
         url = "https://github.com/digitallyinduced/ihp.git";
-        ref = "refs/tags/v0.16.0";
+        ref = "refs/tags/v0.17.0";
     };
     haskellEnv = import "${ihp}/NixSupport/default.nix" {
         ihp = ihp;
@@ -24,8 +24,9 @@ let
         projectPath = ./.;
     };
 in
-    haskellEnv.overrideAttrs (oldAttrs: { 
+    haskellEnv.overrideAttrs (oldAttrs: {
         installPhase = oldAttrs.installPhase + ''
             ln -s "$out/lib/build/ihp-lib" "$out/IHP"
-        ''; 
+            ln -s "$out/lib/static" "$out/static"
+        '';
     })
