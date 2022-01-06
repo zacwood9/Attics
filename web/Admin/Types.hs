@@ -15,6 +15,7 @@ import           Generated.Types
 import           IHP.ModelSupport
 import           IHP.Prelude
 import           IHP.ControllerPrelude
+import           GHC.Generics
 import qualified Database.PostgreSQL.Simple as PG
 import qualified Database.PostgreSQL.Simple.Types as PG
 import qualified Database.PostgreSQL.Simple.FromField as PG
@@ -34,7 +35,7 @@ data BandsController
     | EditBandAction { bandId :: !(Id Band) }
     | UpdateBandAction { bandId :: !(Id Band) }
     | DeleteBandAction { bandId :: !(Id Band) }
-    deriving (Eq, Show, Data)
+    deriving (Eq, Show, Data, Generic)
 
 data JobsController
     = JobsAction

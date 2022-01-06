@@ -1,9 +1,11 @@
-#!/usr/bin/env run-script
+module Main where
 
-module Application.Script.NightlyScrape where
-
-import Application.Script.Prelude
+import Application.Script.Prelude hiding ( run )
 import Control.Monad (void)
+import IHP.ScriptSupport ( runScript )
+import qualified Config
+
+main = runScript Config.config run
 
 run :: Script
 run = do

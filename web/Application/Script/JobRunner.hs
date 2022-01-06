@@ -1,14 +1,10 @@
-#!/usr/bin/env run-script
-module Application.Script.JobRunner where
+module Main (main) where
 
 import Application.Script.Prelude
-import Control.Monad (void)
+import IHP.ScriptSupport
+import IHP.Job.Runner
+import qualified Config
+import RootApplication ()
 
-run :: Script
-run = do
-    bands <- query @Band |> fetch
-    mapM_ (\band ->
-        newRecord @NightlyScrapeJob
-          |> set #bandId (get #id band)
-          |> create)
-        bands
+main :: IO ()
+main = runScript Config.config (runJobWorkers (workers RootApplication))

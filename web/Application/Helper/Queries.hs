@@ -15,7 +15,7 @@ fetchBandByCollection :: (?modelContext :: ModelContext) => Collection -> IO Ban
 fetchBandByCollection collection =
   query @Band |> filterWhere (#collection, collection) |> fetchOne
 
-identifiersForBand :: _ => Band -> IO [Identifier]
+identifiersForBand :: (?modelContext :: ModelContext) => Band -> IO [Identifier]
 identifiersForBand band = do
     map fromOnly <$> sqlQuery theQuery (Only (get #id band))
     where
