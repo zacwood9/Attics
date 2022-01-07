@@ -26,6 +26,7 @@ let
         preBuild = (if (builtins.hasAttr "preBuild" oldAttrs) then oldAttrs.preBuild else "") + "${haskellPackages.ihp}/bin/build-generated-code";
         installPhase = oldAttrs.installPhase + ''
           mkdir -p $out/IHP $out/static
+
           cp -r $src/static $out
           cp -r ${haskellPackages.ihp}/lib/IHP/static $out/IHP
           '';

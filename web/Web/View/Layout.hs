@@ -29,7 +29,7 @@ defaultLayout inner =
 <body>
     <nav class="navbar navbar-dark bg-attics-blue">
         <a class="navbar-brand" href={BandsAction}>
-            <img src="/icon.png" width="30" height="30" class="d-inline-block align-top mr-2" style="border-radius: 8px" alt="">
+            <img src={assetPath "/icon.png"} width="30" height="30" class="d-inline-block align-top mr-2" style="border-radius: 8px" alt="">
             Attics
         </a>
     </nav>
@@ -58,28 +58,27 @@ homeLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
 stylesheets :: Html
 stylesheets = do
     [hsx|
-        <link rel="stylesheet" href="/vendor/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/vendor/flatpickr.min.css"/>
-        <link rel="stylesheet" href="/app-v1.css"/>
+        <link rel="stylesheet" href={assetPath "/vendor/bootstrap.min.css"}/>
+        <link rel="stylesheet" href={assetPath "/vendor/flatpickr.min.css"}/>
+        <link rel="stylesheet" href={assetPath "/app.css"}/>
     |]
 
 scripts :: Html
 scripts = do
     [hsx|
-        <script id="livereload-script" src="/livereload.js"></script>
-        <script src="/vendor/jquery-3.2.1.slim.min.js"></script>
-        <script src="/vendor/timeago.js"></script>
-        <script src="/vendor/popper.min.js"></script>
-        <script src="/vendor/bootstrap.min.js"></script>
-        <script src="/vendor/flatpickr.js"></script>
-        <script src="/helpers.js"></script>
-        <script src="/vendor/morphdom-umd.min.js"></script>
-        <script src="/ihp-auto-refresh.js"></script>
-        <script src="/vendor/turbolinks.js"></script>
-        <script src="/vendor/morphdom-umd.min.js"></script>
-        <script src="/vendor/turbolinksMorphdom.js"></script>
-        <script src="/vendor/turbolinksInstantClick.js"></script>
-        <script src="/app-v1.js"></script>
+        {when isDevelopment devScripts}
+        <script src={assetPath "/vendor/jquery-3.6.0.slim.min.js"}></script>
+        <script src={assetPath "/vendor/timeago.js"}></script>
+        <script src={assetPath "/vendor/popper.min.js"}></script>
+        <script src={assetPath "/vendor/bootstrap.min.js"}></script>
+        <script src={assetPath "/vendor/flatpickr.js"}></script>
+        <script src={assetPath "/vendor/morphdom-umd.min.js"}></script>
+        <script src={assetPath "/vendor/turbolinks.js"}></script>
+        <script src={assetPath "/vendor/turbolinksInstantClick.js"}></script>
+        <script src={assetPath "/vendor/turbolinksMorphdom.js"}></script>
+        <script src={assetPath "/helpers.js"}></script>
+        <script src={assetPath "/ihp-auto-refresh.js"}></script>
+        <script src={assetPath "/app.js"}></script>
     |]
 
 metaTags :: Html
@@ -90,10 +89,10 @@ metaTags = [hsx|
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://attics.io"/>
     <meta property="og:description" content="Stream thousands of live concerts"/>
-    <meta property="og:image" content="/icon.png" />
+    <meta property="og:image" content={assetPath "/icon.png"} />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href={assetPath "/apple-touch-icon.png"}>
+    <link rel="icon" type="image/png" sizes="32x32" href={assetPath "/favicon-32x32.png"}>
+    <link rel="icon" type="image/png" sizes="16x16" href={assetPath "/favicon-16x16.png"}>
+    <link rel="manifest" href={assetPath "/site.webmanifest"}>
 |]
