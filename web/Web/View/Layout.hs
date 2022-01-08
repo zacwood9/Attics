@@ -96,3 +96,8 @@ metaTags = [hsx|
     <link rel="icon" type="image/png" sizes="16x16" href={assetPath "/favicon-16x16.png"}>
     <link rel="manifest" href={assetPath "/site.webmanifest"}>
 |]
+
+devScripts :: Html
+devScripts = [hsx|
+        <script id="livereload-script" src={assetPath "/livereload.js"}></script>
+    |]
