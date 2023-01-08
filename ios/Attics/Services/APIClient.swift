@@ -79,13 +79,6 @@ struct APIClient {
         return get(url: url.toURL())
     }
     
-    func getMigrationItems(_ identifiers: [String]) -> AnyPublisher<[MigrationItem], APIError> {
-        let url = baseUrl
-            .appendingPath("Migration")
-            .appendingQuery(key: "identifiers", value: identifiers.joined(separator: ","))
-        return get(url: url.toURL())
-    }
-    
     func getPerformances(for band: Band, in year: Year) -> AnyPublisher<YearResponse, APIError> {
         let url = baseUrl
             .appendingPath("ShowBand")

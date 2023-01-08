@@ -9,69 +9,6 @@
 import UIKit
 import Combine
 
-protocol SourceStore {
-    func save(source: LegacySource)
-    func remove(source: LegacySource)
-    func getAll() -> [LegacySource]
-    func contains(source: LegacySource) -> Bool
-}
-
-struct FileSystemSourceStore: SourceStore {
-    let file: File
-    
-    var favs: Set<LegacySource> {
-        return try! Set(JSONDecoder().decode([LegacySource].self, from: file.read()))
-    }
-    
-    init(named name: String, backup: Bool = false) {
-        print(Folder.home.path)
-        let cacheDir = Folder.applicationSupport
-        file = try! cacheDir.createFileIfNeeded(at: name)
-        
-        if !backup {
-            file.excludeFromBackup()
-        }
-        
-        let favsStr = try! file.readAsString()
-        if favsStr == "" {
-            try! file.write("[]")
-        }
-    }
-    
-    func save(source: LegacySource) {
-        let newFavs = favs.union([source])
-        do {
-            try file.write(JSONEncoder().encode(Array(newFavs)))
-            NotificationCenter.default.post(name: .FavoritesChanged, object: source.identifier)
-        } catch {
-            print(error)
-        }
-    }
-    
-    func remove(source: LegacySource) {
-        let newFavs = favs.subtracting([source])
-        do {
-            try file.write(JSONEncoder().encode(Array(newFavs)))
-            NotificationCenter.default.post(name: .FavoritesChanged, object: source.identifier)
-        } catch {
-            print(error)
-        }
-    }
-    
-    func getAll() -> [LegacySource] {
-        if let favs = try? JSONDecoder().decode([LegacySource].self, from: file.read()) {
-            return favs
-        } else {
-            print("failed to load favorites")
-            return []
-        }
-    }
-    
-    func contains(source: LegacySource) -> Bool {
-        return favs.contains(source)
-    }
-    
-}
 
 class AppStorageManager {
     public static var shared = AppStorageManager()
