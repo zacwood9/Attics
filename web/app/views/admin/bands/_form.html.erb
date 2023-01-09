@@ -1,0 +1,34 @@
+<%= form_with(model: [:admin, band]) do |form| %>
+  <% if band.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(band.errors.count, "error") %> prohibited this band from being saved:</h2>
+
+      <ul>
+        <% band.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="display: flex; flex-direction: column">
+    <div style="margin-bottom: 1em">
+      <%= form.label "Name" %>
+      <%= form.text_field :name %>
+    </div>
+
+    <div style="margin-bottom: 1em;">
+      <%= form.label "Collection" %>
+      <%= form.text_field :collection %>
+    </div>
+
+    <div style="margin-bottom: 1em;">
+      <%= form.label "Logo URL" %>
+      <%= form.text_field :logo_url %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

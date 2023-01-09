@@ -90,11 +90,11 @@ class ShareItem: NSObject, UIActivityItemSource {
     }
 
     var urlString: String {
-        "https://attics.io/ShowRecording?identifier=\(stored.recording.identifier)"
+        "https://v2.attics.io/api/legacy/recordings/\(stored.recording.identifier)/tracks"
     }
 
     func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return URL(string: "https://attics.io/ShowRecording?identifier=\(stored.recording.identifier)")!
+        return URL(string: urlString)!
     }
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {

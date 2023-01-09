@@ -95,15 +95,23 @@ final class App: NSObject {
         UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
     }
     
-    func openUrl(_ path: String, _ params: [URLQueryItem]) {
+    func openUrl(_ components: NSURLComponents) -> Bool {
         tabBarController.selectedIndex = 0
         
-        switch path {
+        switch components.path {
         case "/ShowRecording":
-            guard let identifier = params.first(where: { $0.name == "identifier" })?.value else { return }
+            guard let identifier = components.queryItems?.first(where: { $0.name == "identifier" })?.value else { return false }
             browseNavigator.openToRecording(identifier: identifier)
+            return true
             
-        default: return
+        default:
+            guard
+                let components = components.url?.pathComponents,
+                components.count == 5,
+                components.starts(with: ["api", "legacy", "recordings"]) else { return false }
+            
+            browseNavigator.openToRecording(identifier: components[3])
+            return true
         }
     }
     

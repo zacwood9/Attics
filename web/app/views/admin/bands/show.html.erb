@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @band %>
+
+<div>
+  <%= link_to "Edit this band", edit_admin_band_path(@band) %> |
+  <%= link_to "Back to bands", admin_bands_path %>
+
+  <%= button_to "Destroy this band", [:admin, @band], method: :delete %>
+</div>

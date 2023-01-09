@@ -21,12 +21,6 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     lazy var musicPlayer = App.shared.musicPlayer
 
-    // Delegate downloads to parent since all navigators need to be in sync
-    var startDownload: (Source, [Song]) -> () = { _,_ in }
-    var removeDownload: (Source) -> () = { _ in }
-    var isDownloading: (Source) -> Bool = { _ in false }
-    var getProgress: (Source) -> ([Song:Double], Int) = { _ in ([:], 0) }
-
     var networkStatus: () -> NWPath.Status
 
     lazy var playBtn = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(_play))

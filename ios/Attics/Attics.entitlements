@@ -5,6 +5,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:attics.io</string>
+		<string>applinks:v2.attics.io</string>
 	</array>
 </dict>
 </plist>

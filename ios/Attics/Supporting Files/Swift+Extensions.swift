@@ -19,6 +19,8 @@ extension UIFont {
 
 extension Double {
     var timeString: String {
+        guard !isNaN && !isInfinite else { return "--" }
+        
         let roundedDown = Int(self)
         let minutes = roundedDown / 60
         let seconds = roundedDown % 60

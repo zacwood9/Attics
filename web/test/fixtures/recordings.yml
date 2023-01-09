@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+barton_hall_charlie:
+  transferer: Charlie Miller
+  source: MyString
+  lineage: MyString
+  archive_downloads: 19250
+  avg_rating: 4.9
+  num_reviews: 5000
+  attics_downloads: 1
+  identifier: gd1977.charlie.miller
+  performance: barton_hall
+
+englishtown_charlie:
+  transferer: Charlie Miller
+  source: MyString
+  lineage: MyString
+  archive_downloads: 92812
+  avg_rating: 4.87
+  num_reviews: 192
+  attics_downloads: 2
+  identifier: gd1977.09.03.charlie.miller
+  performance: englishtown
+
+englishtown_hunter:
+  transferer: Hunter
+  source: MyString
+  lineage: MyString
+  archive_downloads: 9128
+  avg_rating: 4.5
+  num_reviews: 87
+  attics_downloads: 5
+  identifier: gd1977.09.03.hunter
+  performance: englishtown
+
+anthem_travis:
+  transferer: Travis Wood
+  source: MyString
+  lineage: MyString
+  archive_downloads: 1
+  avg_rating: 1.5
+  num_reviews: 1
+  attics_downloads: 1
+  identifier: billy_strings2022.09.12
+  performance: anthem

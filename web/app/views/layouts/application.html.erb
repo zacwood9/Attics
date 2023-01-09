@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Attics</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <meta charset="utf-8"/>
+    <meta property="og:title" content="Attics"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://attics.io"/>
+    <meta property="og:description" content="Stream thousands of live concerts"/>
+    <meta property="og:image" content="<%= asset_path("icon.png") %>" />
+
+    <%= favicon_link_tag  %>
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path "apple-touch-icon.png" %>">
+    <link rel="manifest" href="<%= asset_path "site.webmanifest" %>">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>

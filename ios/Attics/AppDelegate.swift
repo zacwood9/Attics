@@ -41,15 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, NSUserActivityDelegate {
             return false
         }
         
-        // Check for specific URL components that you need.
-        guard let path = components.path,
-              let params = components.queryItems else {
-            return false
-        }
-        
-        App.shared.openUrl(path, params)
-        
-        return true
+        return App.shared.openUrl(components)
     }
     
     func applicationWillResignActive(_ application: UIApplication) {

@@ -1,0 +1,10 @@
+<h1>Editing band</h1>
+
+<%= render "form", band: @band %>
+
+<br>
+
+<div>
+  <%= link_to "Show this band", [:admin, @band] %> |
+  <%= link_to "Back to bands", admin_bands_path %>
+</div>

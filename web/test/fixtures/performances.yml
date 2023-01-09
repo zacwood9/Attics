@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+barton_hall:
+  date: 1977-05-08
+  venue: Barton Hall
+  city: Ithica
+  state: NY
+  band: grateful_dead
+
+englishtown:
+  date: 1977-09-03
+  venue: Raceway Park
+  city: Englishtown
+  state: NJ
+  band: grateful_dead
+
+anthem:
+  date: 2022-11-18
+  venue: The Anthem
+  city: Washington
+  state: DC
+  band: billy_strings

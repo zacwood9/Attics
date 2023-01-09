@@ -64,25 +64,28 @@ struct APIResource {
 
 struct APIClient {
     let urlSession: URLSession = .shared
-    let baseUrl = APIResource(base: "https://attics.io/")
+    let baseUrl = APIResource(base: "http://localhost:3000/api/legacy/")
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
-        let url = baseUrl.appendingPath("Bands")
+        let url = baseUrl.appendingPath("bands.json")
         return get(url: url.toURL())
     }
     
     func getTopPerformances(_ band: Band) -> AnyPublisher<BandResponse, APIError> {
         let url = baseUrl
-            .appendingPath("TopPerformances")
-            .appendingQuery(key: "collection", value: band.collection)
-            .appendingQuery(key: "numPerformances", value: UIDevice.current.userInterfaceIdiom == .pad ? "10": "5")
+            .appendingPath("bands")
+            .appendingPath(band.collection)
+            .appendingPath("performances")
+            .appendingPath("top.json")
+            .appendingQuery(key: "recordings_per_year", value: UIDevice.current.userInterfaceIdiom == .pad ? "10": "5")
         return get(url: url.toURL())
     }
     
     func getPerformances(for band: Band, in year: Year) -> AnyPublisher<YearResponse, APIError> {
         let url = baseUrl
-            .appendingPath("ShowBand")
-            .appendingQuery(key: "collection", value: band.collection)
+            .appendingPath("bands")
+            .appendingPath(band.collection)
+            .appendingPath("performances.json")
             .appendingQuery(key: "year", value: year)
         
         return get(url: url.toURL())
@@ -90,16 +93,19 @@ struct APIClient {
     
     func getShow(for band: Band, recordingsOf date: String) -> AnyPublisher<ShowResponse, APIError> {
         let url = baseUrl
-            .appendingPath("Recordings")
-            .appendingQuery(key: "collection", value: band.collection)
-            .appendingQuery(key: "date", value: date)
+            .appendingPath("bands")
+            .appendingPath(band.collection)
+            .appendingPath("performances")
+            .appendingPath(date)
+            .appendingPath("recordings.json")
         
         return get(url: url.toURL())
     }
     
     func getRecording(identifier: String) -> AnyPublisher<SourceResponse, APIError> {
-        let url = baseUrl.appendingPath("ShowRecording")
-            .appendingQuery(key: "identifier", value: identifier)
+        let url = baseUrl.appendingPath("recordings")
+            .appendingPath(identifier)
+            .appendingPath("tracks.json")
         
         return get(url: url.toURL())
     }
