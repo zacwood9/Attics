@@ -8,7 +8,6 @@
 
 import UIKit
 import AVKit
-import CoreData
 import Network
 import SwiftUI
 
@@ -107,10 +106,10 @@ final class App: NSObject {
         default:
             guard
                 let components = components.url?.pathComponents,
-                components.count == 5,
-                components.starts(with: ["api", "legacy", "recordings"]) else { return false }
+                components.count == 6,
+                components.starts(with: ["/", "api", "legacy", "recordings"]) else { return false }
             
-            browseNavigator.openToRecording(identifier: components[3])
+            browseNavigator.openToRecording(identifier: components[4])
             return true
         }
     }
