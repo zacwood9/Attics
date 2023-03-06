@@ -7,7 +7,6 @@
 
 import AVKit
 import MediaPlayer
-import SwiftUI
 import Combine
 
 struct Playlist: Codable {
