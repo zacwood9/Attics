@@ -77,7 +77,7 @@ class InitialScrapeJob < ApplicationJob
       }
       .each.with_index { |pair, i|
         file, original = pair
-        Song.create!(
+        Track.create!(
           file_name: file["name"],
           title: file["title"] || original["title"],
           track: i + 1,

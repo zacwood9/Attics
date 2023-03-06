@@ -81,9 +81,4 @@ test:
 #
 production:
   <<: *default
-#  url: postgres://attics:ham6fomdu2nnBQPkDxJC@attics:io:5432/attics
-#  database: attics
-#  username: attics
-#  password: ham6fomdu2nnBQPkDxJC
-#  host: attics.io
-#  password: <%#= ENV["ATTICS_DATABASE_PASSWORD"] %>
+  url: <%= Rails.application.credentials[:database_url] %>
