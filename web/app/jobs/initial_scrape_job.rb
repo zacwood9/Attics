@@ -42,7 +42,6 @@ class InitialScrapeJob < ApplicationJob
     performance = Performance.find_or_create_by!(band: band, date: date)
 
     city, state = item["coverage"]&.split(', ')
-
     update_attrs = { city: city, state: state, venue: item["venue"].presence }.compact
     performance.update!(update_attrs) if update_attrs.present?
 
