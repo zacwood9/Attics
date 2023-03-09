@@ -1,4 +1,5 @@
 require "rest-client"
+require "internet_archive"
 
 class InitialScrapeJob < ApplicationJob
   queue_as :default
@@ -18,18 +19,25 @@ class InitialScrapeJob < ApplicationJob
 
     cursor = nil
 
+    recordings = []
     loop do
       response = RestClient.get(scrape_url(band.collection, cursor))
       result = JSON.parse(response.body)
 
       items = result["items"]
-      items.each { |item| build_attrs(band, item) }
+      items.each { |item| recordings.push(build_attrs(band, item)) }
 
       cursor = result["cursor"]
       break if cursor.blank?
     end
 
-    Recording.find_each { |recording| create_songs(recording) }
+    recordings.each do |recording|
+      files = InternetArchive.files(recording.identifier)
+      track_attributes = Track.attributes_from_files(recording.id, files)
+      next if track_attributes.blank?
+
+      Track.insert_all!(track_attributes)
+    end
   end
 
   def build_attrs(band, item)
@@ -57,35 +65,6 @@ class InitialScrapeJob < ApplicationJob
         num_reviews: item["num_reviews"]
       }.compact
     )
-  end
-
-  def create_songs(recording)
-    response = RestClient.get("https://archive.org/metadata/#{recording.identifier}/files")
-    result = JSON.parse(response.body)["result"] || []
-
-    result
-      .select { |file| file["name"]&.end_with?(".mp3") }
-      .map { |file|
-        # Sometimes derivative files are missing data that is present
-        # on the file's source, so fetch both.
-        if file["original"].present?
-          [file, result.find { |other| other["name"] == file["original"] } || {}]
-        else
-          [file, {}]
-        end
-      }
-      .each.with_index { |pair, i|
-        file, original = pair
-        Track.create!(
-          file_name: file["name"],
-          title: file["title"] || original["title"],
-          track: i + 1,
-          length: file["length"] || original["length"],
-          creator: file["creator"] || original["creator"],
-          album: file["album"] || original["album"],
-          recording_id: recording.id,
-        )
-      }
   end
 
   def scrape_url(collection, cursor = nil)

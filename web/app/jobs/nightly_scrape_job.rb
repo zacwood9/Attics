@@ -1,4 +1,5 @@
 require "rest-client"
+require "internet_archive"
 
 class NightlyScrapeJob < ApplicationJob
   queue_as :default
@@ -11,7 +12,11 @@ class NightlyScrapeJob < ApplicationJob
     results.each do |item|
       recording = process_item(band, item)
       if recording.present?
-        create_songs(recording)
+        files = InternetArchive.files(recording.identifier)
+        attributes = Track.attributes_from_files(recording.id, files)
+        next if attributes.blank?
+
+        Track.insert_all!(attributes)
       end
     end
   end
@@ -45,36 +50,6 @@ class NightlyScrapeJob < ApplicationJob
       }.compact
     )
   end
-
-  def create_songs(recording)
-    response = RestClient.get("https://archive.org/metadata/#{recording.identifier}/files")
-    result = JSON.parse(response.body)["result"] || []
-
-    result
-      .select { |file| file["name"]&.end_with?(".mp3") }
-      .map { |file|
-        # Sometimes derivative files are missing data that is present
-        # on the file's source, so fetch both.
-        if file["original"].present?
-          [file, result.find { |other| other["name"] == file["original"] } || {}]
-        else
-          [file, {}]
-        end
-      }
-      .each.with_index { |pair, i|
-      file, original = pair
-      Track.create!(
-        file_name: file["name"],
-        title: file["title"] || original["title"],
-        track: i + 1,
-        length: file["length"] || original["length"],
-        creator: file["creator"] || original["creator"],
-        album: file["album"] || original["album"],
-        recording_id: recording.id,
-        )
-    }
-  end
-
 end
 
 def advanced_search(collection, sort_by = "publicdate")

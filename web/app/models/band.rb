@@ -2,7 +2,7 @@ class Band < ApplicationRecord
   validates :name, presence: true
   validates :collection, presence: true, uniqueness: true
 
-  has_many :performances
+  has_many :performances, dependent: :destroy
 
   scope :with_metadata, -> {
     select('bands.*')

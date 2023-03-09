@@ -1,6 +1,6 @@
 class Performance < ApplicationRecord
   belongs_to :band, optional: false
-  has_many :recordings
+  has_many :recordings, dependent: :destroy
 
   validates :date, presence: true
 
