@@ -31,7 +31,7 @@ class InitialScrapeJob < ApplicationJob
       break if cursor.blank?
     end
 
-    recordings.each do |recording|
+    recordings.compact.each do |recording|
       files = InternetArchive.files(recording.identifier)
       track_attributes = Track.attributes_from_files(recording.id, files)
       next if track_attributes.blank?

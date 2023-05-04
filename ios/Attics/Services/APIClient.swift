@@ -64,7 +64,7 @@ struct APIResource {
 
 struct APIClient {
     let urlSession: URLSession = .shared
-    let baseUrl = APIResource(base: "https://v2.attics.io/api/legacy/")
+    let baseUrl = APIResource(base: "http://localhost:3000/api/legacy/")
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
         let url = baseUrl.appendingPath("bands.json")
@@ -72,12 +72,14 @@ struct APIClient {
     }
     
     func getTopPerformances(_ band: Band) -> AnyPublisher<BandResponse, APIError> {
+        let formatted = ISO8601DateFormatter().string(from: Date())
         let url = baseUrl
             .appendingPath("bands")
             .appendingPath(band.collection)
             .appendingPath("performances")
             .appendingPath("top.json")
             .appendingQuery(key: "recordings_per_year", value: UIDevice.current.userInterfaceIdiom == .pad ? "10": "5")
+            .appendingQuery(key: "on_this_day", value: formatted)
         return get(url: url.toURL())
     }
     

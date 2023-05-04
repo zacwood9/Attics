@@ -81,6 +81,7 @@ class TopPerformancesViewController: UIViewController {
                 }
             } receiveValue: { [weak self] bandResponse in
                 self?.topPerformances = bandResponse.topPerformances.map { $0 }.sorted(by: {$0.0 < $1.0})
+                self?.topPerformances.insert(("On This Day", bandResponse.onThisDay), at: 0)
                 self?.updateTableViewOnMainThread()
                 self?.refreshControl.endRefreshing()
             }
@@ -151,6 +152,8 @@ extension TopPerformancesViewController: UITableViewDelegate, UITableViewDataSou
         
         cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row)
         cell.collectionViewOffset = offsets[indexPath.row] ?? 0
+        
+        cell.seeAllLabel.text = indexPath.row == 0 ? "" : "See All >"
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -160,6 +163,8 @@ extension TopPerformancesViewController: UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row != 0 else { return }
+        
         onYearTapped(band, topPerformances[indexPath.row].0)
     }
 }
@@ -190,6 +195,7 @@ extension TopPerformancesViewController: UICollectionViewDelegate, UICollectionV
 }
 
 struct BandResponse : Codable {
+    let onThisDay: [Show]
     let topPerformances: [Year : [Show]]
     let band: Band
 }

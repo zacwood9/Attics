@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: bands
+#
+#  id         :uuid             not null, primary key
+#  collection :string           not null
+#  logo_url   :string
+#  name       :string           not null
+#  url        :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 class Band < ApplicationRecord
   validates :name, presence: true
   validates :collection, presence: true, uniqueness: true

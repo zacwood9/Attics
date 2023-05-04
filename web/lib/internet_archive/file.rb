@@ -1,3 +1,5 @@
+require "base_struct"
+
 module InternetArchive
   class File < BaseStruct
     attribute :name, Types::String

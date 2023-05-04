@@ -6,7 +6,7 @@ json.band do
 end
 
 json.performance do
-  json.id  @performance.id
+  json.id @performance.id
   json.date @performance.date
   json.venue @performance.venue.to_s
   json.city @performance.city.to_s
