@@ -23,6 +23,8 @@
 #
 class Track < ApplicationRecord
   belongs_to :recording
+  has_one :performance, through: :recording
+  has_one :band, through: :performance
 
   validates :file_name, presence: true
   validates :track, presence: true

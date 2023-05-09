@@ -26,7 +26,10 @@
 require "test_helper"
 
 class RecordingTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "relationships" do
+    recording = create(:recording)
+    assert recording.performance
+    assert recording.band
+    assert recording.tracks
+  end
 end

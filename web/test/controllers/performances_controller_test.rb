@@ -1,6 +1,20 @@
 require "test_helper"
 
 class PerformancesControllerTest < ActionDispatch::IntegrationTest
+  test "should get index" do
+    band = create(:band)
+    barton = create(:performance, band: band, date: "1977-05-08")
+    create(:recording, performance: barton, avg_rating: 5, num_reviews: 1)
+    create(:recording, performance: barton, avg_rating: 4.5, num_reviews: 2)
+
+    _other = create(:performance, band: band, date: "1979-05-09")
+
+    get band_performances_url(collection: band.collection, year: "1977", format: :json)
+    assert_response :ok
+    body = JSON.parse(response.body)
+    assert_equal 1, body["performances"].length
+  end
+
   test "top performances should sort by star rating" do
     band = create(:band)
     barton = create(:performance, band: band, date: "1977-05-08")

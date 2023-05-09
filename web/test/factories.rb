@@ -19,6 +19,23 @@ FactoryBot.define do
     avg_rating { 4.5 }
     num_reviews { 25 }
   end
+
+  factory :track do
+    recording
+    sequence(:track) do |n|
+      n
+    end
+
+    sequence :title do |n|
+      "Track #{n}"
+    end
+
+    sequence :file_name do |n|
+      "Track_#{n}.mp3"
+    end
+
+    length { "4:55" }
+  end
 end
 
 def performance_with_recordings(num_recordings: 3)

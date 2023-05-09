@@ -13,7 +13,19 @@
 require "test_helper"
 
 class BandTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "relationships" do
+    band = create(:band)
+    performance = create(:performance, band: band)
+    recording = create(:recording, performance: performance)
+    create_list(:track, 3, recording: recording)
+    assert_equal 3, band.tracks.count
+  end
+
+  test "with_metadata" do
+    band = create(:band)
+    performance = create(:performance, band: band)
+    create_list(:recording, 5, performance: performance)
+    assert_equal 1, Band.with_metadata.first.num_performances
+    assert_equal 5, Band.with_metadata.first.num_recordings
+  end
 end

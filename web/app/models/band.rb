@@ -15,12 +15,17 @@ class Band < ApplicationRecord
   validates :collection, presence: true, uniqueness: true
 
   has_many :performances, dependent: :destroy
+  has_many :recordings, through: :performances
+  has_many :tracks, through: :recordings
+
+  attribute :num_performances, :integer, default: 0
+  attribute :num_recordings, :integer, default: 0
 
   scope :with_metadata, -> {
     select('bands.*')
      .select('count(distinct performances.id) as num_performances')
      .select('count(distinct recordings.id) as num_recordings')
-     .left_joins(performances: [:recordings])
+     .left_joins(performances: :recordings)
      .group('bands.id')
   }
 end

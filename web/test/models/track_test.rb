@@ -24,7 +24,10 @@
 require "test_helper"
 
 class TrackTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "relationships" do
+    track = create(:track)
+    assert track.recording
+    assert track.performance
+    assert track.band
+  end
 end
