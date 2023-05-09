@@ -64,7 +64,7 @@ struct APIResource {
 
 struct APIClient {
     let urlSession: URLSession = .shared
-    let baseUrl = APIResource(base: "http://localhost:3000/api/legacy/")
+    let baseUrl = APIResource(base: "https://v2.attics.io/api/legacy/")
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
         let url = baseUrl.appendingPath("bands.json")

@@ -173,7 +173,19 @@ extension TopPerformancesViewController: UITableViewDelegate, UITableViewDataSou
 
 extension TopPerformancesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return topPerformances[collectionView.tag].1.count
+        let show_count = topPerformances[collectionView.tag].1.count;
+        if show_count == 0 {
+            collectionView.backgroundView = {
+                let label = UILabel()
+                label.text = "No shows played on this date."
+                label.font = .preferredFont(forTextStyle: .callout)
+                label.textAlignment = .center
+                return label
+            }()
+        } else {
+            collectionView.backgroundView = nil
+        }
+        return show_count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
