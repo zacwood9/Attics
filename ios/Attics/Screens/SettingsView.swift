@@ -71,7 +71,7 @@ struct SettingsView: View {
                 .scaledToFit()
                 .frame(maxHeight: 250)
                 .padding([.leading, .trailing], 16)
-            Text("Version 1.5")
+            Text("Version 1.6.1")
                 .font(.title)
                 .bold()
             Text("Developed by Zachary Wood")
