@@ -680,7 +680,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 200;
+				CURRENT_PROJECT_VERSION = 201;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -689,6 +689,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -708,7 +709,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 200;
+				CURRENT_PROJECT_VERSION = 201;
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -716,6 +717,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

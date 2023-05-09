@@ -72,7 +72,11 @@ struct APIClient {
     }
     
     func getTopPerformances(_ band: Band) -> AnyPublisher<BandResponse, APIError> {
-        let formatted = ISO8601DateFormatter().string(from: Date())
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = .current
+        formatter.formatOptions = .withFullDate
+        let formatted = formatter.string(from: Date())
+        
         let url = baseUrl
             .appendingPath("bands")
             .appendingPath(band.collection)
