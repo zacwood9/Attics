@@ -114,6 +114,7 @@ GEM
     erubi (1.11.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
+    ffi (1.15.5)
     globalid (1.0.0)
       activesupport (>= 5.0)
     http-accept (1.7.0)
@@ -204,6 +205,14 @@ GEM
       netrc (~> 0.8)
     rexml (3.2.5)
     rubyzip (2.3.2)
+    sassc (2.4.0)
+      ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     selenium-webdriver (4.6.1)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -217,6 +226,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     thor (1.2.1)
+    tilt (2.1.0)
     timeout (0.3.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
@@ -256,6 +266,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.0.4)
   rest-client
+  sassc-rails
   selenium-webdriver
   sprockets-rails
   tzinfo-data

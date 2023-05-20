@@ -46,12 +46,10 @@ class Admin::BandsController < Admin::AdminController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_band
     @band = Band.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def band_params
     params.require(:band).permit(:name, :collection, :logo_url)
   end

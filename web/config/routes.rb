@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root to: "welcome#index"
+
   get "/.well-known/apple-app-site-association",
       to: "apple_app_site_association#index"
 
@@ -11,22 +12,22 @@ Rails.application.routes.draw do
 
   scope :api do
     scope :legacy do
-      get "/bands", to: "bands#index", as: :bands
+      get "/bands", to: "api/bands#index", as: :api_bands
       get "/bands/:collection/performances/top",
-          to: "performances#top",
-          as: :band_top_performances
+          to: "api/performances#top",
+          as: :api_band_top_performances
       get "/bands/:collection/performances/on_this_day",
-          to: "performances#top",
-          as: :band_on_this_day_performances
+          to: "api/performances#top",
+          as: :api_band_on_this_day_performances
       get "/bands/:collection/performances",
-          to: "performances#index",
-          as: :band_performances
+          to: "api/performances#index",
+          as: :api_band_performances
       get "/bands/:collection/performances/:date/recordings",
-          to: "recordings#index",
-          as: :performance_recordings
+          to: "api/recordings#index",
+          as: :api_performance_recordings
       get "/recordings/:identifier/tracks",
-          to: "tracks#index",
-          as: :recording_tracks,
+          to: "api/tracks#index",
+          as: :api_recording_tracks,
           identifier: /.*/
     end
   end
