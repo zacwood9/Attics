@@ -66,6 +66,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem "webmock"
 end
 
 gem "dry-struct", "~> 1.6"
+
+gem "async", "~> 2.5", require: false

@@ -19,7 +19,7 @@ class Admin::BandsController < Admin::AdminController
     @band = Band.new(band_params)
 
     if @band.save
-      InitialScrapeJob.perform_later(@band.id)
+      @band.scrape
       redirect_to admin_band_url(@band), notice: "Band was successfully created."
     else
       render :new, status: :unprocessable_entity

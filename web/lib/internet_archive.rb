@@ -5,8 +5,10 @@ module InternetArchive
 
   class << self
     def files(identifier)
+      url = "https://archive.org/metadata/#{identifier}/files"
+      Rails.logger.info("getting: #{url}")
       response =
-        RestClient.get("https://archive.org/metadata/#{identifier}/files")
+        RestClient.get(url)
       result = JSON.parse(response.body)["result"] || []
       result.map do |item|
         InternetArchive::File.new(
