@@ -12,6 +12,10 @@ trackless_recordings.map do |recording|
   Async do
     files = InternetArchive.files(recording.identifier)
     attributes = Track.attributes_from_files(recording.id, files)
-    Track.insert_all! attributes unless attributes.empty?
+    if attributes.empty?
+      recording.destroy!
+    else
+      Track.insert_all! attributes
+    end
   end
 end.each(&:wait)

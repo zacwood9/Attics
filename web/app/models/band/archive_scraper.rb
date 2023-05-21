@@ -45,6 +45,13 @@ class Band::ArchiveScraper
       return
     end
 
+    begin
+      date.to_date
+    rescue Date::Error => _
+      Rails.logger.warn("found invalid date for #{item["identifier"]}: #{date}}. skipping")
+      return
+    end
+
     if @identifiers_id_map.key? item["identifier"]
       queue_for_update item
     else
@@ -126,9 +133,11 @@ class Band::ArchiveScraper
       Async do
         files = ::InternetArchive.files(item[:identifier])
         track_attributes = Track.attributes_from_files(@identifiers_id_map[item[:identifier]], files)
-        next if track_attributes.blank?
-
-        Track.insert_all!(track_attributes)
+        if track_attributes.blank?
+          Recording.destroy(@identifiers_id_map[item[:identifier]])
+        else
+          Track.insert_all!(track_attributes)
+        end
       end
     end.each(&:wait)
   end
