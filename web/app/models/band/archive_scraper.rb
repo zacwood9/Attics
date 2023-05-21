@@ -86,12 +86,25 @@ class Band::ArchiveScraper
   end
 
   def process_update_batch(slice)
-    attrs = slice.map do |item|
+    attrs = slice.filter_map do |item|
       identifier = item["identifier"]
+
+      recording_id = @identifiers_id_map[identifier]
+      if recording_id.blank?
+        Rails.logger.warn("updating #{identifier}, but couldn't find it's recording id? skipping...")
+        next
+      end
+
       date = item["date"]&.split('T')&.first
+      performance_id = @dates_id_map[date]
+      if performance_id.blank?
+        Rails.logger.warn("updating #{identifier}, but couldn't find it's performance on #{date}? skipping...")
+        next
+      end
+
       {
-        id: @identifiers_id_map[identifier],
-        performance_id: @dates_id_map[date],
+        id: recording_id,
+        performance_id: performance_id,
         lineage: item["lineage"],
         identifier: identifier,
         transferer: item["transferer"],
