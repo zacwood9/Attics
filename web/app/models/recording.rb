@@ -30,4 +30,8 @@ class Recording < ApplicationRecord
   has_many :tracks, dependent: :destroy
 
   validates :identifier, presence: true
+
+  def stars
+    num_reviews * avg_rating
+  end
 end

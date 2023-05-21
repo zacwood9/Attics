@@ -27,7 +27,7 @@ require "test_helper"
 
 class RecordingTest < ActiveSupport::TestCase
   test "relationships" do
-    recording = create(:recording)
+    recording = recordings(:grateful_dead_1977_05_08_hicks_sbd)
     assert recording.performance
     assert recording.band
     assert recording.tracks

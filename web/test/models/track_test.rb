@@ -25,7 +25,7 @@ require "test_helper"
 
 class TrackTest < ActiveSupport::TestCase
   test "relationships" do
-    track = create(:track)
+    track = tracks(:grateful_dead_1977_05_08_hicks_sbd_track_1)
     assert track.recording
     assert track.performance
     assert track.band

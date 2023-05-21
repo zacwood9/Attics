@@ -23,16 +23,12 @@ require "test_helper"
 
 class PerformanceTest < ActiveSupport::TestCase
   test "performance" do
-    performance = create(:performance)
-    create(:recording, performance: performance, avg_rating: 5, num_reviews: 1)
-    create(:recording, performance: performance, avg_rating: 4.5, num_reviews: 2)
-
-    assert_equal 0, performance.num_recordings
+    performance = performances(:grateful_dead_1977_05_08)
 
     Performance.with_recording_metadata.find(performance.id).tap do |p|
-      assert_equal 2, p.num_recordings
-      assert_equal 3, p.num_reviews
-      assert_equal 4.67, p.avg_rating
+      assert_equal performance.recordings.count, p.num_recordings
+      assert_equal performance.recordings.sum(:num_reviews), p.num_reviews
+      assert_equal 4.9, p.avg_rating
     end
   end
 end

@@ -69,4 +69,3 @@ group :test do
 end
 
 gem "dry-struct", "~> 1.6"
-gem "factory_bot", "~> 6.2"

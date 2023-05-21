@@ -1,0 +1,9 @@
+grateful_dead:
+  name: Grateful Dead
+  collection: GratefulDead
+  logo_url: https://google.com
+
+billy_strings:
+  name: Billy Strings
+  collection: BillyStrings
+  logo_url: https://google.com

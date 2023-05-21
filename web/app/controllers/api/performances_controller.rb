@@ -48,7 +48,7 @@ module Api
     end
 
     def performances_per_year
-      params[:performances_per_year]&.to_i || 5
+      params[:recordings_per_year]&.to_i || 5
     end
   end
 end
