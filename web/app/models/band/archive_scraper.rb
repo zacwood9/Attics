@@ -52,18 +52,18 @@ class Band::ArchiveScraper
       return
     end
 
+    city, state = item["coverage"]&.split(', ')
+    venue = item["venue"]
+    if @dates_id_map.key? date
+      update_attrs = { city: city, state: state, venue: item["venue"].presence }.compact
+      Performance.update(@dates_id_map[date], update_attrs) if update_attrs.present?
+    else
+      add_performance(date: date, venue: venue, city: city, state: state) unless @dates_id_map.key? date
+    end
+
     if @identifiers_id_map.key? item["identifier"]
       queue_for_update item
     else
-      city, state = item["coverage"]&.split(', ')
-      venue = item["venue"]
-
-      if @dates_id_map.key? date
-        update_attrs = { city: city, state: state, venue: item["venue"].presence }.compact
-        Performance.update(@dates_id_map[date], update_attrs) if update_attrs.present?
-      else
-        add_performance(date: date, venue: venue, city: city, state: state) unless @dates_id_map.key? date
-      end
       queue_for_insert item
     end
   end
