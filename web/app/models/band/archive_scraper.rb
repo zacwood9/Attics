@@ -58,7 +58,7 @@ class Band::ArchiveScraper
       update_attrs = { city: city, state: state, venue: item["venue"].presence }.compact
       Performance.update(@dates_id_map[date], update_attrs) if update_attrs.present?
     else
-      add_performance(date: date, venue: venue, city: city, state: state) unless @dates_id_map.key? date
+      add_performance(date: date, venue: venue, city: city, state: state)
     end
 
     if @identifiers_id_map.key? item["identifier"]
