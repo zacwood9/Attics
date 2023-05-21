@@ -30,9 +30,17 @@ class Track < ApplicationRecord
   validates :track, presence: true
   validates :length, presence: true
 
+  def mp3?
+    file_name.ends_with? ".mp3"
+  end
+
+  def flac?
+    file_name.ends_with? ".flac"
+  end
+
   def self.attributes_from_files(recording_id, archive_files)
     archive_files
-      .filter(&:mp3?)
+      .filter(&:playable?)
       .map { |file|
         # Sometimes derivative files are missing data that is present
         # on the file's source, so fetch both.
@@ -44,15 +52,30 @@ class Track < ApplicationRecord
       }
       .map.with_index { |pair, i|
         file, original = pair
+        length = (file.length || original&.length).then do |len|
+          if /[0-9]*\.[0-9]/.match? len
+            convert_to_minutes_seconds len
+          else
+            len
+          end
+        end
+
         {
           file_name: file.name,
           title: file.title || original&.title,
-          track: i + 1,
-          length: file.length || original&.length,
+          track: (file.track.presence || original&.track&.presence)&.to_i || i + 1,
+          length: length || "0:00",
           creator: file.creator || original&.creator,
           album: file.album || original&.album,
           recording_id: recording_id,
         }
       }
+  end
+
+  def self.convert_to_minutes_seconds(length_in_seconds)
+    seconds = length_in_seconds.to_f
+    minutes = (seconds / 60).to_i
+    seconds = (seconds % 60).round(2)
+    "#{'%02d' % minutes}:#{'%02d' % seconds}"
   end
 end

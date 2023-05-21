@@ -14,7 +14,7 @@ require "test_helper"
 
 class BandTest < ActiveSupport::TestCase
   test "relationships" do
-    assert_equal 3, bands(:grateful_dead).tracks.count
+    assert_equal 4, bands(:grateful_dead).tracks.count
   end
 
   test "with_metadata" do

@@ -31,6 +31,16 @@ class Recording < ApplicationRecord
 
   validates :identifier, presence: true
 
+  def playlist
+    tracks.group_by(&:track).map do |_, tracks|
+      if tracks.length == 1
+        tracks.first
+      else
+        tracks.find(&:mp3?) || tracks.first
+      end
+    end
+  end
+
   def stars
     num_reviews * avg_rating
   end

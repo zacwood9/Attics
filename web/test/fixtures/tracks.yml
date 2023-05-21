@@ -14,9 +14,17 @@ grateful_dead_1977_05_08_hicks_sbd_track_2:
   creator: Grateful Dead
   length: '08:52'
   album: 1977-05-08 - Barton Hall, Cornell University
+grateful_dead_1977_05_08_hicks_sbd_track_2_flac:
+  recording: grateful_dead_1977_05_08_hicks_sbd
+  file_name: gd77-05-08eaton-d1t02.flac
+  title: Loser
+  track: 2
+  creator: Grateful Dead
+  length: '08:52'
+  album: 1977-05-08 - Barton Hall, Cornell University
 grateful_dead_1977_05_08_hicks_sbd_track_3:
   recording: grateful_dead_1977_05_08_hicks_sbd
-  file_name: gd77-05-08eaton-d1t03.mp3
+  file_name: gd77-05-08eaton-d1t03.flac
   title: El Paso
   track: 3
   creator: Grateful Dead
