@@ -149,6 +149,7 @@ class Band::ArchiveScraper
 
       attrs.map do |item|
         semaphore.async do
+          attempts ||= 1
           files = ::InternetArchive.files(item[:identifier])
 
           track_attributes = Track.attributes_from_files(@identifiers_id_map[item[:identifier]], files)
@@ -158,6 +159,11 @@ class Band::ArchiveScraper
           else
             Track.insert_all!(track_attributes)
           end
+
+        rescue Net::TimeoutError
+          Rails.logger.warn("timeout, retrying once...")
+          attempts += 1
+          retry unless attempts > 2
         end
       end
     end.wait
