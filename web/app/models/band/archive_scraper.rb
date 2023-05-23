@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'async'
+require 'async/semaphore'
+
 require 'rest-client'
 require 'internet_archive'
 
@@ -142,17 +144,23 @@ class Band::ArchiveScraper
       @identifiers_id_map[recording["identifier"]] = recording["id"]
     end
 
-    attrs.map do |item|
-      Async do
-        files = ::InternetArchive.files(item[:identifier])
-        track_attributes = Track.attributes_from_files(@identifiers_id_map[item[:identifier]], files)
-        if track_attributes.blank?
-          Recording.destroy(@identifiers_id_map[item[:identifier]])
-        else
-          Track.insert_all!(track_attributes)
+    Async do
+      semaphore = Async::Semaphore.new(5)
+
+      attrs.map do |item|
+        semaphore.async do
+          files = ::InternetArchive.files(item[:identifier])
+
+          track_attributes = Track.attributes_from_files(@identifiers_id_map[item[:identifier]], files)
+
+          if track_attributes.blank?
+            Recording.destroy(@identifiers_id_map[item[:identifier]])
+          else
+            Track.insert_all!(track_attributes)
+          end
         end
       end
-    end.each(&:wait)
+    end.wait
   end
 
   def scrape_url(collection, cursor = nil)
