@@ -50,8 +50,7 @@ class Track < ApplicationRecord
           [file, nil]
         end
       }
-      .map.with_index { |pair, i|
-        file, original = pair
+      .map.with_index { |(file, original), i|
         length = (file.length || original&.length).then do |len|
           if /[0-9]*\.[0-9]/.match? len
             convert_to_minutes_seconds len
