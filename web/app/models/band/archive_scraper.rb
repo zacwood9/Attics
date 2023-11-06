@@ -7,12 +7,11 @@ require 'rest-client'
 require 'internet_archive'
 
 class Band::ArchiveScraper
-  attr_reader :band, :insert_queue, :update_queue
-
-  def initialize(band)
+  def initialize(band, concurrent_requests: 5)
     @band = band
     @insert_queue = []
     @update_queue = []
+    @concurrent_requests = concurrent_requests
   end
 
   def scrape
@@ -39,6 +38,8 @@ class Band::ArchiveScraper
   end
 
   private
+
+  attr_reader :band, :insert_queue, :update_queue, :concurrent_requests
 
   def process(item)
     date = item["date"]&.split('T')&.first
@@ -145,8 +146,6 @@ class Band::ArchiveScraper
     end
 
     Async do
-      semaphore = Async::Semaphore.new(5)
-
       attrs.map do |item|
         semaphore.async do
           attempts ||= 1
@@ -160,13 +159,17 @@ class Band::ArchiveScraper
             Track.insert_all!(track_attributes)
           end
 
-        rescue Net::TimeoutError
+        rescue Net::ReadTimeout
           Rails.logger.warn("timeout, retrying once...")
           attempts += 1
           retry unless attempts > 2
         end
       end
     end.wait
+  end
+
+  def semaphore
+    @semaphore ||= Async::Semaphore.new(concurrent_requests)
   end
 
   def scrape_url(collection, cursor = nil)

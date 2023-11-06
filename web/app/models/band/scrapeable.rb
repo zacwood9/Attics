@@ -1,6 +1,6 @@
 module Band::Scrapeable
-  def scrape
-    Band::ArchiveScraper.new(band).scrape
+  def scrape(...)
+    Band::ArchiveScraper.new(self, ...).scrape
   end
 
   def scrape_later
