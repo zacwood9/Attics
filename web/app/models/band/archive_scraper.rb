@@ -153,7 +153,7 @@ class Band::ArchiveScraper
 
           track_attributes = Track.attributes_from_files(@identifiers_id_map[item[:identifier]], files)
 
-          if track_attributes.blank?
+          if track_attributes.empty?
             Recording.destroy(@identifiers_id_map[item[:identifier]])
           else
             Track.insert_all!(track_attributes)
