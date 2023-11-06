@@ -24,6 +24,8 @@
 #  fk_rails_...  (performance_id => performances.id)
 #
 class Recording < ApplicationRecord
+  include Prunable
+
   belongs_to :performance
   has_one :band, through: :performance
 

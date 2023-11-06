@@ -11,7 +11,7 @@
 #  updated_at :datetime         not null
 #
 class Band < ApplicationRecord
-  include Scrapeable
+  include Scrapeable, Prunable
 
   validates :name, presence: true
   validates :collection, presence: true, uniqueness: true
