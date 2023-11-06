@@ -8,29 +8,6 @@ module Api
       get api_bands_url(format: :json)
       assert_response :success
 
-      expected = [
-        {
-          id: bands(:billy_strings).id,
-          collection: "BillyStrings",
-          name: "Billy Strings",
-          logo_url: "string",
-          num_performances: 0,
-          num_recordings: 0,
-          created_at: bands(:billy_strings).created_at.iso8601,
-          updated_at: bands(:billy_strings).updated_at.iso8601,
-        },
-        {
-          id: bands(:grateful_dead).id,
-          collection: "GratefulDead",
-          name: "Grateful Dead",
-          logo_url: "string",
-          num_performances: 2,
-          num_recordings: 1,
-          created_at: bands(:grateful_dead).created_at.iso8601,
-          updated_at: bands(:grateful_dead).updated_at.iso8601,
-        }
-      ]
-
       body = JSON.parse(response.body).map(&:deep_symbolize_keys)
       assert_equal bands(:billy_strings).id, body.dig(0, :id)
       assert_equal "BillyStrings", body.dig(0, :collection)
