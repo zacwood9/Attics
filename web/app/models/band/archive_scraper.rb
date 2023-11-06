@@ -126,6 +126,8 @@ class Band::ArchiveScraper
   end
 
   def process_insert_batch(slice)
+    return if slice.empty?
+
     attrs = slice.map do |item|
       date = item["date"]&.split('T')&.first
       {
@@ -140,36 +142,33 @@ class Band::ArchiveScraper
       }
     end
 
-    new_recordings = Recording.insert_all! attrs, returning: %w[id identifier]
+    Recording.insert_all! attrs, returning: false
+    new_recordings = Recording.where(identifier: attrs.map { _1[:identifier] })
+
     new_recordings.each do |recording|
-      @identifiers_id_map[recording["identifier"]] = recording["id"]
+      @identifiers_id_map[recording.identifier] = recording.id
     end
 
-    Async do
-      attrs.map do |item|
-        semaphore.async do
-          attempts ||= 1
-          files = ::InternetArchive.files(item[:identifier])
+    attrs.each do |item|
+      attempts ||= 1
+      recording_id = @identifiers_id_map[item[:identifier]]
+      next if recording_id.nil?
 
-          track_attributes = Track.attributes_from_files(@identifiers_id_map[item[:identifier]], files)
+      files = InternetArchive.files(item[:identifier])
+      track_attributes = Track.attributes_from_files(recording_id, files)
 
-          if track_attributes.empty?
-            Recording.destroy(@identifiers_id_map[item[:identifier]])
-          else
-            Track.insert_all!(track_attributes)
-          end
-
-        rescue Net::ReadTimeout
-          Rails.logger.warn("timeout, retrying once...")
-          attempts += 1
-          retry unless attempts > 2
-        end
+      if track_attributes.empty?
+        Recording.destroy(recording_id)
+        @identifiers_id_map.delete(item[:identifier])
+      else
+        Track.insert_all!(track_attributes)
       end
-    end.wait
-  end
 
-  def semaphore
-    @semaphore ||= Async::Semaphore.new(concurrent_requests)
+    rescue Net::ReadTimeout
+      Rails.logger.warn("timeout, retrying once...")
+      attempts += 1
+      retry unless attempts > 2
+    end
   end
 
   def scrape_url(collection, cursor = nil)
