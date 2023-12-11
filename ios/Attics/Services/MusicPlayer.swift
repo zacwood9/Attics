@@ -231,6 +231,18 @@ class MusicPlayer : ObservableObject {
     private func setupRemoteControls() {
         let commandCenter = MPRemoteCommandCenter.shared()
         
+        commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
+            guard let self = self, let state = self.state else { return .noActionableNowPlayingItem }
+            
+            if state.playing {
+                self.pause()
+            } else {
+                self.resume()
+            }
+            
+            return .success
+        }
+        
         commandCenter.playCommand.addTarget { [weak self] _ in
             guard let self = self, let state = self.state else { return .noActionableNowPlayingItem }
             

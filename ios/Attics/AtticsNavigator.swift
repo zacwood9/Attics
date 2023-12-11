@@ -40,7 +40,9 @@ class AtticsNavigator: NSObject, UINavigationControllerDelegate {
     // MARK: - Views
 
     func pushPerformancesController(band: Band, year: Year) {
-        let showsVC = storyboard.instantiateViewController(withIdentifier: ViewControllerIds.shows) as! PerformancesViewController
+        let layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        let showsVC = PerformancesViewController(collectionViewLayout: layout)
         showsVC.band = band
         showsVC.year = year
         showsVC.api = apiClient

@@ -49,6 +49,7 @@ class PerformancesViewController: UICollectionViewController {
         navigationItem.title = year
         extendedLayoutIncludesOpaqueBars = true
         collectionView.refreshControl = refreshControl
+        collectionView.register(ShowCollectionViewCell.self, forCellWithReuseIdentifier: CellTypes.showCell)
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
         sortItem = UIBarButtonItem(title: "Sort By: \(sortBy)", style: .plain, target: self, action: #selector(presentSortByAlert))
@@ -106,12 +107,11 @@ extension PerformancesViewController {
         cell.dateLabel.font = UIFont.preferredFont(forTextStyle: .title1, withSymbolicTraits: .traitBold)
         cell.venueLabel.text = show.venue
         cell.locationLabel.text = "\(show.city), \(show.state)"
-        cell.sourcesLabel.text = "\(show.numRecordings) recordings"
-        cell.recordingTypesLabel.text = ""
+        cell.recordingsLabel.text = "\(show.numRecordings) recordings"
         cell.stars.rating = show.avgRating
         
-        cell.view.roundCorners()
-        cell.view.setShadow()
+        cell.contentView.roundCorners()
+        cell.contentView.setShadow()
         
         return cell
     }

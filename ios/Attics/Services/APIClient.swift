@@ -64,7 +64,10 @@ struct APIResource {
 
 struct APIClient {
     let urlSession: URLSession = .shared
-    let baseUrl = APIResource(base: "https://v2.attics.io/api/legacy/")
+    static let localhost = "http://localhost:3000/api/legacy/"
+    static let production = "https://v2.attics.io/api/legacy/"
+    
+    let baseUrl = APIResource(base: localhost)
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
         let url = baseUrl.appendingPath("bands.json")
@@ -116,7 +119,7 @@ struct APIClient {
         return get(url: url.toURL())
     }
     
-    private func get<T: Decodable>(url: URL, decoder: JSONDecoder = .snakeCaseDecoder) -> AnyPublisher<T, APIError> {
+    private func get<T: Decodable>(url: URL, decoder: JSONDecoder = defaultDecoder) -> AnyPublisher<T, APIError> {
         print("APIClient: Getting \(url.absoluteString)")
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -124,12 +127,19 @@ struct APIClient {
             .map(\.data)
             .decode(type: T.self, decoder: decoder)
             .mapError { error in
+                print(error)
                 if let error = error as? APIError { return error }
                 return APIError(message: error.localizedDescription, code: -1)
             }
             .eraseToAnyPublisher()
     }
+    
+    private static let defaultDecoder = {
+        let decoder: JSONDecoder = .snakeCaseDecoder
+        return decoder
+    }()
 }
+
 
 struct MigrationItem : Decodable {
     let band: BandWithMetadata
