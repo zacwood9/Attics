@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: performances
+#
+#  id         :uuid             not null, primary key
+#  city       :string
+#  date       :date             not null
+#  state      :string
+#  venue      :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  band_id    :uuid             not null
+#
+# Indexes
+#
+#  index_performances_on_band_id  (band_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (band_id => bands.id)
+#
 grateful_dead_1977_05_08:
   band: grateful_dead
   city: Ithica

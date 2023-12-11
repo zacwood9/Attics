@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AppleAppSiteAssociationController < ApplicationController
+class AppleAppSiteAssociationController < ActionController::Base
   def index
     render json: {
       applinks: {
