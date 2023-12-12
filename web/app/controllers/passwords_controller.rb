@@ -1,4 +1,4 @@
-class PasswordsController < ApplicationController
+class PasswordsController < AuthenticatedController
   before_action :set_user
 
   def edit

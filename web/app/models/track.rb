@@ -38,6 +38,10 @@ class Track < ApplicationRecord
     file_name.ends_with? ".flac"
   end
 
+  def media_url
+    "https://archive.org/download/#{recording.identifier}/#{file_name}"
+  end
+
   def self.attributes_from_files(recording_id, archive_files)
     archive_files
       .filter(&:playable?)

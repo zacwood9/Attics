@@ -1,28 +1,19 @@
-<p style="color: green"><%= notice %></p>
+<%= render partial: 'shared/nav' %>
 
-<p>Signed as <%= Current.user.email %></p>
+<div class="browse">
+  <section class="browse__band_list">
+    <h4>Choose a band</h4>
+    <ul>
+      <% Band.all.order(name: :asc).each do |band| %>
+        <li>
+          <%= link_to band.name, band_path(band) %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
 
-<% if Current.user.provider.nil? %>
-  <h2>Login and verification</h2>
-
-  <div>
-    <%= link_to "Change password", edit_password_path %>
-  </div>
-  <div>
-    <%= link_to "Change email address", edit_identity_email_path %>
-  </div>
-<% end %>
-
-<h2>Access history</h2>
-
-<div>
-  <%= link_to "Devices & Sessions", sessions_path %>
+  <section>
+    <h4>Welcome to Attics!</h4>
+    <p>Choose a band to browse our collection of live music.</p>
+  </section>
 </div>
-
-<div>
-  <%= link_to "Activity Log", authentications_events_path %>
-</div>
-
-<br>
-
-<%= button_to "Log out", Current.session, method: :delete %>

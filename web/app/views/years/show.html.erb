@@ -1,0 +1,41 @@
+<%= render partial: 'shared/nav' %>
+
+<div class="browse">
+  <section class="browse__band_list">
+    <h4>Choose a band</h4>
+    <ul>
+      <% Band.all.order(name: :asc).each do |band| %>
+        <li>
+          <%= link_to band.name, band_path(band) %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section class="browse__show_list">
+    <div><%= link_to "< Back to top shows", band_path(@band) %></div>
+    <h4><%= @band.name %>: <%= @year.year %></h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Location</th>
+          <th>Num. Recordings</th>
+          <th>Avg. Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @year.performances.each do |performance| %>
+          <tr>
+            <td class="browse__show_list__date"><%= link_to performance.date, performance_path(performance) %></td>
+            <td><%= performance.venue %></td>
+            <td><%= performance.city %>, <%= performance.state %></td>
+            <td><%= performance.recordings.length %></td>
+            <td><%= performance.num_stars.zero? ? '--' : performance.avg_rating %> / 5</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</div>

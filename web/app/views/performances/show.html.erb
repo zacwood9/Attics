@@ -1,0 +1,39 @@
+<%= render partial: 'shared/nav' %>
+
+<div class="browse">
+  <section class="browse__band_list">
+    <h4>Choose a band</h4>
+    <ul>
+      <% Band.all.order(name: :asc).each do |band| %>
+        <li>
+          <%= link_to band.name, band_path(band) %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section class="browse__recording_list">
+    <div><%= link_to "< Back to #{@performance.year}", band_year_path(@performance.band, @performance.year.to_param) %></div>
+    <h4><%= @performance.date %> recordings</h4>
+    <table>
+      <thead>
+      <tr>
+        <th>Identifier</th>
+        <th>Transferer</th>
+        <th>Avg. Rating</th>
+        <th>Num Reviews</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @performance.recordings.sort_by(&:avg_rating).reverse.each do |recording| %>
+        <tr>
+          <td><%= link_to recording.identifier, recording_path(recording) %></td>
+          <td><%= recording.transferer %></td>
+          <td><%= recording.avg_rating %></td>
+          <td><%= recording.num_reviews %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </section>
+</div>

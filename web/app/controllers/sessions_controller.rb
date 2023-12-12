@@ -1,5 +1,5 @@
-class SessionsController < ApplicationController
-  skip_before_action :authenticate, only: %i[ new create ]
+class SessionsController < AuthenticatedController
+  skip_before_action :redirect_unless_authenticated, only: %i[ new create ]
 
   before_action :set_session, only: :destroy
 

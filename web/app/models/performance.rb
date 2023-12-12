@@ -36,6 +36,7 @@ class Performance < ApplicationRecord
      .select('COALESCE(sum(recordings.avg_rating * recordings.num_reviews), 0) as num_stars')
      .select('COALESCE(sum(recordings.num_reviews), 0) as num_reviews')
      .left_joins(:recordings)
+     .order(date: :asc)
      .group('performances.id')
   }
 

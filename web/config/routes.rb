@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   post "sign_up", to: "registrations#create"
   resources :sessions, only: [:index, :show, :destroy]
   resource  :password, only: [:edit, :update]
+  resource :account, only: [:show]
   namespace :identity do
     resource :email,              only: [:edit, :update]
     resource :email_verification, only: [:show, :create]
@@ -18,6 +19,13 @@ Rails.application.routes.draw do
   post "/auth/:provider/callback", to: "sessions/omniauth#create"
 
   root "home#index"
+
+  resources :bands, only: [:show] do
+    resources :years, only: [:show], param: :year
+  end
+
+  resources :performances, only: [:show]
+  resources :recordings, only: [:show]
 
   get "/.well-known/apple-app-site-association",
       to: "apple_app_site_association#index"

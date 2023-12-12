@@ -1,0 +1,28 @@
+<header class="attics__header">
+  <div class="attics__header__logo">
+    <h1>Attics</h1>
+    <p><i>Seeking all that's still unsung</i></p>
+  </div>
+
+  <div id="player" data-turbo-permanent>
+  </div>
+
+  <nav>
+    <div><%= link_to "Home", root_path %></div>
+    <% if authenticated? %>
+      <div><%= link_to "Account", account_path %></div>
+    <% end %>
+
+    <% if Current.user.nil? %>
+      <%= link_to "Sign in", sign_in_path %>
+    <% else %>
+      <%= button_to "Log out", Current.session, method: :delete %>
+    <% end %>
+  </nav>
+</header>
+
+<% if notice.present? %>
+  <p style="color: green"><%= notice %></p>
+<% end %>
+
+

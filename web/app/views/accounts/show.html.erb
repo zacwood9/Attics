@@ -1,0 +1,30 @@
+<%= render partial: 'shared/nav' %>
+
+<h2>Account</h2>
+
+<section class="home__authentication">
+  <p>Signed as <%= Current.user.email %></p>
+  <%= button_to "Log out", Current.session, method: :delete %>
+</section>
+
+
+<% if Current.user.provider.nil? %>
+  <h2>Login and verification</h2>
+
+  <div>
+    <%= link_to "Change password", edit_password_path %>
+  </div>
+  <div>
+    <%= link_to "Change email address", edit_identity_email_path %>
+  </div>
+<% end %>
+
+<h2>Access history</h2>
+
+<div>
+  <%= link_to "Devices & Sessions", sessions_path %>
+</div>
+
+<div>
+  <%= link_to "Activity Log", authentications_events_path %>
+</div>
