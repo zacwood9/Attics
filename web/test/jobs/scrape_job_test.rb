@@ -1,4 +1,5 @@
 require "test_helper"
+require "webmock/minitest"
 
 class ScrapeJobTest < ActiveJob::TestCase
   test "inserts and updates" do

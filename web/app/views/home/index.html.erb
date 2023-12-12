@@ -1,0 +1,19 @@
+<%= render partial: 'shared/nav' %>
+
+<div class="browse">
+  <section class="browse__band_list">
+    <h4>Choose a band</h4>
+    <ul>
+      <% Band.all.order(name: :asc).each do |band| %>
+        <li>
+          <%= link_to band.name, band_path(band) %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section>
+    <h4>Welcome to Attics!</h4>
+    <p>Choose a band to browse our collection of live music.</p>
+  </section>
+</div>

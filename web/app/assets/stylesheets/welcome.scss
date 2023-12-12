@@ -1,3 +1,132 @@
+:root {
+  color-scheme: light;
+
+  --system-font: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: var(--system-font);
+
+  /* Light mode */
+  --color-light-gray-1: rgb(142, 142, 147);
+  --color-light-gray-2: rgb(174, 174, 178);
+  --color-light-gray-3: rgb(199, 199, 204);
+  --color-light-gray-4: rgb(209, 209, 214);
+  --color-light-gray-5: rgb(229, 229, 234);
+  --color-light-gray-6: rgb(242, 242, 247);
+  --color-light-blue: rgb(0, 122, 255);
+  --color-light-green: rgb(52, 199, 89);
+  --color-light-indigo: rgb(88, 86, 214);
+  --color-light-orange: rgb(255, 149, 0);
+  --color-light-pink: rgb(255, 45, 85);
+  --color-light-purple: rgb(175, 82, 222);
+  --color-light-red: rgb(255, 59, 48);
+  --color-light-teal: rgb(90, 200, 250);
+  --color-light-yellow: rgb(255, 204, 0);
+
+  --color-light-system-background: rgba(100%, 100%, 100%, 1.0);
+  --color-light-secondary-system-background: rgba(95%, 95%, 97%, 1.0);
+  --color-light-tertiary-system-background: rgba(100%, 100%, 100%, 1.0);
+  --color-light-system-grouped-background: rgba(95%, 95%, 97%, 1.0);
+  --color-light-secondary-system-grouped-background: rgba(100%, 100%, 100%, 1.0);
+  --color-light-tertiary-system-grouped-background: rgba(95%, 95%, 97%, 1.0);
+
+  --color-light-label: #000000FF;
+  --color-light-secondary-label: #3C3C4399;
+  --color-light-tertiary-label: #3C3C434D;
+  --color-light-quaternary-label: #3C3C432E;
+
+
+  /* Dark mode */
+  --color-dark-gray-1: rgb(142, 142, 147);
+  --color-dark-gray-2: rgb(99, 99, 102);
+  --color-dark-gray-3: rgb(72, 72, 74);
+  --color-dark-gray-4: rgb(58, 58, 60);
+  --color-dark-gray-5: rgb(44, 44, 46);
+  --color-dark-gray-6: rgb(28, 28, 30);
+  --color-dark-blue: rgb(10, 132, 255);
+  --color-dark-green: rgb(48, 209, 88);
+  --color-dark-indigo: rgb(94, 92, 230);
+  --color-dark-orange: rgb(255, 159, 10);
+  --color-dark-pink: rgb(255, 55, 95);
+  --color-dark-purple: rgb(191, 90, 242);
+  --color-dark-red: rgb(255, 69, 58);
+  --color-dark-teal: rgb(100, 210, 255);
+  --color-dark-yellow: rgb(255, 214, 10);
+
+  --color-dark-system-background: rgba(0%, 0%, 0%, 1.0);
+  --color-dark-secondary-system-background: rgba(11%, 11%, 12%, 1.0);
+  --color-dark-tertiary-system-background: rgba(17%, 17%, 18%, 1.0);
+  --color-dark-system-grouped-background: rgba(0%, 0%, 0%, 1.0);
+  --color-dark-secondary-system-grouped-background: rgba(11%, 11%, 12%, 1.0);
+  --color-dark-tertiary-system-grouped-background: rgba(17%, 17%, 18%, 1.0);
+
+  --color-dark-label: #FFFFFFFF;
+  --color-dark-secondary-label: #EBEBF599;
+  --color-dark-tertiary-label: #EBEBF54D;
+  --color-dark-quaternary-label: #EBEBF52E;
+
+  --color-gray-1: var(--color-light-gray-1);
+  --color-gray-2: var(--color-light-gray-2);
+  --color-gray-3: var(--color-light-gray-3);
+  --color-gray-4: var(--color-light-gray-4);
+  --color-gray-5: var(--color-light-gray-5);
+  --color-gray-6: var(--color-light-gray-6);
+  --color-blue: var(--color-light-blue);
+  --color-green: var(--color-light-green);
+  --color-indigo: var(--color-light-indigo);
+  --color-orange: var(--color-light-orange);
+  --color-pink: var(--color-light-pink);
+  --color-purple: var(--color-light-purple);
+  --color-red: var(--color-light-red);
+  --color-teal: var(--color-light-teal);
+  --color-yellow: var(--color-light-yellow);
+
+  --color-attics-blue: rgb(19.86990605%, 26.47938419%, 55.06226206%);
+
+  --color-system-background: var(--color-light-system-background);
+  --color-secondary-system-background: var(--color-light-secondary-system-background);
+  --color-tertiary-system-background: var(--color-light-tertiary-system-background);
+  --color-system-grouped-background: var(--color-light-system-grouped-background);
+  --color-secondary-system-grouped-background: var(--color-light-secondary-system-grouped-background);
+  --color-tertiary-system-grouped-background: var(--color-light-tertiary-system-grouped-background);
+
+  --color-label: var(--color-light-label);
+  --color-secondary-label: var(--color-light-secondary-label);
+  --color-tertiary-label: var(--color-light-tertiary-label);
+  --color-quaternary-label: var(--color-light-quaternary-label);
+}
+
+//@media (prefers-color-scheme: dark) {
+//  :root {
+//    --color-gray-1: var(--color-dark-gray-1);
+//    --color-gray-2: var(--color-dark-gray-2);
+//    --color-gray-3: var(--color-dark-gray-3);
+//    --color-gray-4: var(--color-dark-gray-4);
+//    --color-gray-5: var(--color-dark-gray-5);
+//    --color-gray-6: var(--color-dark-gray-6);
+//    --color-blue: var(--color-dark-blue);
+//    --color-green: var(--color-dark-green);
+//    --color-indigo: var(--color-dark-indigo);
+//    --color-orange: var(--color-dark-orange);
+//    --color-pink: var(--color-dark-pink);
+//    --color-purple: var(--color-dark-purple);
+//    --color-red: var(--color-dark-red);
+//    --color-teal: var(--color-dark-teal);
+//    --color-yellow: var(--color-dark-yellow);
+//
+//    --color-system-background: var(--color-dark-system-background);
+//    --color-secondary-system-background: var(--color-dark-secondary-system-background);
+//    --color-tertiary-system-background: var(--color-dark-tertiary-system-background);
+//    --color-system-grouped-background: var(--color-dark-system-grouped-background);
+//    --color-secondary-system-grouped-background: var(--color-dark-secondary-system-grouped-background);
+//    --color-tertiary-system-grouped-background: var(--color-dark-tertiary-system-grouped-background);
+//
+//    --color-label: var(--color-dark-label);
+//    --color-secondary-label: var(--color-dark-secondary-label);
+//    --color-tertiary-label: var(--color-dark-tertiary-label);
+//    --color-quaternary-label: var(--color-dark-quaternary-label);
+//  }
+//}
+//
+
 .welcome {
   margin: 0 auto;
   max-width: 50em;

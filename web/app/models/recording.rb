@@ -29,7 +29,7 @@ class Recording < ApplicationRecord
   belongs_to :performance
   has_one :band, through: :performance
 
-  has_many :tracks, dependent: :destroy
+  has_many :tracks, -> { order(track: :asc) }, dependent: :destroy
 
   validates :identifier, presence: true
 

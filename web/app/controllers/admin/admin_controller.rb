@@ -1,4 +1,4 @@
-class Admin::AdminController < ApplicationController
+class Admin::AdminController < ActionController::Base
   before_action :authenticate
 
   private

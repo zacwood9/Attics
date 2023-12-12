@@ -1,5 +1,31 @@
 Rails.application.routes.draw do
-  root to: "welcome#index"
+  get  "sign_in", to: "sessions#new"
+  post "sign_in", to: "sessions#create"
+  get  "sign_up", to: "registrations#new"
+  post "sign_up", to: "registrations#create"
+  resources :sessions, only: [:index, :show, :destroy]
+  resource  :password, only: [:edit, :update]
+  resource :account, only: [:show]
+  namespace :identity do
+    resource :email,              only: [:edit, :update]
+    resource :email_verification, only: [:show, :create]
+    resource :password_reset,     only: [:new, :edit, :create, :update]
+  end
+  namespace :authentications do
+    resources :events, only: :index
+  end
+  get  "/auth/failure",            to: "sessions/omniauth#failure"
+  get  "/auth/:provider/callback", to: "sessions/omniauth#create"
+  post "/auth/:provider/callback", to: "sessions/omniauth#create"
+
+  root "home#index"
+
+  resources :bands, only: [:show] do
+    resources :years, only: [:show], param: :year
+  end
+
+  resources :performances, only: [:show]
+  resources :recordings, only: [:show]
 
   get "/.well-known/apple-app-site-association",
       to: "apple_app_site_association#index"

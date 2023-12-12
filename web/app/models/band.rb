@@ -30,4 +30,10 @@ class Band < ApplicationRecord
      .left_joins(performances: :recordings)
      .group('bands.id')
   }
+
+  def years
+    performances.group_by { _1.date.year }.keys.sort.map do |year|
+      Year.new(band: self, year: year)
+    end
+  end
 end

@@ -1,0 +1,51 @@
+<%= render partial: 'shared/nav' %>
+
+<template id="playlist-json" data-playlist-json="<%= @serialized_playlist %>">
+</template>
+
+<div class="browse">
+  <section class="browse__band_list">
+    <h4>Choose a band</h4>
+    <ul>
+      <% Band.all.order(name: :asc).each do |band| %>
+        <li>
+          <%= link_to band.name, band_path(band) %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section class="browse__player">
+    <div><%= link_to "< Back to #{@recording.performance.date}", performance_path(@recording.performance) %></div>
+    <div class="browse__player__header">
+      <h4><%= @performance.date %></h4>
+      <div><%= @performance.band.name %> at <%= @performance.venue %></div>
+    </div>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Track</th>
+        <th>Title</th>
+        <th>Length</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @recording.playlist.each do |track| %>
+        <tr>
+          <td><%= track.track %></td>
+          <td><%= track.title || track.file_name %></td>
+          <td><%= track.length || '--' %></td>
+          <td>
+            <button
+              class="browse__player__play_track"
+              data-track="<%= track.track %>"
+            >Play</button>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </section>
+</div>
