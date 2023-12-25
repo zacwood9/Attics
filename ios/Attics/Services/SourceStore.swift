@@ -294,18 +294,6 @@ class AppStorageManager {
         }
     }
     
-    func moveDownloadToCache(_ url: URL, _ identifier: String, _ song: Song) -> URL? {
-        if let base = try? Folder.applicationSupport.createSubfolderIfNeeded(withName: "Cache"),
-           let recordingFolder = try? base.createSubfolderIfNeeded(withName: identifier),
-           let tempFile = try? File(path: url.path) {
-            try! tempFile.move(to: recordingFolder)
-            try? tempFile.rename(to: song.fileName, keepExtension: false)
-            tempFile.excludeFromBackup()
-            return tempFile.url
-        }
-        return nil
-    }
-    
     lazy var browseState: RestoreState = {
         return readFromFile("browseState.json", defaultValue: .band(band))
     }()

@@ -5,7 +5,7 @@ module Api
     test "should get index" do
       travel_to Date.new(2022, 3, 20)
 
-      get api_bands_url(format: :json)
+      get api_legacy_bands_url(format: :json)
       assert_response :success
 
       body = JSON.parse(response.body).map(&:deep_symbolize_keys)

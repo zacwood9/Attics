@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,6 @@
 		1112A62925C06D9100FC0C94 /* MigrationErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1112A62825C06D9100FC0C94 /* MigrationErrorView.swift */; };
 		112CEDA023A17E2C00E9F72C /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112CED9F23A17E2C00E9F72C /* DownloadManager.swift */; };
 		113C3C5D23CD40BE00FF481D /* LoadingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C3C5C23CD40BE00FF481D /* LoadingVC.swift */; };
-		113ECD06259D505D00C3DD77 /* LNPopupController-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 113ECD05259D505D00C3DD77 /* LNPopupController-Static */; };
 		113ECD0E259E49DE00C3DD77 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113ECD0D259E49DE00C3DD77 /* PlayerView.swift */; };
 		113ECD11259E561800C3DD77 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113ECD10259E561800C3DD77 /* PlayerViewController.swift */; };
 		114483AA25A3D83100813D48 /* UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114483A925A3D83100813D48 /* UITests.swift */; };
@@ -37,6 +36,13 @@
 		11BEA57523C2B80700C86EED /* ATSProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BEA57423C2B80700C86EED /* ATSProgressCircle.swift */; };
 		11EA56A323C7EA9F00F0F64A /* SFSymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA56A223C7EA9F00F0F64A /* SFSymbolButton.swift */; };
 		11EA56A723C939D800F0F64A /* UpdateVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11EA56A623C939D800F0F64A /* UpdateVC.swift */; };
+		206394C42B2B608100293E41 /* RecordingView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206394C32B2B608100293E41 /* RecordingView2.swift */; };
+		206394C72B2BF7A700293E41 /* BrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206394C62B2BF7A700293E41 /* BrowseView.swift */; };
+		209284552B2914EE0083D283 /* AtticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 209284542B2914EE0083D283 /* AtticsCore */; };
+		209B8BEE2B2D4919008E3794 /* YearView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209B8BED2B2D4919008E3794 /* YearView2.swift */; };
+		209B8BF02B2D6C0A008E3794 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209B8BEF2B2D6C0A008E3794 /* RatingView.swift */; };
+		209B8BF32B2D7358008E3794 /* LNPopupController in Frameworks */ = {isa = PBXBuildFile; productRef = 209B8BF22B2D7358008E3794 /* LNPopupController */; };
+		209B8BF52B2E3B9F008E3794 /* PerformanceView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209B8BF42B2E3B9F008E3794 /* PerformanceView2.swift */; };
 		C5243D7120FBC58B0005E67A /* SourceCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */; };
 		C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */; };
 		C529DC0220FA8E98009F399A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C529DC0120FA8E98009F399A /* App.swift */; };
@@ -51,7 +57,6 @@
 		C55CF9F620D49EDF00A2F780 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CF9F520D49EDF00A2F780 /* Song.swift */; };
 		C575FFB620D5B36E00DE76BA /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */; };
 		C58DCE3120F038AD00F0B289 /* Swift+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3020F038AD00F0B289 /* Swift+Extensions.swift */; };
-		C58DCE3420F03B3100F0B289 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58DCE3320F03B3100F0B289 /* Network.swift */; };
 		C5ADA8A220FE3D2C0096318E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADA8A120FE3D2C0096318E /* Constants.swift */; };
 		C5BE2FA82107AEAA00E8E18E /* SourceInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */; };
 		C5C5EEE621082B9E00E5449F /* BrowseNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */; };
@@ -119,6 +124,13 @@
 		11BEA57423C2B80700C86EED /* ATSProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ATSProgressCircle.swift; path = "Attics/Custom Views/ATSProgressCircle.swift"; sourceTree = SOURCE_ROOT; };
 		11EA56A223C7EA9F00F0F64A /* SFSymbolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolButton.swift; sourceTree = "<group>"; };
 		11EA56A623C939D800F0F64A /* UpdateVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateVC.swift; sourceTree = "<group>"; };
+		206394C32B2B608100293E41 /* RecordingView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RecordingView2.swift; path = Attics/Screens/Rewrite/RecordingView2.swift; sourceTree = SOURCE_ROOT; };
+		206394C62B2BF7A700293E41 /* BrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseView.swift; sourceTree = "<group>"; };
+		2092844E2B2849D40083D283 /* AtticsCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AtticsCore; sourceTree = "<group>"; };
+		209284532B2914A40083D283 /* AtticsCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AtticsCore; sourceTree = "<group>"; };
+		209B8BED2B2D4919008E3794 /* YearView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearView2.swift; sourceTree = "<group>"; };
+		209B8BEF2B2D6C0A008E3794 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
+		209B8BF42B2E3B9F008E3794 /* PerformanceView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceView2.swift; sourceTree = "<group>"; };
 		C5243D7020FBC58B0005E67A /* SourceCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCollectionViewCell.swift; sourceTree = "<group>"; };
 		C5243D7220FBD4540005E67A /* SongsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewCell.swift; sourceTree = "<group>"; };
 		C529DC0120FA8E98009F399A /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -135,7 +147,6 @@
 		C55CF9F520D49EDF00A2F780 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
 		C58DCE3020F038AD00F0B289 /* Swift+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Swift+Extensions.swift"; sourceTree = "<group>"; };
-		C58DCE3320F03B3100F0B289 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		C5ADA8A120FE3D2C0096318E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5BE2FA72107AEAA00E8E18E /* SourceInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceInfoTableViewCell.swift; sourceTree = "<group>"; };
 		C5C5EEE521082B9E00E5449F /* BrowseNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseNavigator.swift; sourceTree = "<group>"; };
@@ -161,7 +172,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				116C9E0E2582D188005BE880 /* Cosmos in Frameworks */,
-				113ECD06259D505D00C3DD77 /* LNPopupController-Static in Frameworks */,
+				209B8BF32B2D7358008E3794 /* LNPopupController in Frameworks */,
+				209284552B2914EE0083D283 /* AtticsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +193,7 @@
 		1184459323C6479A00DC195C /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				206394C52B2BF75A00293E41 /* Rewrite */,
 				116B741523063CE60038255D /* BandsViewController.swift */,
 				C5ED3A7C20D44CC70019F0EF /* TopPerformancesViewController.swift */,
 				C5ED3A8720D452380019F0EF /* PerformancesViewController.swift */,
@@ -238,13 +251,43 @@
 			path = "Custom Views";
 			sourceTree = "<group>";
 		};
+		206394C52B2BF75A00293E41 /* Rewrite */ = {
+			isa = PBXGroup;
+			children = (
+				206394C32B2B608100293E41 /* RecordingView2.swift */,
+				206394C62B2BF7A700293E41 /* BrowseView.swift */,
+				209B8BED2B2D4919008E3794 /* YearView2.swift */,
+				209B8BEF2B2D6C0A008E3794 /* RatingView.swift */,
+				209B8BF42B2E3B9F008E3794 /* PerformanceView2.swift */,
+			);
+			path = Rewrite;
+			sourceTree = "<group>";
+		};
+		209284412B283E160083D283 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		209284522B2914A40083D283 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				209284532B2914A40083D283 /* AtticsCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 		C54C120520D1EC430013F697 = {
 			isa = PBXGroup;
 			children = (
+				209284522B2914A40083D283 /* Packages */,
+				2092844E2B2849D40083D283 /* AtticsCore */,
 				115247C92185411600BDF490 /* Assets.xcassets */,
 				C54C121020D1EC440013F697 /* Attics */,
 				114483A825A3D83100813D48 /* UITests */,
 				C54C120F20D1EC440013F697 /* Products */,
+				209284412B283E160083D283 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -283,7 +326,6 @@
 			children = (
 				C575FFB520D5B36E00DE76BA /* MusicPlayer.swift */,
 				C5ED3A8920D4531A0019F0EF /* APIClient.swift */,
-				C58DCE3320F03B3100F0B289 /* Network.swift */,
 				11AC3C9222D6CC6000956056 /* SourceStore.swift */,
 				110D8298230DC8010087F5A0 /* UserDefaultStore.swift */,
 				1103750123960A7900572DAD /* AppState.swift */,
@@ -342,7 +384,8 @@
 			name = Attics;
 			packageProductDependencies = (
 				116C9E0D2582D188005BE880 /* Cosmos */,
-				113ECD05259D505D00C3DD77 /* LNPopupController-Static */,
+				209284542B2914EE0083D283 /* AtticsCore */,
+				209B8BF22B2D7358008E3794 /* LNPopupController */,
 			);
 			productName = Attics;
 			productReference = C54C120E20D1EC440013F697 /* Attics.app */;
@@ -384,7 +427,7 @@
 			mainGroup = C54C120520D1EC430013F697;
 			packageReferences = (
 				116C9E0C2582D188005BE880 /* XCRemoteSwiftPackageReference "Cosmos" */,
-				116C9E122582D1C6005BE880 /* XCRemoteSwiftPackageReference "LNPopupController" */,
+				209B8BF12B2D7358008E3794 /* XCRemoteSwiftPackageReference "LNPopupController" */,
 			);
 			productRefGroup = C54C120F20D1EC440013F697 /* Products */;
 			projectDirPath = "";
@@ -446,6 +489,7 @@
 				11EA56A723C939D800F0F64A /* UpdateVC.swift in Sources */,
 				C53F491620D487380006EF72 /* RecordingsViewController.swift in Sources */,
 				11BEA57123BFF0FA00C86EED /* ATSLabel.swift in Sources */,
+				206394C72B2BF7A700293E41 /* BrowseView.swift in Sources */,
 				114483B725A4B40A00813D48 /* BandsView.swift in Sources */,
 				113ECD11259E561800C3DD77 /* PlayerViewController.swift in Sources */,
 				C5C5EEE821082DC300E5449F /* SettingsNavigator.swift in Sources */,
@@ -454,16 +498,17 @@
 				1197EF5F238D9531008A25DD /* Files.swift in Sources */,
 				C5C5EEE621082B9E00E5449F /* BrowseNavigator.swift in Sources */,
 				11AC3C9322D6CC6000956056 /* SourceStore.swift in Sources */,
+				206394C42B2B608100293E41 /* RecordingView2.swift in Sources */,
 				116B741623063CE60038255D /* BandsViewController.swift in Sources */,
 				1184459823C64D7300DC195C /* ErrorVC.swift in Sources */,
 				110375002395F70300572DAD /* Migrations.swift in Sources */,
 				C5C5EEEA210849BC00E5449F /* SettingsTableViewController.swift in Sources */,
 				11014B452597E3D9002A1184 /* RecordingViewController.swift in Sources */,
 				C5ED3A8220D44D180019F0EF /* Year.swift in Sources */,
-				C58DCE3420F03B3100F0B289 /* Network.swift in Sources */,
 				11BEA57523C2B80700C86EED /* ATSProgressCircle.swift in Sources */,
 				C529DC0220FA8E98009F399A /* App.swift in Sources */,
 				1112A62925C06D9100FC0C94 /* MigrationErrorView.swift in Sources */,
+				209B8BEE2B2D4919008E3794 /* YearView2.swift in Sources */,
 				C5BE2FA82107AEAA00E8E18E /* SourceInfoTableViewCell.swift in Sources */,
 				C54C121220D1EC440013F697 /* AppDelegate.swift in Sources */,
 				C5ED3A8A20D4531A0019F0EF /* APIClient.swift in Sources */,
@@ -472,7 +517,9 @@
 				110D8299230DC8010087F5A0 /* UserDefaultStore.swift in Sources */,
 				C53F491220D484DA0006EF72 /* Source.swift in Sources */,
 				C5243D7320FBD4540005E67A /* SongsTableViewCell.swift in Sources */,
+				209B8BF52B2E3B9F008E3794 /* PerformanceView2.swift in Sources */,
 				11AC3C9722D7ED9300956056 /* MyShowsViewController.swift in Sources */,
+				209B8BF02B2D6C0A008E3794 /* RatingView.swift in Sources */,
 				C54A165C20FAAB0100A6EF95 /* YearsTableViewCell.swift in Sources */,
 				C54A165E20FAAB2A00A6EF95 /* TopShowsCollectionViewCell.swift in Sources */,
 				11EA56A323C7EA9F00F0F64A /* SFSymbolButton.swift in Sources */,
@@ -610,7 +657,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -665,7 +712,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -690,7 +737,7 @@
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -718,7 +765,7 @@
 				);
 				INFOPLIST_FILE = Attics/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -780,14 +827,17 @@
 				minimumVersion = 2.10.26;
 			};
 		};
+		209B8BF12B2D7358008E3794 /* XCRemoteSwiftPackageReference "LNPopupController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNPopupController";
+			requirement = {
+				kind = exactVersion;
+				version = 2.13.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		113ECD05259D505D00C3DD77 /* LNPopupController-Static */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 116C9E122582D1C6005BE880 /* XCRemoteSwiftPackageReference "LNPopupController" */;
-			productName = "LNPopupController-Static";
-		};
 		113ECD07259D507400C3DD77 /* LNPopupController-Static */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 116C9E122582D1C6005BE880 /* XCRemoteSwiftPackageReference "LNPopupController" */;
@@ -797,6 +847,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 116C9E0C2582D188005BE880 /* XCRemoteSwiftPackageReference "Cosmos" */;
 			productName = Cosmos;
+		};
+		209284542B2914EE0083D283 /* AtticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AtticsCore;
+		};
+		209B8BF22B2D7358008E3794 /* LNPopupController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 209B8BF12B2D7358008E3794 /* XCRemoteSwiftPackageReference "LNPopupController" */;
+			productName = LNPopupController;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

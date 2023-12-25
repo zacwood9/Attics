@@ -1,0 +1,59 @@
+{
+  "pins" : [
+    {
+      "identity" : "files",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JohnSundell/Files.git",
+      "state" : {
+        "revision" : "d273b5b7025d386feef79ef6bad7de762e106eaf",
+        "version" : "4.2.0"
+      }
+    },
+    {
+      "identity" : "lnpopupcontroller",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LeoNatan/LNPopupController.git",
+      "state" : {
+        "revision" : "efbc856917fc645422d23ecb2bfc47117cb4f4f9",
+        "version" : "2.17.0"
+      }
+    },
+    {
+      "identity" : "lnpopupui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LeoNatan/LNPopupUI",
+      "state" : {
+        "revision" : "8b460913b1d4352a7ec6aca8e2cb0f6204c28ceb",
+        "version" : "1.7.0"
+      }
+    },
+    {
+      "identity" : "lnswiftuiutils",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LeoNatan/LNSwiftUIUtils.git",
+      "state" : {
+        "revision" : "954a3adadc21d5b973c24e1320bdcc3d638c6a9c",
+        "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "sqlite.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stephencelis/SQLite.swift.git",
+      "state" : {
+        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
+        "version" : "0.14.1"
+      }
+    },
+    {
+      "identity" : "swiftaudioex",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/doublesymmetry/SwiftAudioEx.git",
+      "state" : {
+        "revision" : "7fb762db9c60ee232223122ace798333d6add195",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -1,25 +1,32 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Cosmos",
-        "repositoryURL": "https://github.com/evgenyneu/Cosmos.git",
-        "state": {
-          "branch": null,
-          "revision": "cce521e734d0090494bd4afab5fd2e2f2465c1af",
-          "version": "23.0.0"
-        }
-      },
-      {
-        "package": "LNPopupController",
-        "repositoryURL": "https://github.com/LeoNatan/LNPopupController",
-        "state": {
-          "branch": null,
-          "revision": "7a7cf8d76f1cedf5a26565bb12a6566755988a97",
-          "version": "2.10.26"
-        }
+  "pins" : [
+    {
+      "identity" : "cosmos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/evgenyneu/Cosmos.git",
+      "state" : {
+        "revision" : "cce521e734d0090494bd4afab5fd2e2f2465c1af",
+        "version" : "23.0.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "lnpopupcontroller",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LeoNatan/LNPopupController",
+      "state" : {
+        "revision" : "925927f97bc971602c740780b10ee4049a60ad0f",
+        "version" : "2.13.0"
+      }
+    },
+    {
+      "identity" : "sqlite.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stephencelis/SQLite.swift.git",
+      "state" : {
+        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
+        "version" : "0.14.1"
+      }
+    }
+  ],
+  "version" : 2
 }

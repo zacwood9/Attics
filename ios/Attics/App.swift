@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import Network
 import SwiftUI
+import AtticsCore
 
 // App is the top level view coordinator. It holds the main TabBarController which
 // is the highest level view and contains the different navigators for all the tabs.
@@ -27,7 +28,7 @@ final class App: NSObject {
     let monitor = NWPathMonitor()
     
     var downloadManagers: [Source : DownloadManager_] = [:]
-    
+
     /// Persistantly store what tab is open
     var tabState = UserDefaultStore<Int>(withKey: "tabIndex", defaultValue: 0)
     
@@ -35,6 +36,8 @@ final class App: NSObject {
     var firstLaunch = UserDefaultStore<Bool>(withKey: "v1.5-needs-migration", defaultValue: true)
     
     lazy var musicPlayer = MusicPlayer.shared
+    
+    var core = AtticsCore()
     
     private override init() {
         super.init()

@@ -10,7 +10,7 @@ module Api
     end
 
     test "top performances should sort by star rating" do
-      get api_band_top_performances_url(
+      get api_legacy_band_top_performances_url(
             collection: "GratefulDead",
             format: :json
           )
@@ -25,7 +25,7 @@ module Api
     test "top performances should include on_this_day" do
       travel_to Date.new(2023, 5, 8)
 
-      get api_band_top_performances_url(
+      get api_legacy_band_top_performances_url(
             collection: "GratefulDead",
             on_this_day: "2022-05-08",
             format: :json

@@ -89,6 +89,7 @@ GEM
     bcrypt (3.1.20)
     bigdecimal (3.1.4)
     bindex (0.8.1)
+    blueprinter (0.30.0)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -288,6 +289,7 @@ DEPENDENCIES
   async (~> 2.5)
   authentication-zero (~> 3.0)
   bcrypt (~> 3.1.7)
+  blueprinter
   bootsnap
   debug
   importmap-rails
