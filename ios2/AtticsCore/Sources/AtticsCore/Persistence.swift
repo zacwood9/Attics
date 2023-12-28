@@ -21,10 +21,12 @@ public class Persistence {
         case playlist = "v2playlist.json"
         case navigation = "v2navigation.json"
         case libraryNavigation = "v2library.json"
+        case legacyStorage = "storage.json"
     }
     
     let applicationSupport: Folder
-    let sqliteConnection: Connection
+    let downloads: Folder
+    let db: Connection
     
     public let bandRepository: BandRepository
     public let performanceRepository: PerformanceRepository
@@ -33,24 +35,27 @@ public class Persistence {
     
     public init() throws {
         let path = "Library/Application Support"
-        if Folder.home.containsSubfolder(at: path) {
-            self.applicationSupport = try Folder.home.subfolder(at: path)
-        } else {
-            self.applicationSupport = try Folder.home.createSubfolder(at: path)
-        }
+        self.applicationSupport = try Folder.home.createSubfolderIfNeeded(at: path)
+        self.downloads = try applicationSupport.createSubfolderIfNeeded(withName: "Downloads")
         
         let sqliteFile = try applicationSupport.createFileIfNeeded(withName: "database.sqlite3")
-        self.sqliteConnection = try Connection(sqliteFile.path)
+        self.db = try Connection(sqliteFile.path)
         
-        self.bandRepository = BandRepository(db: sqliteConnection)
-        self.performanceRepository = PerformanceRepository(db: sqliteConnection)
-        self.recordingRepository = RecordingRepository(db: sqliteConnection)
-        self.trackRepository = TrackRepository(db: sqliteConnection)
+        self.bandRepository = BandRepository(db: db)
+        self.performanceRepository = PerformanceRepository(db: db)
+        self.recordingRepository = RecordingRepository(db: db)
+        self.trackRepository = TrackRepository(db: db)
         
         try bandRepository.loadSchema()
         try performanceRepository.loadSchema()
         try recordingRepository.loadSchema()
         try trackRepository.loadSchema()
+    }
+    
+    public func registerDownload(sourceUrl: URL, identifier: String, fileName: String) throws {
+        let file = try File.init(path: sourceUrl.absoluteString)
+        let identifierFolder = try downloads.createSubfolderIfNeeded(withName: identifier)
+        try file.move(to: identifierFolder)
     }
     
     public func loadDecodable<T: Decodable>(at path: Path) throws -> T {
@@ -64,6 +69,16 @@ public class Persistence {
         let file = try applicationSupport.createFileIfNeeded(withName: path.rawValue)
         let data = try JSONEncoder().encode(value)
         try file.write(data)
+    }
+    
+    public func trackUrl(recordingIdentifier: String, fileName: String) -> URL? {
+        do {
+            let recordingFolder = try downloads.subfolder(named: recordingIdentifier)
+            let trackFile = try recordingFolder.file(named: fileName)
+            return trackFile.url
+        } catch {
+            return nil
+        }
     }
 }
 

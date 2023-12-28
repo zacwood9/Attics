@@ -62,22 +62,11 @@ public class AudioSystem: ObservableObject {
         }
     }
     
-    public func loadPlaylist(initialId: String, bandName: String, recordingId: String, tracks: [APITrack]) {
-        let playlistTracks = tracks.map { track in
-            return Playlist.Track(
-                id: track.id,
-                title: track.title,
-                fileName: track.fileName,
-                length: track.length,
-                album: track.album,
-                artist: bandName,
-                audioUrl: URL(string: track.downloadUrl)!
-            )
-        }
-        let initialTrack = playlistTracks.first { $0.id == initialId }
+    public func loadPlaylist(initialId: String, bandName: String, recordingId: String, tracks: [Playlist.Track]) {        
+        let initialTrack = tracks.first { $0.id == initialId }
         guard let initialTrack else { return }
         
-        playlist = Playlist(playlistId: recordingId, tracks: playlistTracks, currentTrack: initialTrack)
+        playlist = Playlist(playlistId: recordingId, tracks: tracks, currentTrack: initialTrack)
     }
     
     public func play(id: String) {

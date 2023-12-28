@@ -71,8 +71,28 @@ public class RecordingRepository {
         return recording
     }
     
+    @discardableResult
+    public func upsert(id: String, identifier: String, transferer: String, source: String, lineage: String, favorite: Bool, downloaded: Bool, performanceId: String) throws -> Recording {
+        let recording = Recording(id: id, identifier: identifier, transferer: transferer, source: source, lineage: lineage, favorite: favorite, downloaded: downloaded, performanceId: performanceId)
+        try db.run(table.upsert(recording, onConflictOf: Rows.id))
+        return recording
+    }
+    
     public func getFavorites() throws -> [Recording] {
         let rows = try db.prepare(table.where(Rows.favorite))
+        return rows.compactMap {
+            do {
+                let recording: Recording = try $0.decode()
+                return recording
+            } catch {
+                print(error)
+                return nil
+            }
+        }
+    }
+    
+    public func getDownloads() throws -> [Recording] {
+        let rows = try db.prepare(table.where(Rows.downloaded))
         return rows.compactMap {
             do {
                 let recording: Recording = try $0.decode()
@@ -93,6 +113,18 @@ public class RecordingRepository {
     @discardableResult
     public func unfavorite(id: String) throws -> Recording? {
         try db.run(table.filter(Rows.id == id).update(Rows.favorite <- false))
+        return try get(id: id)
+    }
+    
+    @discardableResult
+    public func markDownloaded(id: String) throws -> Recording? {
+        try db.run(table.filter(Rows.id == id).update(Rows.downloaded <- true))
+        return try get(id: id)
+    }
+    
+    @discardableResult
+    public func markUndownloaded(id: String) throws -> Recording? {
+        try db.run(table.filter(Rows.id == id).update(Rows.downloaded <- false))
         return try get(id: id)
     }
 }

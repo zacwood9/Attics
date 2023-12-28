@@ -32,7 +32,7 @@ struct BandsList: View {
                 NavigationLink(value: Navigation.band(BandDestination(bandId: band.id, bandName: band.name)))
                 {
                     VStack(alignment: .leading) {
-                        Text(band.name)
+                        Text(band.name).fontWeight(.bold)
                         Text("\(band.numPerformances) shows")
                             .font(.subheadline)
                     }

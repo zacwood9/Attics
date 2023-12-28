@@ -7,11 +7,13 @@
 
 import SwiftUI
 import AtticsCore
+import Combine
 
 struct TrackRow: View {
     let index: Int
     let title: String
     let length: String
+    let downloading: Bool
     let playing: Bool
     
     var body: some View {
@@ -19,6 +21,9 @@ struct TrackRow: View {
             Text("\(index). ").fontWeight(.light).font(.footnote)
             Text(title)
             Spacer()
+            if downloading {
+                ProgressView().progressViewStyle(.circular)
+            }
             if playing {
                 PlayingAnimation()
             } else {
@@ -68,8 +73,8 @@ extension ShapeStyle where Self == Color {
 
 #Preview {
     List {
-        TrackRow(index: 1, title: "Stella Blue", length: "4:35", playing: true)
-        TrackRow(index: 2, title: "Scarlet Begonias", length: "9:55", playing: false)
+        TrackRow(index: 1, title: "Stella Blue", length: "4:35", downloading: true, playing: true)
+        TrackRow(index: 2, title: "Scarlet Begonias", length: "9:55", downloading: true, playing: false)
     }
     
 }

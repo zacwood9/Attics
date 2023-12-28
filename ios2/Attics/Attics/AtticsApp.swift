@@ -25,6 +25,7 @@ struct AtticsApp: App {
     
     @StateObject var audioSystem = app.audioSystem
     @StateObject var favorites = app.favorites
+    @StateObject var downloads = app.downloads
     @StateObject var navigationModel = NavigationModel(app: app)
     
     @State var selectedTab: Tab = .browse
@@ -110,6 +111,7 @@ struct AtticsApp: App {
             }
             .environmentObject(audioSystem)
             .environmentObject(favorites)
+            .environmentObject(downloads)
         }
     }
     

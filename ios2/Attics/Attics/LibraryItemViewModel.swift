@@ -19,10 +19,18 @@ class LibraryItemViewModel: ObservableObject {
     let recordingId: String
     
     @Published var loadedLibraryItem: APIResult<LoadedLibraryItem> = .loading
+    var cancellable: AnyCancellable?
+    var downloadsCancellable: AnyCancellable?
     
     init(app: AtticsCore, recordingId: String) {
         self.app = app
         self.recordingId = recordingId
+        
+        cancellable = app.favorites.objectWillChange.sink {
+            Task { [weak self] in
+                await self?.load()
+            }
+        }
     }
     
     @MainActor

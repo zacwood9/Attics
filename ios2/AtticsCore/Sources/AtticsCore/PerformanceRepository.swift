@@ -61,6 +61,14 @@ public class PerformanceRepository {
         return performance
     }
     
+    @discardableResult
+    public func upsert(id: String, date: String, venue: String, city: String, state: String, bandId: String) throws -> Performance {
+        let performance = Performance.init(id: id, date: date, venue: venue, city: city, state: state, bandId: bandId)
+        try db.run(table.upsert(performance, onConflictOf: Rows.id))
+        return performance
+    }
+    
+    
     public func loadSchema() throws {
         try db.run(table.create(ifNotExists: true) { t in
             t.column(Rows.id, primaryKey: true)

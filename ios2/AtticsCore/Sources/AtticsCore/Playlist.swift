@@ -5,6 +5,7 @@ public class Playlist: ObservableObject {
         case recording
         case created
     }
+    
     public struct Track: Codable {
         public let id: String
         public let title: String
@@ -13,6 +14,16 @@ public class Playlist: ObservableObject {
         public let album: String
         public let artist: String
         public let audioUrl: URL
+        
+        public init(id: String, title: String, fileName: String, length: String, album: String, artist: String, audioUrl: URL) {
+            self.id = id
+            self.title = title
+            self.fileName = fileName
+            self.length = length
+            self.album = album
+            self.artist = artist
+            self.audioUrl = audioUrl
+        }
     }
         
     public var playlistId: String

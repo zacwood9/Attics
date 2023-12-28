@@ -51,7 +51,6 @@ class NavigationModel: ObservableObject {
             self.destinations = $0
             do {
                 try self.app.persistence.persistEncodable($0, to: .navigation)
-                print("persisted naviagtion")
             } catch {
                 print(error)
             }
@@ -67,7 +66,6 @@ class NavigationModel: ObservableObject {
             self.libraryDestinations = $0
             do {
                 try self.app.persistence.persistEncodable($0, to: .libraryNavigation)
-                print("persisted library naviagtion")
             } catch {
                 print(error)
             }

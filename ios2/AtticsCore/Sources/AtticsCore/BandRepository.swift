@@ -54,8 +54,14 @@ public class BandRepository {
         return band
     }
     
+    @discardableResult
     public func upsert(band: BandWithMetadata) throws -> Band {
-        let newBand = Band(id: band.id, collection: band.collection, name: band.name)
+        return try upsert(id: band.id, collection: band.collection, name: band.name)
+    }
+    
+    @discardableResult
+    public func upsert(id: String, collection: String, name: String) throws -> Band {
+        let newBand = Band(id: id, collection: collection, name: name)
         try db.run(table.upsert(newBand, onConflictOf: Rows.id))
         return newBand
     }

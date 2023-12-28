@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SQLite
 
 public class Favorites: ObservableObject {
     let p: Persistence
@@ -23,7 +24,6 @@ public class Favorites: ObservableObject {
     
     public func loadFavorites() throws -> [(Band, Performance, Recording)] {
         let recordings = try p.recordingRepository.getFavorites()
-        print(recordings)
         
         let performanceIds = recordings.map(\.performanceId)
         let performanceMap: [String : Performance] = try p.performanceRepository.getIds(performanceIds).reduce(into: [:]) { partialResult, performance in
@@ -36,7 +36,6 @@ public class Favorites: ObservableObject {
         }
         
         return recordings.compactMap { recording in
-            print(recording)
             guard let performance = performanceMap[recording.performanceId] else { return nil }
             guard let band = bandMap[performance.bandId] else { return nil }
             
@@ -59,7 +58,7 @@ public class Favorites: ObservableObject {
     }
     
     public func persistFavorite(apiBand: APIBand, apiPerformance: APIPerformance, apiRecording: APIRecording, apiTracks: [APITrack]) throws {
-        try p.sqliteConnection.transaction {
+        try p.db.transaction {
             try p.bandRepository.upsertApi(apiBand)
             try p.performanceRepository.upsertApi(apiPerformance)
             
@@ -71,6 +70,15 @@ public class Favorites: ObservableObject {
             }
         }
         
+        objectWillChange.send()
+    }
+    
+    public func favorite(recordingId: String) throws {
+        try p.db.run(
+            p.recordingRepository.table
+                .where(RecordingRepository.Rows.id == recordingId)
+                .update(RecordingRepository.Rows.favorite <- true)
+        )
         objectWillChange.send()
     }
     

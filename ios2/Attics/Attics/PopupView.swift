@@ -52,7 +52,7 @@ struct PopupView: View {
                     ForEach(tracks.indices, id: \.self) { i in
                         let track = tracks[i]
                         
-                        TrackRow(index: i + 1, title: track.title, length: track.length, playing: playlist.currentTrack.id == track.id)
+                        TrackRow(index: i + 1, title: track.title, length: track.length, downloading: false, playing: playlist.currentTrack.id == track.id)
                             .onTapGesture {
                                 audioSystem.play(id: track.id)
                             }
@@ -64,7 +64,9 @@ struct PopupView: View {
                         Text("Open recording")
                         Spacer()
                         Image(systemName: "chevron.right").font(.subheadline)
-                    }.onTapGesture {
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
                         guard playlist.playlistType == .recording else { return }
                         openRecording(playlist.playlistId)
                     }
