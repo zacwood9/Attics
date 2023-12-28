@@ -64,6 +64,13 @@ public class TrackRepository {
         return track
     }
     
+    @discardableResult
+    public func upsert(id: String, title: String, fileName: String, track: Int, length: String, recordingId: String) throws -> Track {
+        let track = Track(id: id, title: title, fileName: fileName, track: track, length: length, recordingId: recordingId)
+        try db.run(table.upsert(track, onConflictOf: Rows.id))
+        return track
+    }
+    
     public func loadSchema() throws {
         try db.run(table.create(ifNotExists: true) { t in
             t.column(Rows.id, primaryKey: true)
