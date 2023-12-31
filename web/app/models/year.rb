@@ -11,7 +11,7 @@ class Year
   end
 
   def top_performances(number = 5)
-    performances.sort_by(&:avg_rating).reverse[...number]
+    performances.sort_by(&:num_stars).reverse[...number]
   end
 
   def performances
