@@ -1,5 +1,5 @@
 class PerformancesController < ApplicationController
   def show
-    @performance = Performance.find(params[:id])
+    render 'welcome/index', layout: 'application'
   end
 end

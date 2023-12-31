@@ -9,62 +9,58 @@ import CosmosUI
 import SwiftUI
 import AtticsCore
 
-struct PerformanceView: View {
-    @StateObject var performanceViewModel: PerformanceViewModel
+struct YearView: View {
+    @StateObject var yearViewModel: YearViewModel
     
-    init(performanceId: String, performanceDate: String) {
-        self._performanceViewModel = StateObject(wrappedValue: PerformanceViewModel(app: app, performanceId: performanceId, performanceDate: performanceDate))
+    init(bandId: String, year: String) {
+        self._yearViewModel = StateObject(wrappedValue: YearViewModel(app: app, bandId: bandId, year: year))
     }
     
     var body: some View {
         mainView
-            .toolbarBackground(Color.atticsBlue, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationTitle("\(performanceViewModel.performanceDate) recordings")
-            .onAppear { performanceViewModel.load() }
+            .backgroundStyle(Color(UIColor.systemGroupedBackground))
+            .atticsNavigationBar(yearViewModel.year)
+            .onAppear { yearViewModel.load() }
     }
     
     var mainView: some View {
-        switch performanceViewModel.recordings {
+        switch yearViewModel.performances {
         case .loading:
             AnyView(ProgressView()).id("loading")
         case .success(let t):
-            AnyView(PerformanceList(performanceDate: performanceViewModel.performanceDate, recordings: t)).id("performances")
+            AnyView(YearList(performances: t)).id("performances")
         case .error(let error):
             AnyView(Text(error.localizedDescription)).id("error")
         }
     }
 }
 
-struct PerformanceList: View {
-    var performanceDate: String
-    var recordings: [APIRecording]
+struct YearList: View {
+    var performances: [PerformanceWithMetadata]
     
     var body: some View {
-        List(recordings, id: \.id) { recording in
-            BetterNavigationLink(value: Navigation.recording(RecordingDestination(recordingId: recording.id))) {
+        List(performances, id: \.id) { show in
+            BetterNavigationLink(value: Navigation.performance(PerformanceDestination(performanceId: show.id, performanceDate: show.date))) {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
-                            Text(recording.source)
-                                .lineLimit(1)
+                            Text(show.venue)
                                 .font(.subheadline)
                                 .foregroundColor(Color(UIColor.lightGray))
-                            Text("\(recording.archiveDownloads) downloads")
+                            Text(show.cityState)
                                 .font(.subheadline)
                                 .foregroundColor(Color(UIColor.lightGray))
                         }.font(.footnote)
                         Spacer()
                         VStack(alignment: .trailing, spacing: 0) {
-                            CosmosView(rating: recording.avgRating)
-                            Text("\(recording.numReviews) reviews\(recording.numReviews > 1 ? "s" : "")")
+                            CosmosView(rating: show.avgRating)
+                            Text("\(show.numRecordings) recording\(show.numRecordings > 1 ? "s" : "")")
                                 .font(.subheadline).foregroundColor(Color(UIColor.lightGray))
                         }
                     }
                     
                     HStack {
-                        Text(recording.transferer)
+                        Text(show.date)
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -78,5 +74,6 @@ struct PerformanceList: View {
             .listRowSeparator(.hidden)
         }
         .listStyle(.inset)
+        .backgroundStyle(Color(UIColor.systemGroupedBackground))
     }
 }

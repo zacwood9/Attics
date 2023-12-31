@@ -11,31 +11,22 @@ import SwiftUI
 import AtticsCore
 
 struct BrowseView: View {
-    @StateObject var browseViewModel: BrowseViewModel
+    let bandId: String
+    let bandName: String
     
-    init(bandId: String, bandName: String) {
-        self._browseViewModel = StateObject(wrappedValue: BrowseViewModel(app: app, bandId: bandId, bandName: bandName))
-    }
+    @State var result: APIResult<[YearWithTopPerformances]> = .loading
     
     var body: some View {
-        mainView
-            .toolbarBackground(Color.atticsBlue, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationTitle(browseViewModel.bandName)
-            .onAppear { browseViewModel.load() }
-            .refreshable { browseViewModel.load() }
+        ResultView(result) { result in
+            BrowseList(bandId: bandId, yearsWithTopPerformances: result)
+        }
+        .atticsNavigationBar(bandName)
+        .task { await load() }
+        .refreshable { Task { await load() } }
     }
     
-    var mainView: some View {
-        switch browseViewModel.yearsWithTopPerformances {
-        case .loading:
-            AnyView(ProgressView()).id("loading")
-        case .success(let t):
-            AnyView(BrowseList(bandId: browseViewModel.bandId, yearsWithTopPerformances: t)).id("years")
-        case .error(let error):
-            AnyView(Text(error.localizedDescription)).id("error")
-        }
+    private func load() async {
+        
     }
 }
 
@@ -54,7 +45,7 @@ struct BrowseList: View {
                         Text(year.year).font(.title2).fontWeight(.bold)
                         Spacer()
                         Text("See all")
-                         .font(.footnote).foregroundColor(Color(UIColor.secondaryLabel))
+                            .font(.footnote).foregroundColor(Color(UIColor.secondaryLabel))
                     }
                     
                 }
@@ -65,7 +56,7 @@ struct BrowseList: View {
                         ForEach(year.topPerformances, id: \.date) { show in
                             VStack(alignment: .leading) {
                                 CosmosView(rating: show.avgRating)
-
+                                
                                 Spacer(minLength: 38)
                                 Text(show.date).font(.headline).foregroundColor(.white)
                                 Text(show.venue).font(.footnote).foregroundColor(Color(UIColor.lightGray))

@@ -74,7 +74,7 @@ struct RecordingLoadedView: View {
                         downloading: downloads.fileDownloadProgresses[track.fileName] != nil,
                         playing: playing
                     )
-                    .onTapGesture {                        
+                    .onTapGesture {
                         let playlistTracks = recordingView.tracks.map { track in
                             return Playlist.Track(
                                 id: track.id,
@@ -119,9 +119,16 @@ struct RecordingLoadedView: View {
     func onDownloadClick() {
         switch progress {
         case .notDownloaded:
-            let batchDownload = BatchDownload(identifier: recordingView.recording.identifier, fileNames: recordingView.tracks.map(\.fileName))
-            let downloader = downloads.addDownloader(recordingId: recordingView.recording.id, identifier: recordingView.recording.identifier)
-            downloader.download(batchDownload: batchDownload)
+            do {
+                try app.library.persistApiItem(apiBand: recordingView.band, apiPerformance: recordingView.performance, apiRecording: recordingView.recording, apiTracks: recordingView.tracks)
+                
+                let batchDownload = BatchDownload(identifier: recordingView.recording.identifier, fileNames: recordingView.tracks.map(\.fileName))
+                let downloader = downloads.addDownloader(recordingId: recordingView.recording.id, identifier: recordingView.recording.identifier)
+                downloader.download(batchDownload: batchDownload)
+            } catch {
+                logger.error("Failed to start download for Recording(identifier: \(recordingView.recording.identifier)): \(error)")
+            }
+            
         case .downloading:
             downloads.cancelDownloader(identifier: recordingView.recording.identifier)
         case .downloaded:

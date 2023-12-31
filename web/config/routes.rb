@@ -43,7 +43,8 @@ Rails.application.routes.draw do
     end
 
     resources :performances, only: [:show]
-    resources :recordings, only: [:show]
+    resources :recordings, only: [:show], id: /.*/
+    resources :legacy_recordings, only: [:show], param: :identifier
   end
 
   scope :api do
@@ -55,19 +56,19 @@ Rails.application.routes.draw do
           collection: /.*/
       get "/bands/:collection/performances/on_this_day",
           to: "api/legacy/performances#top",
-          as: :api_band_on_this_day_performances,
+          as: :api_legacy_band_on_this_day_performances,
           collection: /.*/
       get "/bands/:collection/performances",
           to: "api/legacy/performances#index",
-          as: :api_band_performances,
+          as: :api_legacy_band_performances,
           collection: /.*/
       get "/bands/:collection/performances/:date/recordings",
           to: "api/legacy/recordings#index",
-          as: :api_performance_recordings,
+          as: :api_legacy_performance_recordings,
           collection: /.*/
       get "/recordings/:identifier/tracks",
           to: "api/legacy/tracks#index",
-          as: :api_recording_tracks,
+          as: :api_legacy_recording_tracks,
           identifier: /.*/
     end
   end

@@ -9,61 +9,60 @@ import CosmosUI
 import SwiftUI
 import AtticsCore
 
-struct YearView: View {
-    @StateObject var yearViewModel: YearViewModel
+struct PerformancePage: View {
+    let performanceId: String
+    let performanceDate: String
     
-    init(bandId: String, year: String) {
-        self._yearViewModel = StateObject(wrappedValue: YearViewModel(app: app, bandId: bandId, year: year))
-    }
+    @State var result: APIResult<[APIRecording]> = .loading
     
     var body: some View {
-        mainView
-            .backgroundStyle(Color(UIColor.systemGroupedBackground))
-            .toolbarBackground(Color.atticsBlue, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationTitle(yearViewModel.year)
-            .onAppear { yearViewModel.load() }
+        ResultView(result) { result in
+            PerformanceView(performanceDate: performanceDate, recordings: result)
+        }
+            .atticsNavigationBar("\(performanceDate) recordings")
+            
     }
     
     var mainView: some View {
-        switch yearViewModel.performances {
+        switch performanceViewModel.recordings {
         case .loading:
             AnyView(ProgressView()).id("loading")
         case .success(let t):
-            AnyView(YearList(performances: t)).id("performances")
+            AnyView().id("performances")
         case .error(let error):
             AnyView(Text(error.localizedDescription)).id("error")
         }
     }
 }
 
-struct YearList: View {
-    var performances: [PerformanceWithMetadata]
+struct PerformanceView: View {
+    var performanceDate: String
+    var recordings: [APIRecording]
     
     var body: some View {
-        List(performances, id: \.id) { show in
-            BetterNavigationLink(value: Navigation.performance(PerformanceDestination(performanceId: show.id, performanceDate: show.date))) {
+        List(recordings, id: \.id) { recording in
+            BetterNavigationLink(value: Navigation.recording(RecordingDestination(recordingId: recording.id))) {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
-                            Text(show.venue)
+                            Text(recording.source)
+                                .lineLimit(1)
                                 .font(.subheadline)
                                 .foregroundColor(Color(UIColor.lightGray))
-                            Text(show.cityState)
+                            Text("\(recording.archiveDownloads) download\(recording.archiveDownloads == 1 ? "" : "s")")
                                 .font(.subheadline)
                                 .foregroundColor(Color(UIColor.lightGray))
                         }.font(.footnote)
                         Spacer()
                         VStack(alignment: .trailing, spacing: 0) {
-                            CosmosView(rating: show.avgRating)
-                            Text("\(show.numRecordings) recording\(show.numRecordings > 1 ? "s" : "")")
+                            CosmosView(rating: recording.avgRating)
+                            Text("\(recording.numReviews) review\(recording.numReviews == 1 ? "" : "s")")
                                 .font(.subheadline).foregroundColor(Color(UIColor.lightGray))
                         }
                     }
                     
                     HStack {
-                        Text(show.date)
+                        Text(recording.transferer)
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
@@ -77,6 +76,5 @@ struct YearList: View {
             .listRowSeparator(.hidden)
         }
         .listStyle(.inset)
-        .backgroundStyle(Color(UIColor.systemGroupedBackground))
     }
 }

@@ -3,9 +3,9 @@
 require 'test_helper'
 
 module Api
-  class BandsControllerTest < ActionDispatch::IntegrationTest
+  class YearsControllerTest < ActionDispatch::IntegrationTest
     def test_get
-      get api_bands_path
+      get api_band_year_path(bands(:grateful_dead), 1977)
       assert_response :ok
     end
   end

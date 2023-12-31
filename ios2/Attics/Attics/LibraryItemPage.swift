@@ -9,46 +9,46 @@ import AtticsCore
 import SwiftUI
 import Combine
 
-struct LibraryItemView: View {
-    @StateObject var viewModel: LibraryItemViewModel
+struct LibraryItemPage: View {
+    let recordingId: String
     
-    init(recordingId: String) {
-        _viewModel = StateObject(wrappedValue: LibraryItemViewModel(app: app, recordingId: recordingId))
-    }
+    @State var result: APIResult<Library.Item> = .loading
     
     var body: some View {
-        mainView
-            .task {
-                await viewModel.load()
-            }
+        ResultView(result) { result in
+            LibraryItemView(item: result)
+        }
+        .task { await load() }
+        .refreshable { Task { await load() } }
+        .onReceive(app.downloads.$activeDownloadIdentifiers, perform: { _ in
+            Task { await load() }
+        })
+        .onReceive(app.downloads.$downloadedRecordingIds, perform: { _ in
+            Task { await load() }
+        })
+        .onReceive(app.favorites.objectWillChange, perform: { _ in
+            Task { await load() }
+        })
     }
     
-    var mainView: some View {
-        switch viewModel.loadedLibraryItem {
-        case .loading:
-            AnyView(ProgressView()).id("loading")
-        case .success(let t):
-            AnyView(
-                LoadedLibraryItemView(
-                    viewModel: viewModel,
-                    loadedItem: t
-                )
-            ).id("library")
-        case .error(let error):
-            AnyView(Text(error.localizedDescription)).id("error")
+    private func load() async {
+        do {
+            if let item = try app.library.loadItem(recordingId: recordingId) {
+                result = .success(item)
+            }
+        } catch {
+            logger.error("Failed to load LibraryItem: \(error)")
+            result = .error(error)
         }
     }
 }
 
-struct LoadedLibraryItemView: View {
-    @EnvironmentObject var audioSystem: AudioSystem
-    @EnvironmentObject var favorites: Favorites
-    @EnvironmentObject var downloads: Downloads
+struct LibraryItemView: View {
+    let item: Library.Item
     
-    @ObservedObject var viewModel: LibraryItemViewModel
-    let loadedItem: LoadedLibraryItem
-    
-    var item: LibraryItem { loadedItem.item }
+    @StateObject var audioSystem = app.audioSystem
+    @StateObject var favorites = app.favorites
+    @StateObject var downloads = app.downloads
     
     var progress: DownloadProgress {
         if downloads.activeDownloadIdentifiers.contains(item.recording.identifier) {
@@ -67,7 +67,7 @@ struct LoadedLibraryItemView: View {
             }
             
             Section {
-                ForEach(loadedItem.tracks, id: \.id) { track in
+                ForEach(item.tracks, id: \.id) { track in
                     TrackRow(
                         index: track.track,
                         title: track.title,
@@ -76,16 +76,16 @@ struct LoadedLibraryItemView: View {
                         playing: audioSystem.playlist?.currentTrack.id == track.id
                     )
                         .onTapGesture {
-                            let playlistTracks = loadedItem.tracks.map { track in
+                            let playlistTracks = item.tracks.map { track in
                                 return Playlist.Track(
                                     id: track.id,
                                     title: track.title,
                                     fileName: track.fileName,
                                     length: track.length,
-                                    album: "\(item.performance.date): \(loadedItem.item.performance.venue)",
-                                    artist: loadedItem.item.band.name,
+                                    album: "\(item.performance.date): \(item.performance.venue)",
+                                    artist: item.band.name,
                                     audioUrl: URL(
-                                        string: "https://archive.org/download/\(loadedItem.item.recording.identifier)/\(track.fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                                        string: "https://archive.org/download/\(item.recording.identifier)/\(track.fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
                                     )!
                                 )
                             }
@@ -106,14 +106,14 @@ struct LoadedLibraryItemView: View {
                 try favorites.favorite(recordingId: item.recording.id)
             }
         } catch {
-            print(error)
+            logger.error("Failed to favorite LibraryItem(recordingId: \(item.recording.id)): \(error)")
         }
     }
     
     func onDownloadClick() {
         switch progress {
         case .notDownloaded:
-            let batchDownload = BatchDownload(identifier: item.recording.identifier, fileNames: loadedItem.tracks.map(\.fileName))
+            let batchDownload = BatchDownload(identifier: item.recording.identifier, fileNames: item.tracks.map(\.fileName))
             let downloader = downloads.addDownloader(recordingId: item.recording.id, identifier: item.recording.identifier)
             downloader.download(batchDownload: batchDownload)
         case .downloading:
@@ -123,22 +123,3 @@ struct LoadedLibraryItemView: View {
         }        
     }
 }
-
-//struct TrackWrapper: View {
-//    let track: Track
-//    @
-//    
-//    @EnvironmentObject var audioSystem: AudioSystem
-//    private var cancellable: AnyCancellable?
-//    
-//    
-//    var body: some View {
-//        TrackRow(
-//            index: track.track,
-//            title: track.title,
-//            length: track.length,
-//            downloading: downloading,
-//            playing: audioSystem.playlist?.currentTrack.id == track.id
-//        )
-//    }
-//}

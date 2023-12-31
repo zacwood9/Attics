@@ -1,14 +1,17 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 module Api
   class RecordingsControllerTest < ActionDispatch::IntegrationTest
-    test "should get index" do
-      get api_performance_recordings_url(
-        collection: "GratefulDead",
-        date: "1977-05-08",
-        format: :json
-      )
-      assert_response :success
+    def test_get
+      get api_recording_path(recordings(:grateful_dead_1977_05_08_hicks_sbd))
+      assert_response :ok
+    end
+
+    def test_get__with_identifier
+      get api_recording_path(recordings(:grateful_dead_1977_05_08_hicks_sbd).identifier)
+      assert_response :ok
     end
   end
 end
