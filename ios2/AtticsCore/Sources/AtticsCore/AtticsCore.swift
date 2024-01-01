@@ -1,14 +1,20 @@
+import Foundation
 import SwiftAudioEx
 import Files
 import SQLite
+import os
 
-public class AtticsCore {
+public let logger = Logger()
+
+public class AtticsCore {    
     public let apiClient: APIClient
     public let audioSystem: AudioSystem
     public let persistence: Persistence
     public let favorites: Favorites
     public let downloads: Downloads
-    let legacyImport: LegacyImport
+    public let library: Library
+    public let legacyImport: LegacyImport
+    public let history: History
     
     public var bandRepository: BandRepository { persistence.bandRepository }
     
@@ -16,34 +22,24 @@ public class AtticsCore {
         persistence = try! Persistence()
         apiClient = APIClient()
         audioSystem = AudioSystem()
-        favorites = Favorites(p: persistence)
+        
         downloads = try! Downloads(p: persistence)
+        library = Library(p: persistence)
+        favorites = try! Favorites(p: persistence, library: library)
         legacyImport = LegacyImport(p: persistence, apiClient: apiClient)
+        history = History(p: persistence)
         
         if let playlistData: PlaylistData = try? persistence.loadDecodable(at: .playlist) {
             audioSystem.loadPlaylistData(playlistData)
         }
     }
-    
-    public func runImport() {
-        Task {
-            do {
-                try await legacyImport.run()
-                await MainActor.run {
-                    downloads.reloadDownloadedRecordings()
-                }
-            } catch {
-                print("failed to import: \(error)")
-            }
-        }
-    }
-    
+
     public func beforeTermination() {
         if let playlist = audioSystem.playlist {
             do {
                 try persistence.persistEncodable(playlist.playlistData, to: .playlist)
             } catch {
-                print(error)
+                logger.error("Failed to persist playlist: \(error)")
             }
         }
     }

@@ -10,7 +10,7 @@ import CosmosUI
 import SwiftUI
 import AtticsCore
 
-struct BrowseView: View {
+struct BrowsePage: View {
     let bandId: String
     let bandName: String
     
@@ -18,19 +18,35 @@ struct BrowseView: View {
     
     var body: some View {
         ResultView(result) { result in
-            BrowseList(bandId: bandId, yearsWithTopPerformances: result)
+            BrowseView(bandId: bandId, yearsWithTopPerformances: result)
         }
         .atticsNavigationBar(bandName)
-        .task { await load() }
-        .refreshable { Task { await load() } }
+        .task {
+            switch result {
+            case .success:
+                break
+            case .error:
+                result = .loading
+                await load()
+            case .loading:
+                await load()
+            }
+        }
+        .refreshable { await load() }
     }
     
     private func load() async {
-        
+        do {
+            let data = try await app.apiClient.getTopPerformances(bandId: bandId)
+            result = .success(data)
+        } catch {
+            logger.error("Failed to fetch BrowsePage for Band(id: \(bandId), name: \(bandName)): \(error)")
+            result = .error(error)
+        }
     }
 }
 
-struct BrowseList: View {
+struct BrowseView: View {
     @ScaledMetric(relativeTo: .body)
     var maxWidth = 160
     
@@ -38,50 +54,53 @@ struct BrowseList: View {
     var yearsWithTopPerformances: [YearWithTopPerformances]
     
     var body: some View {
-        List(yearsWithTopPerformances, id: \.year) { year in
-            VStack(alignment: .leading) {
-                NavigationLink(value: Navigation.year(YearDestination(bandId: bandId, year: year.year))) {
-                    HStack {
-                        Text(year.year).font(.title2).fontWeight(.bold)
-                        Spacer()
-                        Text("See all")
-                            .font(.footnote).foregroundColor(Color(UIColor.secondaryLabel))
-                    }
-                    
-                }
-                .padding([.leading, .trailing], 16)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(year.topPerformances, id: \.date) { show in
-                            VStack(alignment: .leading) {
-                                CosmosView(rating: show.avgRating)
-                                
-                                Spacer(minLength: 38)
-                                Text(show.date).font(.headline).foregroundColor(.white)
-                                Text(show.venue).font(.footnote).foregroundColor(Color(UIColor.lightGray))
+        ScrollView(.vertical) {
+            LazyVStack(alignment: .leading) {
+                ForEach(yearsWithTopPerformances, id: \.year) { year in
+                    VStack(alignment: .leading) {
+                        NavigationLink(value: Navigation.year(YearDestination(bandId: bandId, year: year.year))) {
+                            HStack {
+                                Text(year.year).font(.title2).fontWeight(.bold)
+                                Spacer()
+                                Text("See all")
+                                    .font(.footnote).foregroundColor(Color(UIColor.secondaryLabel))
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote)
+                                    .fontWeight(.light)
+                            }.contentShape(Rectangle())
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding([.leading, .trailing], 16)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(year.topPerformances, id: \.date) { show in
+                                    NavigationLink(value: Navigation.performance(PerformanceDestination(performanceId: show.id, performanceDate: show.date))) {
+                                        VStack(alignment: .leading) {
+                                            CosmosView(rating: show.avgRating)
+                                            
+                                            Spacer(minLength: 38)
+                                            Text(show.date).font(.headline).foregroundColor(.white)
+                                            Text(show.venue).font(.footnote).foregroundColor(Color(UIColor.lightGray))
+                                        }
+                                        .contentShape(Rectangle())
+                                        .padding([.leading, .trailing], 8)
+                                        .padding([.top, .bottom], 12)
+                                        .frame(minWidth: 130, maxWidth: maxWidth, alignment: .leading)
+                                        .background {
+                                            Color.atticsBlue
+                                        }
+                                        .cornerRadius(8)
+                                    }
+                                }
                             }
-                            .padding([.leading, .trailing], 8)
-                            .padding([.top, .bottom], 12)
-                            .frame(minWidth: 130, maxWidth: maxWidth, alignment: .leading)
-                            .overlay {
-                                NavigationLink(value: Navigation.performance(PerformanceDestination(performanceId: show.id, performanceDate: show.date))) { Color.clear }
-                            }
-                            .background {
-                                Color.atticsBlue
-                            }
-                            .cornerRadius(8)
-                            
                         }
                     }
+                    .contentShape(Rectangle())
+                    .tint(.clear)
+                    .padding([.top, .bottom], 12)
                 }
             }
-            .tint(.clear)
-            .listItemTint(.clear)
-            .padding([.top, .bottom], 12)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
-        .backgroundStyle(Color(UIColor.systemGroupedBackground))
-        .listStyle(.inset)
     }
 }

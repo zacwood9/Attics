@@ -43,7 +43,10 @@ struct RemoteImage: View {
     }
     
     func asyncFileLoad(_ completion: @escaping (UIImage) -> (), failure: @escaping () -> ()) -> Bool {
-        guard let file = try? folder.file(named: name + ".jpeg") else { return false }
+        guard let file = try? folder.file(named: "\(url.lastPathComponent).jpeg") else {
+            return false
+        }
+        
         DispatchQueue.init(label: "background", qos: .userInteractive).async {
             if let data = try? file.read(),
                let image = UIImage(data: data) {
@@ -58,17 +61,18 @@ struct RemoteImage: View {
     }
     
     func loadFromFile() throws -> UIImage? {
-        let file = try folder.file(named: name + ".jpeg")
+        let file = try folder.file(named:  "\(url.lastPathComponent).jpeg")
         return UIImage(data: try file.read())
     }
     
     func writeFile(image: UIImage) throws {
-        let file = try folder.createFileIfNeeded(at: name + ".jpeg")
+        let file = try folder.createFileIfNeeded(at: "\(url.lastPathComponent).jpeg")
         try file.write(image.jpegData(compressionQuality: 0.10)!)
     }
     
     var body: some View {
-        _body().onAppear(perform: load)
+        _body()
+            .onAppear(perform: load)
     }
     
     @ViewBuilder

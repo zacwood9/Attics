@@ -3,9 +3,10 @@ import AtticsCore
 import LNPopupUI
 
 struct PopupView: View {
-    @ObservedObject var playlist: Playlist
-    @EnvironmentObject var audioSystem: AudioSystem
+    @ObservedObject var playlist: Playlist    
     let openRecording: (String) -> Void
+    
+    @StateObject var audioSystem = app.audioSystem
     
     enum SeekState {
         case notSeeking
@@ -52,7 +53,7 @@ struct PopupView: View {
                     ForEach(tracks.indices, id: \.self) { i in
                         let track = tracks[i]
                         
-                        TrackRow(index: i + 1, title: track.title, length: track.length, downloading: false, playing: playlist.currentTrack.id == track.id)
+                        TrackRow(index: i + 1, title: track.title, length: track.length, downloading: false, playing: playlist.currentTrack.id == track.id, disabled: false)
                             .onTapGesture {
                                 audioSystem.play(id: track.id)
                             }
@@ -96,6 +97,7 @@ struct PopupView: View {
                 HStack(spacing: 24) {
                     Button {
                         audioSystem.previousTrack()
+                        UIDevice.vibrate(style: .select)
                     } label: {
                         Image(systemName: "backward.fill")
                     }.buttonStyle(BorderlessButtonStyle())
@@ -106,12 +108,14 @@ struct PopupView: View {
                         } else {
                             audioSystem.resume()
                         }
+                        UIDevice.vibrate(style: .select)
                     } label: {
                         Image(systemName: audioSystem.isPlaying ? "pause.fill" : "play.fill")
                     }.buttonStyle(BorderlessButtonStyle())
                     
                     Button {
                         audioSystem.nextTrack()
+                        UIDevice.vibrate(style: .select)
                     } label: {
                         Image(systemName: "forward.fill")
                     }.buttonStyle(BorderlessButtonStyle())
@@ -124,13 +128,19 @@ struct PopupView: View {
             .background(Color(UIColor.systemBackground))
         }
         .popupTitle(verbatim: playlist.currentTrack.title, subtitle: playlist.currentTrack.album)
-        .popupBarStyle(LNPopupBar.Style.prominent)
+        .popupBarStyle(LNPopupBar.Style.floating)
         .popupHapticFeedbackEnabled(true)
         .popupBarItems({
-            Button(action: { audioSystem.isPlaying ? audioSystem.pause() : audioSystem.resume() }) {
+            Button(action: {
+                audioSystem.isPlaying ? audioSystem.pause() : audioSystem.resume()
+                UIDevice.vibrate(style: .select)
+            }) {
                 Image(systemName: audioSystem.isPlaying ? "pause.fill" : "play.fill")
             }
-            Button(action: { audioSystem.nextTrack() }) {
+            Button(action: {
+                audioSystem.nextTrack()
+                UIDevice.vibrate(style: .select)
+            }) {
                 Image(systemName: "forward.fill")
             }
         })

@@ -21,11 +21,13 @@ public class Persistence {
         case playlist = "v2playlist.json"
         case navigation = "v2navigation.json"
         case libraryNavigation = "v2library.json"
+        case selectedTab = "v2SelectedTab.json"
         case legacyStorage = "storage.json"
     }
     
     let applicationSupport: Folder
     let downloads: Folder
+    public let images: Folder
     let db: Connection
     
     public let bandRepository: BandRepository
@@ -34,28 +36,34 @@ public class Persistence {
     public let trackRepository: TrackRepository
     
     public init() throws {
-        let path = "Library/Application Support"
-        self.applicationSupport = try Folder.home.createSubfolderIfNeeded(at: path)
-        self.downloads = try applicationSupport.createSubfolderIfNeeded(withName: "Downloads")
+        applicationSupport = try Folder.home.createSubfolderIfNeeded(at: "Library/Application Support")
+        
+        downloads = try applicationSupport.createSubfolderIfNeeded(withName: "Downloads")
+        downloads.excludeForBackup()
+        
+        images = try applicationSupport.createSubfolderIfNeeded(withName: "Images")
+        images.excludeForBackup()
         
         let sqliteFile = try applicationSupport.createFileIfNeeded(withName: "database.sqlite3")
-        self.db = try Connection(sqliteFile.path)
+        sqliteFile.excludeFromBackup()
         
-        self.bandRepository = BandRepository(db: db)
-        self.performanceRepository = PerformanceRepository(db: db)
-        self.recordingRepository = RecordingRepository(db: db)
-        self.trackRepository = TrackRepository(db: db)
+        db = try Connection(sqliteFile.path)
         
-        try bandRepository.loadSchema()
-        try performanceRepository.loadSchema()
-        try recordingRepository.loadSchema()
-        try trackRepository.loadSchema()
+        bandRepository = BandRepository(db: db)
+        performanceRepository = PerformanceRepository(db: db)
+        recordingRepository = RecordingRepository(db: db)
+        trackRepository = TrackRepository(db: db)
+        
+        try migrate()
     }
     
     public func registerDownload(sourceUrl: URL, identifier: String, fileName: String) throws {
-        let file = try File.init(path: sourceUrl.absoluteString)
+        let file = try File.init(path: sourceUrl.path())
         let identifierFolder = try downloads.createSubfolderIfNeeded(withName: identifier)
         try file.move(to: identifierFolder)
+        try file.rename(to: fileName, keepExtension: false)
+        
+        logger.info("Moved downloaded file \(fileName) to \(identifier)/\(fileName) for permanant storage.")
     }
     
     public func loadDecodable<T: Decodable>(at path: Path) throws -> T {
@@ -67,28 +75,100 @@ public class Persistence {
     
     public func persistEncodable<T: Encodable>(_ value: T, to path: Path) throws {
         let file = try applicationSupport.createFileIfNeeded(withName: path.rawValue)
+        file.excludeFromBackup()
+        
         let data = try JSONEncoder().encode(value)
         try file.write(data)
     }
     
-    public func trackUrl(recordingIdentifier: String, fileName: String) -> URL? {
+    public func trackUrl(recordingIdentifier: String, fileName: String) -> URL {
         do {
             let recordingFolder = try downloads.subfolder(named: recordingIdentifier)
             let trackFile = try recordingFolder.file(named: fileName)
             return trackFile.url
-        } catch {
-            return nil
+        } catch {            
+            return URL(
+                string: "https://archive.org/download/\(recordingIdentifier)/\(fileName)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            )!
         }
     }
-}
-
-extension Folder {
-    static var applicationSupport: Folder {
-        let path = "Library/Application Support"
-        guard Folder.home.containsSubfolder(at: path) else {
-            return try! Folder.home.createSubfolder(at: path)
+    
+    private func migrate() throws {        
+        if db.userVersion == 0 {
+            try db.run(BandRepository.table.create(ifNotExists: true) { t in
+                typealias Columns = BandRepository.Rows
+                t.column(Columns.id, primaryKey: true)
+                t.column(Columns.name, unique: true)
+                t.column(Columns.collection, unique: true)
+            })
+            
+            try db.run(PerformanceRepository.table.create(ifNotExists: true) { t in
+                typealias Columns = PerformanceRepository.Rows
+                t.column(Columns.id, primaryKey: true)
+                t.column(Columns.date)
+                t.column(Columns.venue)
+                t.column(Columns.city)
+                t.column(Columns.state)
+                t.column(Columns.bandId)
+                
+                t.foreignKey(Columns.bandId, references: BandRepository.table, BandRepository.Rows.id)
+            })
+            
+            try db.run(RecordingRepository.table.create(ifNotExists: true) { t in
+                typealias Rows = RecordingRepository.Rows
+                t.column(Rows.id, primaryKey: true)
+                t.column(Rows.identifier)
+                t.column(Rows.transferer)
+                t.column(Rows.source)
+                t.column(Rows.lineage)
+                t.column(Rows.favorite, defaultValue: false)
+                t.column(Rows.downloaded, defaultValue: false)
+                t.column(Rows.performanceId)
+                
+                t.foreignKey(Rows.performanceId, references: PerformanceRepository.table, PerformanceRepository.Rows.id)
+            })
+            
+            try db.run(TrackRepository.table.create(ifNotExists: true) { t in
+                typealias Rows = TrackRepository.Rows
+                t.column(Rows.id, primaryKey: true)
+                t.column(Rows.title)
+                t.column(Rows.fileName)
+                t.column(Rows.track)
+                t.column(Rows.length)
+                t.column(Rows.recordingId)
+                
+                t.foreignKey(Rows.recordingId, references: RecordingRepository.table, RecordingRepository.Rows.id)
+            })
+            
+            try db.run(PendingImport.table.create() { t in
+                typealias Columns = PendingImport.Columns
+                t.column(Columns.id, primaryKey: true)
+                t.column(Columns.recordingId)
+                
+                t.foreignKey(Columns.recordingId, references: RecordingRepository.table, RecordingRepository.Rows.id)
+            })
+            
+            db.userVersion = 1
         }
-        return try! Folder.home.subfolder(at: path)
+        if db.userVersion == 1 {
+            try db.run(PendingImport.table.addColumn(PendingImport.Columns.pending, defaultValue: false))
+            
+            db.userVersion = 2
+        }
+        if db.userVersion == 2 {
+            try db.run(TrackPlay.table.create() { t in
+                typealias C = TrackPlay.Columns
+                t.column(C.id, primaryKey: true)
+                t.column(C.trackId)
+                t.column(C.playedAt)
+                                
+                t.foreignKey(C.trackId, references: TrackRepository.table, TrackRepository.Rows.id)
+            })
+            
+            db.userVersion = 3
+        }
+        
+        logger.info("Database migrated.")
     }
 }
 
@@ -97,7 +177,11 @@ extension File {
         var vals = URLResourceValues()
         vals.isExcludedFromBackup = true
         var urlCopy = url
-        try! urlCopy.setResourceValues(vals)
+        do {
+            try urlCopy.setResourceValues(vals)
+        } catch {
+            logger.error("Failed to exclude file \(url) from backup: \(error)")
+        }
     }
 }
 
@@ -106,7 +190,11 @@ extension Folder {
         var vals = URLResourceValues()
         vals.isExcludedFromBackup = true
         var urlCopy = url
-        try! urlCopy.setResourceValues(vals)
+        do {
+            try urlCopy.setResourceValues(vals)
+        } catch {
+            logger.error("Failed to exclude folder \(url) from backup: \(error)")
+        }
     }
 }
 

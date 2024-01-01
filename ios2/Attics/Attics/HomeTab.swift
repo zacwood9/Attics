@@ -5,26 +5,28 @@
 //  Created by Zachary Wood on 12/29/23.
 //
 
+import AtticsCore
 import SwiftUI
 
-struct BrowseTab: View {
-    @State var destinations = [Navigation]()
+struct HomeTab: View { 
+    var path: Binding<[Navigation]>
     
     var body: some View {
-        NavigationStack(path: $destinations) {
+        NavigationStack(path: path) {
             BandsPage()
                 .navigationDestination(for: Navigation.self) { destination in
                     switch destination {
                     case .band(let bandDestination):
-                        BrowseView(bandId: bandDestination.bandId, bandName: bandDestination.bandName)
+                        BrowsePage(bandId: bandDestination.bandId, bandName: bandDestination.bandName)
                     case .year(let yearDestination):
-                        YearView(bandId: yearDestination.bandId, year: yearDestination.year)
+                        YearPage(bandId: yearDestination.bandId, year: yearDestination.year)
                     case .performance(let destination):
-                        PerformanceView(performanceId: destination.performanceId, performanceDate: destination.performanceDate)
+                        PerformancePage(performanceId: destination.performanceId, performanceDate: destination.performanceDate)
                     case .recording(let destination):
-                        RecordingView(recordingId: destination.recordingId)
+                        RecordingPage(recordingIdOrIdentifier: destination.recordingId)
+                    case .storedRecording(let destination):
+                        LibraryItemPage(recordingId: destination.recordingId)
                     }
-                    
                 }
         }
     }

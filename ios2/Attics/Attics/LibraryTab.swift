@@ -8,11 +8,20 @@
 import SwiftUI
 
 struct LibraryTab: View {
+    var path: Binding<[LibraryNavigation]>
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack(path: path) {
+            LibraryPage()
+                .navigationDestination(for: LibraryNavigation.self) { destination in
+                    switch destination {
+                    case .recording(let destination):
+                        LibraryItemPage(recordingId: destination.recordingId)
+                    case .history:
+                        HistoryPage()
+                    }
+                    
+                }
+        }
     }
-}
-
-#Preview {
-    LibraryTab()
 }

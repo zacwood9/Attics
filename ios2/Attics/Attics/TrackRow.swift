@@ -10,26 +10,27 @@ import AtticsCore
 import Combine
 
 struct TrackRow: View {
-    let index: Int
-    let title: String
-    let length: String
-    let downloading: Bool
-    let playing: Bool
+    var index: Int
+    var title: String
+    var length: String
+    var downloading: Bool
+    var playing: Bool
+    var disabled: Bool
     
     var body: some View {
         HStack {
             Text("\(index). ").fontWeight(.light).font(.footnote)
             Text(title)
             Spacer()
-            if downloading {
-                ProgressView().progressViewStyle(.circular)
-            }
+            
             if playing {
                 PlayingAnimation()
             } else {
                 Text(length).fontWeight(.light).font(.footnote)
             }
-        }.contentShape(Rectangle())
+        }
+        .contentShape(Rectangle())
+        .foregroundStyle(disabled ? .gray : .primary)
     }
 }
 
@@ -73,8 +74,7 @@ extension ShapeStyle where Self == Color {
 
 #Preview {
     List {
-        TrackRow(index: 1, title: "Stella Blue", length: "4:35", downloading: true, playing: true)
-        TrackRow(index: 2, title: "Scarlet Begonias", length: "9:55", downloading: true, playing: false)
+        TrackRow(index: 1, title: "Stella Blue", length: "4:35", downloading: true, playing: true, disabled: false)
+        TrackRow(index: 2, title: "Scarlet Begonias", length: "9:55", downloading: true, playing: false, disabled: true)
     }
-    
 }

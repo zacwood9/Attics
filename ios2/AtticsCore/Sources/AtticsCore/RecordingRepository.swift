@@ -46,22 +46,9 @@ public class RecordingRepository {
         self.db = db
     }
     
-    public func loadSchema() throws {
-        try db.run(table.create(ifNotExists: true) { t in
-            t.column(Rows.id, primaryKey: true)
-            t.column(Rows.identifier)
-            t.column(Rows.transferer)
-            t.column(Rows.source)
-            t.column(Rows.lineage)
-            t.column(Rows.favorite, defaultValue: false)
-            t.column(Rows.downloaded, defaultValue: false)
-            t.column(Rows.performanceId)
-            
-            t.foreignKey(Rows.performanceId, references: PerformanceRepository.table, PerformanceRepository.Rows.id)
-        })
-    }
-    
     public func get(id: String) throws -> Recording? {
+        logger.debug("RecordingRepository.get(id: \(id))")
+        
         return try db.pluck(table.filter(Rows.id == id)).map { try $0.decode() }
     }
     
@@ -79,6 +66,8 @@ public class RecordingRepository {
     }
     
     public func getFavorites() throws -> [Recording] {
+        logger.debug("RecordingRepository.getFavorites()")
+        
         let rows = try db.prepare(table.where(Rows.favorite))
         return rows.compactMap {
             do {
@@ -92,15 +81,33 @@ public class RecordingRepository {
     }
     
     public func getDownloads() throws -> [Recording] {
+        logger.debug("RecordingRepository.getDownloads()")
+        
         let rows = try db.prepare(table.where(Rows.downloaded))
-        return rows.compactMap {
-            do {
-                let recording: Recording = try $0.decode()
-                return recording
-            } catch {
-                print(error)
-                return nil
-            }
+        return rows.compactMap { decode(row: $0) }
+    }
+    
+    public func getPersisted() throws -> [Recording] {
+        logger.debug("RecordingRepository.getPersisted()")
+        
+        let rows = try db.prepare(table.where(Rows.downloaded || Rows.favorite))
+        return rows.compactMap { decode(row: $0) }
+    }
+    
+    public func all() throws -> [Recording] {
+        logger.debug("RecordingRepository.all()")
+        
+        let rows = try db.prepare(table)
+        return rows.compactMap { decode(row: $0) }
+    }
+    
+    private func decode(row: Row) -> Recording? {
+        do {
+            let recording: Recording = try row.decode()
+            return recording
+        } catch {
+            logger.error("Failed to decode Recording: \(error)")
+            return nil
         }
     }
     
@@ -126,5 +133,9 @@ public class RecordingRepository {
     public func markUndownloaded(id: String) throws -> Recording? {
         try db.run(table.filter(Rows.id == id).update(Rows.downloaded <- false))
         return try get(id: id)
+    }
+    
+    public func removeAllDownloads() throws {
+        try db.run(table.update(Rows.downloaded <- false))
     }
 }

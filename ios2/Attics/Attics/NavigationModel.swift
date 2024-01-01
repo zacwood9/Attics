@@ -34,10 +34,18 @@ enum Navigation: Codable, Hashable, Equatable {
     case year(YearDestination)
     case performance(PerformanceDestination)
     case recording(RecordingDestination)
+    case storedRecording(RecordingDestination)
 }
 
 enum LibraryNavigation: Codable, Hashable {
     case recording(RecordingDestination)
+    case history
+}
+
+enum Tab: Codable, Equatable, Hashable {
+    case browse
+    case library
+    case settings
 }
 
 class NavigationModel: ObservableObject {    
@@ -57,20 +65,34 @@ class NavigationModel: ObservableObject {
         tab = (try? app.persistence.loadDecodable(at: .selectedTab)) ?? .browse
         homeDestinations = (try? app.persistence.loadDecodable(at: .navigation)) ?? []
         libraryDestinations = (try? app.persistence.loadDecodable(at: .libraryNavigation)) ?? []
+        
+        tabCancellable = $tab.sink { tab in
+            Task.detached {
+                do {
+                    try app.persistence.persistEncodable(tab, to: .selectedTab)
+                } catch {
+                    logger.error("Failed to persist selected tab: \(error)")
+                }
+            }
+        }
                 
         homeDestinationsCancellable = $homeDestinations.sink { homeDestinations in
-            do {
-                try app.persistence.persistEncodable(homeDestinations, to: .navigation)
-            } catch {
-                logger.error("Failed to persist HomeTab navigation: \(error)")
+            Task.detached {
+                do {
+                    try app.persistence.persistEncodable(homeDestinations, to: .navigation)
+                } catch {
+                    logger.error("Failed to persist HomeTab navigation: \(error)")
+                }
             }
         }
         
         libraryDestinationsCancellable = $libraryDestinations.sink { libraryDestinations in
-            do {
-                try app.persistence.persistEncodable(libraryDestinations, to: .libraryNavigation)
-            } catch {
-                logger.error("Failed to persist LibraryTab navigation: \(error)")
+            Task.detached {
+                do {
+                    try app.persistence.persistEncodable(libraryDestinations, to: .libraryNavigation)
+                } catch {
+                    logger.error("Failed to persist LibraryTab navigation: \(error)")
+                }
             }
         }
     }

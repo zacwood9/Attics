@@ -8,51 +8,38 @@
 import Foundation
 import SQLite
 
-struct History : Codable {
+struct TrackPlay : Codable {
     static let table = Table("track_plays")
     enum Columns {
         static let id = Expression<String>("id")
-        static let pending = Expression<Bool>("pending")
-        static let recordingId = Expression<String>("recordingId")
+        static let trackId = Expression<String>("trackId")
+        static let playedAt = Expression<Date>("playedAt")
     }
     
     let id: String
-    let pending: Bool
-    let recordingId: String
+    let trackId: String
+    let playedAt: Date
     
-    var table: Table { PendingImport.table }
+    var table: Table { Self.table }
     
-    static func all(_ p: Persistence) throws -> [PendingImport] {
+    static func all(_ p: Persistence) throws -> [Self] {
         let rows = try p.db.prepare(table)
         return rows.compactMap { Self.decode(row: $0) }
     }
     
-    static func allPending(_ p: Persistence) throws -> [PendingImport] {
-        let rows = try p.db.prepare(table.where(Columns.pending))
-        return rows.compactMap { Self.decode(row: $0) }
-    }
-    
     @discardableResult
-    static func create(_ p: Persistence, recordingId: String) throws -> PendingImport {
-        let pendingImport = PendingImport(id: UUID().uuidString, pending: true, recordingId: recordingId)
-        try p.db.run(table.insert(pendingImport))
-        logger.info("Created pending import for recording \(recordingId)")
-        return pendingImport
+    static func create(_ p: Persistence, trackId: String) throws -> Self {
+        let trackPlay = TrackPlay(id: UUID().uuidString, trackId: trackId, playedAt: Date())
+        try p.db.run(table.insert(trackPlay))
+        return trackPlay
     }
     
-    func markComplete(_ p: Persistence) throws {
-        try p.db.run(
-            PendingImport.table.filter(Columns.id == id).update(Columns.pending <- false)
-        )
-        logger.info("Marked pending import for recording \(recordingId) as complete")
-    }
-    
-    private static func decode(row: Row) -> PendingImport? {
+    private static func decode(row: Row) -> Self? {
         do {
-            let i: PendingImport = try row.decode()
+            let i: Self = try row.decode()
             return i
         } catch {
-            logger.error("Failed to decode PendingImport: \(error)")
+            logger.error("Failed to decode TrackPlay: \(error)")
             return nil
         }
     }

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Zachary Wood on 12/25/23.
 //
@@ -11,7 +11,7 @@ import SQLite
 public class Downloads: NSObject, ObservableObject, DownloaderDelegate, URLSessionDownloadDelegate {
     let p: Persistence
     
-    @Published public private(set) var fileDownloadProgresses = [String : Double]()
+    @Published public private(set) var fileDownloadProgresses = [String : DownloadItem]()
     @Published public private(set) var activeDownloadIdentifiers = Set<String>()
     @Published public private(set) var downloadedRecordingIds: Set<String>
     
@@ -28,13 +28,22 @@ public class Downloads: NSObject, ObservableObject, DownloaderDelegate, URLSessi
         self.p = p
         downloadedRecordingIds = Set(try p.recordingRepository.getDownloads().map(\.id))
     }
-        
+    
     public func reloadDownloadedRecordings() {
         do {
             downloadedRecordingIds = Set(try p.recordingRepository.getDownloads().map(\.id))
         } catch {
-            print("failed to reload recordings: \(error)")
+            logger.error("Failed to reload recordings: \(error)")
         }
+    }
+    
+    public func removeAllDownloads() throws {
+        for subfolder in p.downloads.subfolders {
+            try subfolder.delete()
+        }
+        
+        try p.recordingRepository.removeAllDownloads()
+        downloadedRecordingIds = []
     }
     
     public func addDownloader(recordingId: String, identifier: String) -> Downloader {
@@ -49,34 +58,47 @@ public class Downloads: NSObject, ObservableObject, DownloaderDelegate, URLSessi
         downloaders.remove(downloader)
         activeDownloadIdentifiers.remove(identifier)
         downloader.items.forEach { fileDownloadProgresses.removeValue(forKey: $0.fileName) }
-        
         downloader.cancel()
+        
+        logger.info("Canceled download for Recording(identifier: \(identifier)).")
     }
     
     public func removeDownload(id: String) {
         downloadedRecordingIds.remove(id)
-        _ = try? p.recordingRepository.markUndownloaded(id: id)
+        do {
+            if let recording = try p.recordingRepository.markUndownloaded(id: id) {
+                try p.downloads.subfolder(named: recording.identifier).delete()
+            }
+        } catch {
+            logger.error("Failed to remove download for Recording(id: \(id)): \(error)")
+        }
+        
+        
+        logger.info("Removed download for Recording(id: \(id)).")
     }
     
     func downloadItemFinished(downloader: Downloader, item: DownloadItem) {
-        fileDownloadProgresses.removeValue(forKey: item.fileName)
+        logger.info("Finished downloading file \(item.fileName).")
     }
     
     func downloadItemProgressed(downloader: Downloader, item: DownloadItem) {
-        fileDownloadProgresses[item.fileName] = item.task.progress.fractionCompleted
+        fileDownloadProgresses[item.fileName] = item
     }
     
     func downloaderFinished(downloader: Downloader) {
         downloaders.remove(downloader)
         activeDownloadIdentifiers.remove(downloader.identifier)
+        downloader.items.forEach { fileDownloadProgresses.removeValue(forKey: $0.fileName) }
         
         if let recording = try? p.recordingRepository.markDownloaded(id: downloader.recordingId) {
             downloadedRecordingIds.insert(recording.id)
         }
+        
+        logger.info("Finished downloading Recording(identifier: \(downloader.identifier)).")
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-                
+        
         downloaders.forEach { downloader in
             downloader.urlSession(session, downloadTask: downloadTask, didWriteData: bytesWritten, totalBytesWritten: totalBytesWritten, totalBytesExpectedToWrite: totalBytesExpectedToWrite)
         }

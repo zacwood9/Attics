@@ -24,10 +24,24 @@ public struct BatchDownload {
     }
 }
 
-public struct DownloadItem: Equatable {
+public class DownloadItem: Equatable {
+    public static func == (lhs: DownloadItem, rhs: DownloadItem) -> Bool {
+        return lhs.identifier == rhs.identifier && lhs.fileName == rhs.fileName
+    }
+    
     public let identifier: String
     public let fileName: String
     public let task: URLSessionDownloadTask
+    public var bytesWritten: Int64 = 0
+    public var bytesExpected: Int64? = nil
+    public var estimatedTimeRemaining: TimeInterval? = nil
+    public var finished = false
+    
+    init(identifier: String, fileName: String, task: URLSessionDownloadTask) {
+        self.identifier = identifier
+        self.fileName = fileName
+        self.task = task
+    }
 }
 
 protocol DownloaderDelegate {
@@ -64,6 +78,8 @@ public class Downloader: NSObject {
             let request = URLRequest(url: url)
             let task = urlSession.downloadTask(with: request)
             task.resume()
+            
+            logger.info("Started download for Track(fileName: \(fileName)).")
             return DownloadItem(identifier: identifier, fileName: fileName, task: task)
         }
     }
@@ -72,24 +88,32 @@ public class Downloader: NSObject {
         for item in items {
             item.task.cancel()
         }
-        items = []
+        items = []        
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
                 
         if let item = items.first(where: { $0.task == downloadTask }) {
+            item.bytesWritten = totalBytesWritten
+            item.bytesExpected = totalBytesExpectedToWrite
+            item.estimatedTimeRemaining = downloadTask.progress.estimatedTimeRemaining
+            
             delegate.downloadItemProgressed(downloader: self, item: item)
         }
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         if let item = items.first(where: { $0.task == downloadTask }) {
-            try? self.p.registerDownload(sourceUrl: location, identifier: item.identifier, fileName: item.fileName)
-            delegate.downloadItemFinished(downloader: self, item: item)
-            
-            items = items.filter { $0.task != downloadTask }            
-            if items.isEmpty {
-                delegate.downloaderFinished(downloader: self)
+            do {
+                try self.p.registerDownload(sourceUrl: location, identifier: item.identifier, fileName: item.fileName)
+                delegate.downloadItemFinished(downloader: self, item: item)
+                item.finished = true
+                            
+                if items.allSatisfy(\.finished) {
+                    delegate.downloaderFinished(downloader: self)
+                }
+            } catch {
+                logger.error("Failed to move download for Track(fileName: \(item.fileName)) to storage: \(error).")
             }
         }
     }

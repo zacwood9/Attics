@@ -11,66 +11,32 @@ import SQLite
 
 public class Favorites: ObservableObject {
     let p: Persistence
+    let library: Library
     
-    var isFavorite: Bool = false
+    @Published public private(set) var favoritedRecordingIds: Set<String>
     
-    public init(p: Persistence) {
+    public init(p: Persistence, library: Library) throws {
         self.p = p
+        self.library = library
+        
+        favoritedRecordingIds = try Set(p.recordingRepository.getFavorites().filter(\.favorite).map(\.id))
+    }
+    
+    public func reloadFavoritedRecordingIds() {
+        do {
+            favoritedRecordingIds = try Set(p.recordingRepository.getFavorites().filter(\.favorite).map(\.id))
+        } catch {
+            logger.error("Failed to reload favorited recording ids: \(error)")            
+        }
     }
     
     public func favorited(recordingId: String) -> Bool {
-        return (try? p.recordingRepository.get(id: recordingId)?.favorite) ?? false
-    }
-    
-    public func loadFavorites() throws -> [(Band, Performance, Recording)] {
-        let recordings = try p.recordingRepository.getFavorites()
-        
-        let performanceIds = recordings.map(\.performanceId)
-        let performanceMap: [String : Performance] = try p.performanceRepository.getIds(performanceIds).reduce(into: [:]) { partialResult, performance in
-            partialResult[performance.id] = performance
-        }
-        
-        let bandIds = performanceMap.values.map(\.bandId)
-        let bandMap: [String : Band] = try p.bandRepository.getIds(bandIds).reduce(into: [:]) { partialResult, band in
-            partialResult[band.id] = band
-        }
-        
-        return recordings.compactMap { recording in
-            guard let performance = performanceMap[recording.performanceId] else { return nil }
-            guard let band = bandMap[performance.bandId] else { return nil }
-            
-            return (band, performance, recording)
-        }
-    }
-    
-    public func loadFavorite(recordingId: String) throws -> (Band, Performance, Recording, [Track])? {
-        let tracks = try p.trackRepository.getRecordingTracks(recordingId: recordingId)
-        let recording = try p.recordingRepository.get(id: recordingId)
-        guard let recording else { return nil }
-        
-        let performance = try p.performanceRepository.getIds([recording.performanceId]).first
-        guard let performance else { return nil }
-        
-        let band = try p.bandRepository.getIds([performance.bandId]).first
-        guard let band else { return nil }
-        
-        return (band, performance, recording, tracks)
+        return favoritedRecordingIds.contains(recordingId)
     }
     
     public func persistFavorite(apiBand: APIBand, apiPerformance: APIPerformance, apiRecording: APIRecording, apiTracks: [APITrack]) throws {
-        try p.db.transaction {
-            try p.bandRepository.upsertApi(apiBand)
-            try p.performanceRepository.upsertApi(apiPerformance)
-            
-            let recording = try (p.recordingRepository.get(id: apiRecording.id) ?? p.recordingRepository.insertApi(apiRecording))
-            try p.recordingRepository.favorite(id: recording.id)
-            
-            for apiTrack in apiTracks {
-                try p.trackRepository.upsertApi(apiTrack)
-            }
-        }
-        
-        objectWillChange.send()
+        try library.persistApiItem(apiBand: apiBand, apiPerformance: apiPerformance, apiRecording: apiRecording, apiTracks: apiTracks)
+        try favorite(recordingId: apiRecording.id)
     }
     
     public func favorite(recordingId: String) throws {
@@ -79,11 +45,11 @@ public class Favorites: ObservableObject {
                 .where(RecordingRepository.Rows.id == recordingId)
                 .update(RecordingRepository.Rows.favorite <- true)
         )
-        objectWillChange.send()
+        favoritedRecordingIds.insert(recordingId)
     }
     
     public func unfavorite(recordingId: String) throws {
         try p.recordingRepository.unfavorite(id: recordingId)
-        objectWillChange.send()
+        favoritedRecordingIds.remove(recordingId)
     }
 }

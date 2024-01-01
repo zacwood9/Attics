@@ -112,15 +112,64 @@ enum LegacyModels {
     }
 }
 
+struct PendingImport : Codable {
+    static let table = Table("pending_imports")
+    enum Columns {
+        static let id = Expression<String>("id")
+        static let pending = Expression<Bool>("pending")
+        static let recordingId = Expression<String>("recordingId")
+    }
+    
+    let id: String
+    let pending: Bool
+    let recordingId: String
+    
+    var table: Table { PendingImport.table }
+    
+    static func all(_ p: Persistence) throws -> [PendingImport] {
+        let rows = try p.db.prepare(table)
+        return rows.compactMap { PendingImport.decode(row: $0) }
+    }
+    
+    static func allPending(_ p: Persistence) throws -> [PendingImport] {
+        let rows = try p.db.prepare(table.where(Columns.pending))
+        return rows.compactMap { PendingImport.decode(row: $0) }
+    }
+    
+    @discardableResult
+    static func create(_ p: Persistence, recordingId: String) throws -> PendingImport {
+        let pendingImport = PendingImport(id: UUID().uuidString, pending: true, recordingId: recordingId)
+        try p.db.run(table.insert(pendingImport))
+        logger.info("Created pending import for recording \(recordingId)")
+        return pendingImport
+    }
+    
+    func markComplete(_ p: Persistence) throws {
+        try p.db.run(
+            PendingImport.table.filter(Columns.id == id).update(Columns.pending <- false)
+        )
+        logger.info("Marked pending import for recording \(recordingId) as complete")
+    }
+    
+    private static func decode(row: Row) -> PendingImport? {
+        do {
+            let i: PendingImport = try row.decode()
+            return i
+        } catch {
+            logger.error("Failed to decode PendingImport: \(error)")
+            return nil
+        }
+    }
+}
+
 public enum ImportState {
+    case waiting
     case importing
     case imported
     case failed
 }
 
-public class LegacyImport {
-    @Published var state: ImportState = .importing
-    
+public class LegacyImport: ObservableObject {
     let p: Persistence
     let apiClient: APIClient
     
@@ -129,26 +178,28 @@ public class LegacyImport {
         self.apiClient = apiClient
     }
     
-    func run() async throws {
-        state = .importing
-        
-        do {
-            let storedRecordings = try legacyStoredRecordings()
-            for storedRecording in storedRecordings {
-                try await upsert(storedRecording)
-            }
-            state = .imported
-        } catch {
-            state = .failed
-            throw error
+    public func importNeeded() -> Bool {
+        let r = legacyStoredRecordings()
+        if r.isEmpty {
+            return false
+        } else {
+            logger.debug("\(r.map(\.recording.identifier))")
+            return true
         }
     }
     
+   public func run() async throws {
+       let storedRecordings = legacyStoredRecordings()
+       for storedRecording in storedRecordings {
+           try await upsert(storedRecording)
+       }
+           
+       logger.info("Completed legacy import")
+   }
+    
     private func upsert(_ stored: LegacyModels.StoredRecording) async throws {
         guard !stored.songs.isEmpty else { return }
-        print("upserting")
-        
-        let recordingPage = try await apiClient.getRecordingAsync(recordingId: stored.recording.id)
+        let recordingPage = try await apiClient.getRecording(recordingId: stored.recording.id)
         
         try p.db.transaction {
             try p.bandRepository.upsert(id: stored.performance.bandId, collection: stored.band.collection, name: stored.band.name)
@@ -159,12 +210,29 @@ public class LegacyImport {
                 if let trackId = recordingPage.tracks.first(where: { $0.fileName == song.fileName })?.id {
                     try p.trackRepository.upsert(id: trackId, title: song.title, fileName: song.fileName, track: song.track, length: song.length, recordingId: song.recordingId)
                 }
-                
             }
+            
+            removeStoredRecording(stored)
+        }
+        
+        logger.info("Finished importing legacy data for \(stored.recording.identifier).")
+    }
+    
+    private func legacyStoredRecordings() -> [LegacyModels.StoredRecording] {
+        do {
+            return try p.loadDecodable(at: .legacyStorage)
+        } catch {
+            logger.debug("Failed to load legacy recordings: \(error)")
+            return []
         }
     }
     
-    private func legacyStoredRecordings() throws -> [LegacyModels.StoredRecording] {
-        return try p.loadDecodable(at: .legacyStorage)
+    private func removeStoredRecording(_ recording: LegacyModels.StoredRecording) {
+        let recordings = legacyStoredRecordings()
+        do {
+            try p.persistEncodable(recordings.filter { $0 != recording }, to: .legacyStorage)
+        } catch {
+            logger.error("Failed to remove LegacyModels.StoredRecording(id: \(recording.id): \(error)")
+        }
     }
 }

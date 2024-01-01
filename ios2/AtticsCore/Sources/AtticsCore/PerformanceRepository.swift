@@ -67,18 +67,4 @@ public class PerformanceRepository {
         try db.run(table.upsert(performance, onConflictOf: Rows.id))
         return performance
     }
-    
-    
-    public func loadSchema() throws {
-        try db.run(table.create(ifNotExists: true) { t in
-            t.column(Rows.id, primaryKey: true)
-            t.column(Rows.date)
-            t.column(Rows.venue)
-            t.column(Rows.city)
-            t.column(Rows.state)
-            t.column(Rows.bandId)
-            
-            t.foreignKey(Rows.bandId, references: BandRepository.table, BandRepository.Rows.id)
-        })
-    }
 }

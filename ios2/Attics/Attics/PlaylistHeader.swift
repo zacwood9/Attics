@@ -9,7 +9,7 @@ import SwiftUI
 
 enum DownloadProgress {
     case notDownloaded
-    case downloading
+    case downloading(Int64, Int64, Double)
     case downloaded
 }
 
@@ -18,13 +18,13 @@ struct PlaylistHeader: View {
     let venue: String
     let date: String
     let isFavorite: Bool
+    let downloadable: Bool
     let downloadProgress: DownloadProgress
     
     let onFavoriteClick: () -> Void
     let onDownloadClick: () -> Void
     
     var body: some View {
-        
         HStack {
             VStack(alignment: .leading) {
                 Text(bandName).font(.title).fontWeight(.bold)
@@ -39,7 +39,7 @@ struct PlaylistHeader: View {
         .background(Color.atticsBlue)
         .listRowInsets(EdgeInsets())
         
-        HStack {
+        HStack(spacing: 8) {
             Image(systemName: isFavorite ? "heart.slash.fill" : "heart")
                 .foregroundColor(.red)
             Text(isFavorite ? "Remove from Library" : "Add to Library")
@@ -50,23 +50,27 @@ struct PlaylistHeader: View {
             onFavoriteClick()
         }
         
-        HStack {
+        HStack(spacing: 8) {
             switch downloadProgress {
             case .notDownloaded:
-                Image(systemName: "square.and.arrow.down")
-                    .foregroundColor(.green)
-                Text("Download")
+                Group {
+                    Image(systemName: "arrow.down.circle")
+                        .foregroundColor(.green)
+                    Text("Download")
+                    Spacer()
+                }.foregroundStyle(downloadable ? .primary : Color.gray)
             case .downloading:
-                Image(systemName: "square.and.arrow.down")
-                    .foregroundColor(.green)
+                ProgressView().progressViewStyle(.circular)
                 Text("Cancel download")
+                Spacer()
             case .downloaded:
-                Image(systemName: "square.and.arrow.down.fill")
+                Image(systemName: "arrow.down.circle.fill")
                     .foregroundColor(.green)
                 Text("Remove download")
+                Spacer()
             }
-            
         }
+        
         .contentShape(Rectangle())
         .onTapGesture {
             onDownloadClick()
@@ -79,7 +83,15 @@ struct PlaylistHeader: View {
     List {
         Section {
             PlaylistHeader(
-                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadProgress: .downloading, onFavoriteClick: { }, onDownloadClick: { }
+                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadable: false, downloadProgress: .downloading(50, 100, 126), onFavoriteClick: { }, onDownloadClick: { }
+            )
+            
+            PlaylistHeader(
+                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadable: false, downloadProgress: .notDownloaded, onFavoriteClick: { }, onDownloadClick: { }
+            )
+            
+            PlaylistHeader(
+                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: false, downloadable: false, downloadProgress: .downloaded, onFavoriteClick: { }, onDownloadClick: { }
             )
         }
     }

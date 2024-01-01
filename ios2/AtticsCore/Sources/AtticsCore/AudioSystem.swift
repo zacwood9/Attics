@@ -18,6 +18,8 @@ public class AudioSystem: ObservableObject {
     @Published public private(set) var isSeeking = false
     @Published public private(set) var isPlaying = false
     
+    public private(set) var trackIdPlayed = PassthroughSubject<String, Never>()
+    
     public var currentProgress: Double {
         guard let item = audioPlayer.currentItem, !item.duration.seconds.isNaN else { return 0 }
         let progress = item.currentTime().seconds
@@ -47,19 +49,23 @@ public class AudioSystem: ObservableObject {
                   let track = playerItems[item]
             else { return }
                         
-            
             playlist.currentTrack = track
+            trackIdPlayed.send(track.id)
             self.setupNowPlaying()
         }
         
         audioPlayer.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1.0, preferredTimescale: 100), queue: .main) { [weak self] time in
             guard let self, let playlist else { return }
             playlist.secondsPlayed = time.seconds
+            
+            self.setupNowPlaying()
         }
         
         interruptionObserver = NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification).sink { [weak self] _ in
             self?.pause()
         }
+        
+        setupRemoteControls()
     }
     
     public func loadPlaylist(initialId: String, bandName: String, recordingId: String, tracks: [Playlist.Track]) {        
@@ -73,7 +79,8 @@ public class AudioSystem: ObservableObject {
         guard let playlist else { return }
         
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-        setupRemoteControls()
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+    
         guard let trackIndex = playlist.tracks.firstIndex(where: { $0.id == id }) else { return }
         
         let tracksToQueue = playlist.tracks.dropFirst(trackIndex)
@@ -82,7 +89,7 @@ public class AudioSystem: ObservableObject {
         }
         
         audioPlayer.removeAllItems()
-        audioPlayer.insert(itemsToQueue.first!, after: nil)
+        itemsToQueue.forEach { audioPlayer.insert($0, after: nil) }
         
         playerItems = zip(tracksToQueue, itemsToQueue).reduce(into: [:]) { result, pair in
             let (track, item) = pair
@@ -91,8 +98,9 @@ public class AudioSystem: ObservableObject {
         
         audioPlayer.play()
         playlist.currentTrack = playlist.tracks[trackIndex]
-        isPlaying = true
+        trackIdPlayed.send(playlist.currentTrack.id)
         setupNowPlaying()
+        isPlaying = true
     }
     
     public func resume() {
@@ -121,7 +129,6 @@ public class AudioSystem: ObservableObject {
         guard let playlist, let currentTrackIndex = playlist.currentTrackIndex else { return }
         
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-        setupRemoteControls()
         
         let tracksToQueue = playlist.tracks.dropFirst(currentTrackIndex)
         let itemsToQueue = tracksToQueue.map { track in
@@ -129,7 +136,7 @@ public class AudioSystem: ObservableObject {
         }
         
         audioPlayer.removeAllItems()
-        audioPlayer.insert(itemsToQueue.first!, after: nil)
+        itemsToQueue.forEach { audioPlayer.insert($0, after: nil) }
         
         playerItems = zip(tracksToQueue, itemsToQueue).reduce(into: [:]) { result, pair in
             let (track, item) = pair
@@ -152,7 +159,11 @@ public class AudioSystem: ObservableObject {
         if currentTrackIndex == playlist.tracks.count - 1 {
             play(id: playlist.tracks[0].id)
         } else {
-            play(id: playlist.tracks[currentTrackIndex + 1].id)
+            playlist.currentTrack = playlist.tracks[currentTrackIndex + 1]
+            audioPlayer.advanceToNextItem()
+            audioPlayer.play()
+            isPlaying = true
+            setupNowPlaying()
         }
     }
     
@@ -231,8 +242,8 @@ public class AudioSystem: ObservableObject {
             currentTime: audioPlayer.currentTime().seconds,
             duration: audioPlayer.currentItem?.duration.seconds ?? 0.0,
             rate: audioPlayer.rate,
-            artist: "Grateful Dead",
-            album: "1977-05-08: Barton Hall"
+            artist: track.artist,
+            album: track.album
         )
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info.toNowPlayingInfo()

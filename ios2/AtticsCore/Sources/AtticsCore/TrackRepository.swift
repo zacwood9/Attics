@@ -11,12 +11,24 @@ import Foundation
 import SQLite
 
 public struct Track: Codable {
+    static var table: Table { TrackRepository.table }
+    
     public let id: String
     public let title: String
     public let fileName: String
     public let track: Int
     public let length: String
     public let recordingId: String
+    
+    public static func decode(row: Row) -> Track? {
+        do {
+            let track: Track = try row.decode()
+            return track
+        } catch {
+            logger.error("Failed to decode Track: \(error)")
+            return nil
+        }
+    }
 }
 
 extension Track {
@@ -45,16 +57,12 @@ public class TrackRepository {
     }
     
     public func getRecordingTracks(recordingId: String) throws -> [Track] {
-        let rows = try db.prepare(table.filter(Rows.recordingId == recordingId))
-        return rows.compactMap { row in
-            do {
-                let track: Track = try row.decode()
-                return track
-            } catch {
-                print(error)
-                return nil
-            }
-        }
+        return try getForRecordings(recordingIds: [recordingId])
+    }
+    
+    public func getForRecordings(recordingIds: [String]) throws -> [Track] {
+        let rows = try db.prepare(table.filter(recordingIds.contains(Rows.recordingId)))
+        return rows.compactMap { Track.decode(row: $0) }
     }
     
     @discardableResult
@@ -69,18 +77,5 @@ public class TrackRepository {
         let track = Track(id: id, title: title, fileName: fileName, track: track, length: length, recordingId: recordingId)
         try db.run(table.upsert(track, onConflictOf: Rows.id))
         return track
-    }
-    
-    public func loadSchema() throws {
-        try db.run(table.create(ifNotExists: true) { t in
-            t.column(Rows.id, primaryKey: true)
-            t.column(Rows.title)
-            t.column(Rows.fileName)
-            t.column(Rows.track)
-            t.column(Rows.length)
-            t.column(Rows.recordingId)
-            
-            t.foreignKey(Rows.recordingId, references: RecordingRepository.table, RecordingRepository.Rows.id)
-        })
     }
 }

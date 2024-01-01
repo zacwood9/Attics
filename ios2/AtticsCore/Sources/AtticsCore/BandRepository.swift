@@ -66,11 +66,5 @@ public class BandRepository {
         return newBand
     }
     
-    public func loadSchema() throws {
-        try db.run(BandRepository.table.create(ifNotExists: true) { t in
-            t.column(Rows.id, primaryKey: true)
-            t.column(Rows.name, unique: true)
-            t.column(Rows.collection, unique: true)
-        })
-    }
+    
 }

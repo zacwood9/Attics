@@ -52,9 +52,10 @@ struct APIResource {
 public struct APIClient {
     let urlSession: URLSession = .shared
     static let localhost = "http://localhost:3000/api/"
+    static let production = "https://attics.io/api/"
     static let archiveReview = "https://archive.org/metadata/"
     
-    let baseUrl = APIResource(base: localhost)
+    let baseUrl = APIResource(base: production)
     let archiveReviewUrl = APIResource(base: archiveReview)
     
     public func getBands() async throws -> [BandWithMetadata] {
@@ -62,24 +63,44 @@ public struct APIClient {
         return try await asyncGet(url: url.toURL())
     }
     
-    public func getTopPerformances(bandId: String) -> AnyPublisher<[YearWithTopPerformances], Error> {
-        let url = baseUrl.appendingPath("bands").appendingPath(bandId).appendingPath("top_performances.json")
+    public func getTopPerformances(bandId: String, perYear: Int = 5) async throws -> [YearWithTopPerformances] {
+        let url = baseUrl
+            .appendingPath("bands")
+            .appendingPath(bandId)
+            .appendingPath("top_performances.json")
+            .appendingQuery(key: "performances_per_year", value: "\(perYear)")
+        
+        return try await asyncGet(url: url.toURL())
+    }
+    
+    public func getTopPerformances2(bandId: String, perYear: Int = 5) -> AnyPublisher<[YearWithTopPerformances], Error> {
+        let url = baseUrl
+            .appendingPath("bands")
+            .appendingPath(bandId)
+            .appendingPath("top_performances.json")
+            .appendingQuery(key: "performances_per_year", value: "\(perYear)")
+        
         return get(url: url.toURL())
     }
     
-    public func getYearPerformances(bandId: String, year: String) -> AnyPublisher<[PerformanceWithMetadata], Error> {
+    public func getYearPerformances(bandId: String, year: String) async throws -> [PerformanceWithMetadata] {
         let url = baseUrl.appendingPath("bands").appendingPath(bandId).appendingPath("years").appendingPath("\(year).json")
-        return get(url: url.toURL())
+        return try await asyncGet(url: url.toURL())
     }
     
-    public func getPerformance(performanceId: String) -> AnyPublisher<[APIRecording], Error> {
+    public func getPerformance(performanceId: String) async throws -> [APIRecording] {
         let url = baseUrl.appendingPath("performances").appendingPath(performanceId)
-        return get(url: url.toURL())
+        return try await asyncGet(url: url.toURL())
     }
     
-    public func getRecording(recordingId: String) -> AnyPublisher<APIRecordingPage, Error> {
+    public func getRecording(recordingId: String) async throws -> APIRecordingPage {
         let url = baseUrl.appendingPath("recordings").appendingPath(recordingId)
-        return get(url: url.toURL())
+        return try await asyncGet(url: url.toURL())
+    }
+    
+    public func getRecording(identifier: String) async throws -> APIRecordingPage {
+        let url = baseUrl.appendingPath("recordings").appendingPath(identifier)
+        return try await asyncGet(url: url.toURL())
     }
     
     public func getReviews(archiveIdentifier: String) -> AnyPublisher<[APIReview], Error> {
@@ -88,7 +109,7 @@ public struct APIClient {
     }
     
     private func get<T: Decodable>(url: URL, decoder: JSONDecoder = defaultDecoder) -> AnyPublisher<T, Error> {
-        print("APIClient: Getting \(url.absoluteString)")
+        logger.info("APIClient: Getting \(url.absoluteString)")
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         return urlSession.dataTaskPublisher(for: request)
@@ -98,7 +119,7 @@ public struct APIClient {
     }
     
     private func asyncGet<T: Decodable>(url: URL, decoder: JSONDecoder = defaultDecoder) async throws -> T {
-        print("APIClient: Getting \(url.absoluteString)")
+        logger.info("APIClient: Getting \(url.absoluteString)")
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
