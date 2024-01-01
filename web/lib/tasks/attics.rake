@@ -8,12 +8,6 @@ namespace :attics do
     logger.level = :info
     Rails.logger = logger
 
-    Async do
-      semaphore = Async::Semaphore.new(2)
-
-      Band.find_each do |band|
-        semaphore.async { ScrapeJob.perform_now band }
-      end
-    end.wait
+    NightlyScrape.new.scrape
   end
 end
