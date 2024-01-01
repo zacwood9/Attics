@@ -92,6 +92,8 @@ GEM
     blueprinter (0.30.0)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
+    brakeman (6.1.1)
+      racc
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
@@ -291,6 +293,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   blueprinter
   bootsnap
+  brakeman
   debug
   importmap-rails
   jbuilder
