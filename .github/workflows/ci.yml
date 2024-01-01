@@ -1,3 +1,7 @@
+defaults:
+  run:
+    working-directory: web
+
 name: CI
 
 on:
