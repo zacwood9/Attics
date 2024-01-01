@@ -63,26 +63,22 @@ public struct APIClient {
         return try await asyncGet(url: url.toURL())
     }
     
-    public func getTopPerformances(bandId: String, perYear: Int = 5) async throws -> [YearWithTopPerformances] {
+    public func getTopPerformances(bandId: String, perYear: Int = 5) async throws -> TopPerformancesPage {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = .current
+        formatter.formatOptions = .withFullDate
+        let formatted = formatter.string(from: Date())
+        
         let url = baseUrl
             .appendingPath("bands")
             .appendingPath(bandId)
             .appendingPath("top_performances.json")
             .appendingQuery(key: "performances_per_year", value: "\(perYear)")
+            .appendingQuery(key: "on_this_day", value: formatted)
         
         return try await asyncGet(url: url.toURL())
     }
-    
-    public func getTopPerformances2(bandId: String, perYear: Int = 5) -> AnyPublisher<[YearWithTopPerformances], Error> {
-        let url = baseUrl
-            .appendingPath("bands")
-            .appendingPath(bandId)
-            .appendingPath("top_performances.json")
-            .appendingQuery(key: "performances_per_year", value: "\(perYear)")
-        
-        return get(url: url.toURL())
-    }
-    
+
     public func getYearPerformances(bandId: String, year: String) async throws -> [PerformanceWithMetadata] {
         let url = baseUrl.appendingPath("bands").appendingPath(bandId).appendingPath("years").appendingPath("\(year).json")
         return try await asyncGet(url: url.toURL())

@@ -15,6 +15,9 @@ class Year
   end
 
   def performances
-    @performances ||= band.performances.with_recording_metadata.filter { _1.date.year == year.to_i }
+    @performances ||= band
+      .performances
+      .with_recording_metadata
+      .in_year(year.to_i)
   end
 end

@@ -31,4 +31,12 @@ class PerformanceTest < ActiveSupport::TestCase
       assert_equal 4.9, p.avg_rating
     end
   end
+
+  test "in year" do
+    assert_equal 1, Performance.in_year(1977).count
+  end
+
+  test "on date" do
+    assert_equal 1, Performance.on_day(month: 5, day: 8).count
+  end
 end

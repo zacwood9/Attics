@@ -16,6 +16,11 @@ public struct BandWithMetadata: Decodable {
     public let numRecordings: Int
 }
 
+public struct TopPerformancesPage: Decodable {
+    public let onThisDay: [PerformanceWithMetadata]
+    public let years: [YearWithTopPerformances]
+}
+
 public struct YearWithTopPerformances: Decodable {
     public let year: String
     public let topPerformances: [PerformanceWithMetadata]

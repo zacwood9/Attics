@@ -14,11 +14,11 @@ struct BrowsePage: View {
     let bandId: String
     let bandName: String
     
-    @State var result: APIResult<[YearWithTopPerformances]> = .loading
+    @State var result: APIResult<TopPerformancesPage> = .loading
     
     var body: some View {
         ResultView(result) { result in
-            BrowseView(bandId: bandId, yearsWithTopPerformances: result)
+            BrowseView(bandId: bandId, topPerformancesPage: result)
         }
         .atticsNavigationBar(bandName)
         .task {
@@ -47,54 +47,37 @@ struct BrowsePage: View {
 }
 
 struct BrowseView: View {
-    @ScaledMetric(relativeTo: .body)
-    var maxWidth = 160
-    
     var bandId: String
-    var yearsWithTopPerformances: [YearWithTopPerformances]
+    var topPerformancesPage: TopPerformancesPage
     
     var body: some View {
         ScrollView(.vertical) {
             LazyVStack(alignment: .leading) {
-                ForEach(yearsWithTopPerformances, id: \.year) { year in
+                VStack(alignment: .leading) {
+                    Text("On This Day").font(.title2).fontWeight(.bold)
+                        .padding([.leading, .trailing], 16)
+                    
+                    BrowsePerformancesList(performances: topPerformancesPage.onThisDay)
+                        .overlay {
+                            if topPerformancesPage.onThisDay.isEmpty {
+                                Text("No shows played on this date.")
+                                    .font(.callout)
+                            }
+                        }
+                }
+                .tint(.clear)
+                .padding([.top, .bottom], 12)
+                
+                ForEach(topPerformancesPage.years, id: \.year) { year in
                     VStack(alignment: .leading) {
                         NavigationLink(value: Navigation.year(YearDestination(bandId: bandId, year: year.year))) {
-                            HStack {
-                                Text(year.year).font(.title2).fontWeight(.bold)
-                                Spacer()
-                                Text("See all")
-                                    .font(.footnote).foregroundColor(Color(UIColor.secondaryLabel))
-                                Image(systemName: "chevron.right")
-                                    .font(.footnote)
-                                    .fontWeight(.light)
-                            }.contentShape(Rectangle())
+                            BrowseHeaderView(header: year.year)
+                                .contentShape(Rectangle())
                         }
                         .buttonStyle(PlainButtonStyle())
                         .padding([.leading, .trailing], 16)
                         
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack {
-                                ForEach(year.topPerformances, id: \.date) { show in
-                                    NavigationLink(value: Navigation.performance(PerformanceDestination(performanceId: show.id, performanceDate: show.date))) {
-                                        VStack(alignment: .leading) {
-                                            CosmosView(rating: show.avgRating)
-                                            
-                                            Spacer(minLength: 38)
-                                            Text(show.date).font(.headline).foregroundColor(.white)
-                                            Text(show.venue).font(.footnote).foregroundColor(Color(UIColor.lightGray))
-                                        }
-                                        .contentShape(Rectangle())
-                                        .padding([.leading, .trailing], 8)
-                                        .padding([.top, .bottom], 12)
-                                        .frame(minWidth: 130, maxWidth: maxWidth, alignment: .leading)
-                                        .background {
-                                            Color.atticsBlue
-                                        }
-                                        .cornerRadius(8)
-                                    }
-                                }
-                            }
-                        }
+                        BrowsePerformancesList(performances: year.topPerformances)
                     }
                     .contentShape(Rectangle())
                     .tint(.clear)
@@ -102,5 +85,68 @@ struct BrowseView: View {
                 }
             }
         }
+    }
+}
+
+struct BrowseHeaderView: View {
+    let header: String
+    
+    var body: some View {
+        HStack {
+            Text(header).font(.title2).fontWeight(.bold)
+            Spacer()
+            Text("See all")
+                .font(.footnote).foregroundColor(Color(UIColor.secondaryLabel))
+            Image(systemName: "chevron.right")
+                .font(.footnote)
+                .fontWeight(.light)
+        }
+    }
+}
+
+struct BrowsePerformancesList: View {
+    let performances: [PerformanceWithMetadata]
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(performances, id: \.id) { performance in
+                    PerformancePreviewCard(performance: performance)
+                }
+            }
+        }.frame(minHeight: 120)
+    }
+}
+
+struct PerformancePreviewCard: View {
+    @ScaledMetric(relativeTo: .body)
+    var maxWidth = 160
+    
+    let performance: PerformanceWithMetadata
+    
+    var body: some View {
+        NavigationLink(value: navigationValue) {
+            VStack(alignment: .leading) {
+                CosmosView(rating: performance.avgRating)
+                
+                Spacer(minLength: 38)
+                Text(performance.date).font(.headline).foregroundColor(.white)
+                Text(performance.venue).font(.footnote).foregroundColor(Color(UIColor.lightGray))
+            }
+            .contentShape(Rectangle())
+            .padding([.leading, .trailing], 8)
+            .padding([.top, .bottom], 12)
+            .frame(minWidth: 130, maxWidth: maxWidth, alignment: .leading)
+            .background(Color.atticsBlue)
+            .cornerRadius(8)
+        }
+    }
+    
+    var navigationValue: Navigation {
+        Navigation.performance(
+            PerformanceDestination(
+                performanceId: performance.id, performanceDate: performance.date
+            )
+        )
     }
 }

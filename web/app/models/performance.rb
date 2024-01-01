@@ -40,6 +40,16 @@ class Performance < ApplicationRecord
      .group('performances.id')
   }
 
+  scope :in_year, ->(year) {
+    where("date_part('year', performances.date) = ?", year)
+  }
+
+  scope :on_day, ->(month:, day:) {
+    where("date_part('month', performances.date) = ?", month)
+      .where("date_part('day', performances.date) = ?", day)
+      .order(date: :asc)
+  }
+
   def year
     date.year
   end

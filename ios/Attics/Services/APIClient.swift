@@ -67,7 +67,7 @@ struct APIClient {
     static let localhost = "http://localhost:3000/api/legacy/"
     static let production = "https://v2.attics.io/api/legacy/"
     
-    let baseUrl = APIResource(base: localhost)
+    let baseUrl = APIResource(base: production)
     
     func getBands() -> AnyPublisher<[BandWithMetadata], APIError> {
         let url = baseUrl.appendingPath("bands.json")
