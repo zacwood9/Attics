@@ -79,6 +79,7 @@ GEM
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
+    ast (2.4.2)
     async (2.6.5)
       console (~> 1.10)
       fiber-annotation
@@ -136,6 +137,8 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    json (2.7.1)
+    language_server-protocol (3.17.0.3)
     loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -178,6 +181,10 @@ GEM
     omniauth-rails_csrf_protection (1.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
+    parallel (1.24.0)
+    parser (3.2.2.4)
+      ast (~> 2.4.1)
+      racc
     pg (1.5.4)
     psych (5.1.1.1)
       stringio
@@ -225,9 +232,11 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
+    rainbow (3.1.1)
     rake (13.1.0)
     rdoc (6.5.0)
       psych (>= 4.0.0)
+    regexp_parser (2.8.3)
     reline (0.3.9)
       io-console (~> 0.5)
     rest-client (2.1.0)
@@ -236,6 +245,36 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.6)
+    rubocop (1.59.0)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
+      parallel (~> 1.10)
+      parser (>= 3.2.2.4)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.30.0)
+      parser (>= 3.2.1.0)
+    rubocop-minitest (0.34.3)
+      rubocop (>= 1.39, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
+    rubocop-performance (1.20.1)
+      rubocop (>= 1.48.1, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
+    rubocop-rails (2.23.1)
+      activesupport (>= 4.2.0)
+      rack (>= 1.1)
+      rubocop (>= 1.33.0, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
+    rubocop-rails-omakase (1.0.0)
+      rubocop
+      rubocop-minitest
+      rubocop-performance
+      rubocop-rails
+    ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -266,6 +305,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
+    unicode-display_width (2.5.0)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -304,6 +344,7 @@ DEPENDENCIES
   rack-ratelimit
   rails (~> 7.1)
   rest-client
+  rubocop-rails-omakase
   sassc-rails
   sprockets-rails
   turbo-rails
