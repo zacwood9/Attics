@@ -18,6 +18,6 @@ class BandTest < ActiveSupport::TestCase
   end
 
   test "with_metadata" do
-    assert_equal 2, Band.with_metadata.find_by(name: 'Grateful Dead').num_performances
+    assert_equal 2, Band.with_metadata.find_by(name: "Grateful Dead").num_performances
   end
 end

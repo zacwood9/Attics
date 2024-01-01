@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'async'
-require 'async/semaphore'
+require "async"
+require "async/semaphore"
 
-require 'rest-client'
-require 'internet_archive'
+require "rest-client"
+require "internet_archive"
 
 class Band::ArchiveScraper
   def initialize(band, concurrent_requests: 5)
@@ -42,9 +42,9 @@ class Band::ArchiveScraper
   attr_reader :band, :insert_queue, :update_queue, :concurrent_requests
 
   def process(item)
-    date = item["date"]&.split('T')&.first
+    date = item["date"]&.split("T")&.first
     if date.blank?
-      Rails.logger.info("ArchiveScraper: missing date, #{item.to_s}")
+      Rails.logger.info("ArchiveScraper: missing date, #{item}")
       return
     end
 
@@ -55,7 +55,7 @@ class Band::ArchiveScraper
       return
     end
 
-    city, state = item["coverage"]&.split(', ')
+    city, state = item["coverage"]&.split(", ")
     venue = item["venue"]
     if @dates_id_map.key? date
       update_attrs = { city: city, state: state, venue: item["venue"].presence }.compact
@@ -98,7 +98,7 @@ class Band::ArchiveScraper
         next
       end
 
-      date = item["date"]&.split('T')&.first
+      date = item["date"]&.split("T")&.first
       performance_id = @dates_id_map[date]
       if performance_id.blank?
         Rails.logger.warn("updating #{identifier}, but couldn't find it's performance on #{date}? skipping...")
@@ -114,7 +114,7 @@ class Band::ArchiveScraper
         source: item["source"],
         archive_downloads: item["downloads"] || 0,
         avg_rating: item["avg_rating"] || 0,
-        num_reviews: item["num_reviews"] || 0,
+        num_reviews: item["num_reviews"] || 0
       }
     end
 
@@ -129,7 +129,7 @@ class Band::ArchiveScraper
     return if slice.empty?
 
     attrs = slice.map do |item|
-      date = item["date"]&.split('T')&.first
+      date = item["date"]&.split("T")&.first
       {
         performance_id: @dates_id_map[date],
         lineage: item["lineage"],
@@ -138,7 +138,7 @@ class Band::ArchiveScraper
         source: item["source"],
         archive_downloads: item["downloads"] || 0,
         avg_rating: item["avg_rating"] || 0,
-        num_reviews: item["num_reviews"] || 0,
+        num_reviews: item["num_reviews"] || 0
       }
     end
 

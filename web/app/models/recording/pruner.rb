@@ -1,4 +1,4 @@
-require 'rest-client'
+require "rest-client"
 
 class Recording::Pruner
   def initialize(recording)

@@ -1,8 +1,8 @@
-require 'async'
-require 'async/semaphore'
+require "async"
+require "async/semaphore"
 
 namespace :attics do
-  desc 'Runs nightly scrape on all bands.'
+  desc "Runs nightly scrape on all bands."
   task nightly_scrape: :environment do
     logger = Logger.new(STDOUT)
     logger.level = :info

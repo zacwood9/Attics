@@ -8,7 +8,7 @@ module Api
         @tracks = @recording.playlist
 
         respond_to do |format|
-          format.html { render 'welcome/index', layout: 'application' }
+          format.html { render "welcome/index", layout: "application" }
           format.json
         end
       end

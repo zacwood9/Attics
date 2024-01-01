@@ -1,5 +1,5 @@
-require 'internet_archive'
-require 'async'
+require "internet_archive"
+require "async"
 
 Rails.logger = Logger.new(STDOUT)
 trackless_recordings = Recording

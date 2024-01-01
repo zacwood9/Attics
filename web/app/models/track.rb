@@ -49,9 +49,9 @@ class Track < ApplicationRecord
         # Sometimes derivative files are missing data that is present
         # on the file's source, so fetch both.
         if file.original.present?
-          [file, archive_files.find { |other| other.name == file.original }]
+          [ file, archive_files.find { |other| other.name == file.original } ]
         else
-          [file, nil]
+          [ file, nil ]
         end
       }
       .map.with_index { |(file, original), i|
@@ -70,7 +70,7 @@ class Track < ApplicationRecord
           length: length || "0:00",
           creator: file.creator || original&.creator,
           album: file.album || original&.album,
-          recording_id: recording_id,
+          recording_id: recording_id
         }
       }
   end

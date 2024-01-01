@@ -15,9 +15,9 @@ def create_songs(recording)
         # Sometimes derivative files are missing data that is present
         # on the file's source, so fetch both.
         if file["original"].present?
-          [file, result.find { |other| other["name"] == file["original"] } || {}]
+          [ file, result.find { |other| other["name"] == file["original"] } || {} ]
         else
-          [file, {}]
+          [ file, {} ]
         end
       }
       .each.with_index { |pair, i|
@@ -36,11 +36,10 @@ def create_songs(recording)
 end
 
 Recording
-  .select('recordings.*')
-  .select('coalesce(count(tracks.*), 0) as num_tracks')
+  .select("recordings.*")
+  .select("coalesce(count(tracks.*), 0) as num_tracks")
   .left_joins(:tracks)
-  .group('recordings.id')
+  .group("recordings.id")
   .filter { |x| x.num_tracks.zero? }
   .sort_by(&:identifier)
   .each(&method(:create_songs))
-

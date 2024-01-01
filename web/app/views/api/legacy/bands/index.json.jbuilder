@@ -1,1 +1,1 @@
-json.partial! 'api/legacy/bands/band', collection: @bands, as: :band
+json.partial! "api/legacy/bands/band", collection: @bands, as: :band

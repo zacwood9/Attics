@@ -9,6 +9,6 @@ class RecordingsController < ApplicationController
     #   .map { _1.as_json(methods: [:media_url]) }
     #   .index_by { _1["track"] }
     #   .to_json
-    render 'welcome/index', layout: 'application'
+    render "welcome/index", layout: "application"
   end
 end

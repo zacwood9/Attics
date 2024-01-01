@@ -1,7 +1,7 @@
-require 'pg'
+require "pg"
 
-bad_performance_id = '7ba03a47-6613-417b-bd65-3baf126212ab'
-bad_recording_id = 'd1976b29-2c2b-434c-842b-6a1b1412432d'
+bad_performance_id = "7ba03a47-6613-417b-bd65-3baf126212ab"
+bad_recording_id = "d1976b29-2c2b-434c-842b-6a1b1412432d"
 
 ActiveRecord::Base.transaction do
   PG.connect(Rails.application.credentials[:legacy_database_url]) do |conn|
@@ -27,7 +27,7 @@ ActiveRecord::Base.transaction do
           venue: performance["venue"],
           city: performance["city"],
           state: performance["state"],
-          band_id: performance["band_id"],
+          band_id: performance["band_id"]
         }
       end
       Performance.insert_all!(attrs)
@@ -58,7 +58,7 @@ ActiveRecord::Base.transaction do
       tracks = conn.exec("select * from songs where recording_id <> '#{bad_recording_id}'")
       tracks.each_slice(1000).with_index do |items, i|
         attrs = items.map do |item|
-          next if item['file_name'].blank?
+          next if item["file_name"].blank?
 
           {
             id: item["id"],

@@ -24,11 +24,11 @@ class Band < ApplicationRecord
   attribute :num_recordings, :integer, default: 0
 
   scope :with_metadata, -> {
-    select('bands.*')
-     .select('count(distinct performances.id) as num_performances')
-     .select('count(distinct recordings.id) as num_recordings')
+    select("bands.*")
+     .select("count(distinct performances.id) as num_performances")
+     .select("count(distinct recordings.id) as num_recordings")
      .left_joins(performances: :recordings)
-     .group('bands.id')
+     .group("bands.id")
   }
 
   def years

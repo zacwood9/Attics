@@ -3,13 +3,13 @@ Rails.application.routes.draw do
   post "sign_in", to: "sessions#create"
   get  "sign_up", to: "registrations#new"
   post "sign_up", to: "registrations#create"
-  resources :sessions, only: [:index, :show, :destroy]
-  resource  :password, only: [:edit, :update]
-  resource :account, only: [:show]
+  resources :sessions, only: [ :index, :show, :destroy ]
+  resource  :password, only: [ :edit, :update ]
+  resource :account, only: [ :show ]
   namespace :identity do
-    resource :email,              only: [:edit, :update]
-    resource :email_verification, only: [:show, :create]
-    resource :password_reset,     only: [:new, :edit, :create, :update]
+    resource :email,              only: [ :edit, :update ]
+    resource :email_verification, only: [ :show, :create ]
+    resource :password_reset,     only: [ :new, :edit, :create, :update ]
   end
   namespace :authentications do
     resources :events, only: :index
@@ -20,12 +20,12 @@ Rails.application.routes.draw do
 
   root "home#index"
 
-  resources :bands, only: [:show] do
-    resources :years, only: [:show], param: :year
+  resources :bands, only: [ :show ] do
+    resources :years, only: [ :show ], param: :year
   end
 
-  resources :performances, only: [:show]
-  resources :recordings, only: [:show]
+  resources :performances, only: [ :show ]
+  resources :recordings, only: [ :show ]
 
   get "/.well-known/apple-app-site-association",
       to: "apple_app_site_association#index"
@@ -37,14 +37,14 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    resources :bands, only: [:index] do
-      resources :top_performances, only: [:index]
-      resources :years, only: [:show], param: :year
+    resources :bands, only: [ :index ] do
+      resources :top_performances, only: [ :index ]
+      resources :years, only: [ :show ], param: :year
     end
 
-    resources :performances, only: [:show]
-    resources :recordings, only: [:show], id: /.*/
-    resources :legacy_recordings, only: [:show], param: :identifier
+    resources :performances, only: [ :show ]
+    resources :recordings, only: [ :show ], id: /.*/
+    resources :legacy_recordings, only: [ :show ], param: :identifier
   end
 
   scope :api do

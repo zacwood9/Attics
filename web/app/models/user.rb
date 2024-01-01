@@ -50,7 +50,7 @@ class User < ApplicationRecord
     events.create! action: "password_changed"
   end
 
-  after_update if: [:verified_previously_changed?, :verified?] do
+  after_update if: [ :verified_previously_changed?, :verified? ] do
     events.create! action: "email_verified"
   end
 end

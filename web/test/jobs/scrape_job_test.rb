@@ -13,7 +13,7 @@ class ScrapeJobTest < ActiveJob::TestCase
     recording = recordings(:grateful_dead_1977_05_08_hicks_sbd)
 
     assert_difference %w[Performance.count Recording.count], 1 do
-      assert_difference 'Track.count', 2 do
+      assert_difference "Track.count", 2 do
         ScrapeJob.perform_now bands(:grateful_dead)
       end
     end

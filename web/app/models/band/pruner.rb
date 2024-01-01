@@ -1,4 +1,4 @@
-require 'async/semaphore'
+require "async/semaphore"
 
 class Band::Pruner
   def initialize(band, concurrent_requests: 5)

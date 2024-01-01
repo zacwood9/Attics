@@ -38,7 +38,7 @@ class RecordingTest < ActiveSupport::TestCase
     playlist = recording.playlist
 
     assert_equal 3, playlist.length
-    assert_equal [1,2,3], playlist.map(&:track)
+    assert_equal [ 1, 2, 3 ], playlist.map(&:track)
     assert_predicate playlist.first, :mp3?
     assert_predicate playlist.second, :mp3?
     assert_predicate playlist.third, :flac?

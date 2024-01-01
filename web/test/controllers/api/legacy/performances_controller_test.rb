@@ -4,7 +4,7 @@ module Api
   module Legacy
     class PerformancesControllerTest < ActionDispatch::IntegrationTest
       test "should get index" do
-        get api_legacy_band_performances_url(collection: 'GratefulDead', year: "1977", format: :json)
+        get api_legacy_band_performances_url(collection: "GratefulDead", year: "1977", format: :json)
         assert_response :ok
         body = JSON.parse(response.body)
         assert_equal 1, body["performances"].length

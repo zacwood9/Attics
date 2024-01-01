@@ -8,7 +8,7 @@ class AppleAppSiteAssociationController < ApplicationController
         details: [
           {
             appID: "W9S2BXPP37.me.zacwood.Attics",
-            paths: ["*"]
+            paths: [ "*" ]
           }
         ]
       }

@@ -1,5 +1,5 @@
 class PerformancesController < ApplicationController
   def show
-    render 'welcome/index', layout: 'application'
+    render "welcome/index", layout: "application"
   end
 end
