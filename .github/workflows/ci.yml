@@ -23,6 +23,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          working-directory: web
 
       - name: Scan for security vulnerabilities
         run: bin/brakeman
@@ -38,6 +39,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          working-directory: web
 
       - name: Lint code for consistent style
         run: bin/rubocop
@@ -72,6 +74,7 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+          working-directory: web
 
       - name: Run Tests
         env:
