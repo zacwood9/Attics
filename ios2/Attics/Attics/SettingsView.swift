@@ -55,17 +55,21 @@ struct SettingsView: View {
     }
     
     var header: some View {
-        VStack {
-            Image("logo")
-                .resizable()
-                .scaledToFit()
-                .frame(maxHeight: 250)
-                .padding([.leading, .trailing], 16)
-            Text("Version 2.0.0")
-                .font(.title)
-                .bold()
-            Text("By: Zac Wood")
-                .font(.title3)
+        HStack {
+            Spacer()
+            VStack(alignment: .center) {
+                Image("logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 250)
+                    .padding([.leading, .trailing], 16)
+                Text("Version 2.0.0")
+                    .font(.title)
+                    .bold()
+                Text("By: Zac Wood")
+                    .font(.title3)
+            }
+            Spacer()
         }
     }
     
