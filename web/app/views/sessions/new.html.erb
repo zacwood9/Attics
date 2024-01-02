@@ -27,6 +27,10 @@
   <%= button_to "Sign in with OmniAuth", "/auth/developer", "data-turbo" => false %>
 </div>
 
+<%= form_tag('/auth/apple', method: 'post', data: {turbo: false}) do %>
+  <button type='submit'>Login with Apple</button>
+<% end %>
+
 <br>
 
 <div>
