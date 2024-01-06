@@ -19,6 +19,10 @@ struct LibraryTab: View {
                         LibraryItemPage(recordingId: destination.recordingId)
                     case .history:
                         HistoryPage()
+                    case .reviews(let destination):
+                        ReviewsPage(archiveIdentifier: destination.archiveIdentifier)
+                    case .sourceInfo(let destination):
+                        SourceInfoPage(archiveIdentifier: destination.archiveIdentifier)
                     }
                     
                 }

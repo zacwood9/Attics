@@ -11,6 +11,8 @@
 		2016955D2B3F645E001456B6 /* LibraryTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2016955C2B3F645E001456B6 /* LibraryTab.swift */; };
 		2016955F2B3F64DF001456B6 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2016955E2B3F64DF001456B6 /* ResultView.swift */; };
 		201695612B3F82E9001456B6 /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201695602B3F82E9001456B6 /* SettingsTab.swift */; };
+		20578C062B49F2F4006F1A7C /* ReviewsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20578C052B49F2F4006F1A7C /* ReviewsPage.swift */; };
+		20578C082B4A0603006F1A7C /* TaperInfoPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20578C072B4A0603006F1A7C /* TaperInfoPage.swift */; };
 		206E4A6A2B40C3A600CEA4D4 /* HistoryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E4A692B40C3A600CEA4D4 /* HistoryPage.swift */; };
 		206E4A6C2B4203EC00CEA4D4 /* RemoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E4A6B2B4203EC00CEA4D4 /* RemoteImage.swift */; };
 		206E4A6E2B420B8100CEA4D4 /* UpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E4A6D2B420B8100CEA4D4 /* UpdateView.swift */; };
@@ -75,6 +77,8 @@
 		2016955C2B3F645E001456B6 /* LibraryTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTab.swift; sourceTree = "<group>"; };
 		2016955E2B3F64DF001456B6 /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		201695602B3F82E9001456B6 /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
+		20578C052B49F2F4006F1A7C /* ReviewsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsPage.swift; sourceTree = "<group>"; };
+		20578C072B4A0603006F1A7C /* TaperInfoPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaperInfoPage.swift; sourceTree = "<group>"; };
 		206E4A692B40C3A600CEA4D4 /* HistoryPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPage.swift; sourceTree = "<group>"; };
 		206E4A6B2B4203EC00CEA4D4 /* RemoteImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImage.swift; sourceTree = "<group>"; };
 		206E4A6D2B420B8100CEA4D4 /* UpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateView.swift; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 				20CA18922B351E70006B8902 /* RecordingPage.swift */,
 				20D7495A2B38FD0200E1C589 /* LibraryPage.swift */,
 				20D7495E2B390B2800E1C589 /* LibraryItemPage.swift */,
+				20578C052B49F2F4006F1A7C /* ReviewsPage.swift */,
+				20578C072B4A0603006F1A7C /* TaperInfoPage.swift */,
 				206E4A692B40C3A600CEA4D4 /* HistoryPage.swift */,
 				20D749562B37C50600E1C589 /* PopupView.swift */,
 				20CDF1082B3E147D0009853A /* SettingsView.swift */,
@@ -378,8 +384,10 @@
 				209B8C032B2E40D5008E3794 /* AtticsApp.swift in Sources */,
 				2016955F2B3F64DF001456B6 /* ResultView.swift in Sources */,
 				20CDF1092B3E147D0009853A /* SettingsView.swift in Sources */,
+				20578C062B49F2F4006F1A7C /* ReviewsPage.swift in Sources */,
 				20E318F22B2FE463007A106B /* YearPage.swift in Sources */,
 				2016955D2B3F645E001456B6 /* LibraryTab.swift in Sources */,
+				20578C082B4A0603006F1A7C /* TaperInfoPage.swift in Sources */,
 				20CA18972B353350006B8902 /* NavigationModel.swift in Sources */,
 				2016955B2B3F27B2001456B6 /* HomeTab.swift in Sources */,
 				206E4A6E2B420B8100CEA4D4 /* UpdateView.swift in Sources */,
@@ -544,7 +552,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 163;
+				CURRENT_PROJECT_VERSION = 166;
 				DEVELOPMENT_ASSET_PATHS = "\"Attics/Preview Content\"";
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				ENABLE_PREVIEWS = YES;
@@ -561,7 +569,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = me.zacwood.Attics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -577,7 +585,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Attics/Attics.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 163;
+				CURRENT_PROJECT_VERSION = 166;
 				DEVELOPMENT_ASSET_PATHS = "\"Attics/Preview Content\"";
 				DEVELOPMENT_TEAM = W9S2BXPP37;
 				ENABLE_PREVIEWS = YES;
@@ -594,7 +602,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = me.zacwood.Attics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

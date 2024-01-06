@@ -29,17 +29,29 @@ struct RecordingDestination: Codable, Hashable, Equatable {
     let recordingId: String
 }
 
+struct ReviewsDestination: Codable, Hashable, Equatable {
+    let archiveIdentifier: String
+}
+
+struct SourceInfoDestination: Codable, Hashable, Equatable {
+    let archiveIdentifier: String
+}
+ 
 enum Navigation: Codable, Hashable, Equatable {
     case band(BandDestination)
     case year(YearDestination)
     case performance(PerformanceDestination)
     case recording(RecordingDestination)
     case storedRecording(RecordingDestination)
+    case reviews(ReviewsDestination)
+    case sourceInfo(SourceInfoDestination)
 }
 
 enum LibraryNavigation: Codable, Hashable {
     case recording(RecordingDestination)
     case history
+    case reviews(ReviewsDestination)
+    case sourceInfo(SourceInfoDestination)
 }
 
 enum Tab: Codable, Equatable, Hashable {

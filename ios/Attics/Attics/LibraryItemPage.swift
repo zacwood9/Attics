@@ -161,6 +161,8 @@ struct LibraryItemView: View {
                     isFavorite: favorite,
                     downloadable: isPlayable,
                     downloadProgress: progress,
+                    reviewsDestination: LibraryNavigation.reviews(ReviewsDestination(archiveIdentifier: item.recording.identifier)),
+                    sourceInfoDestination: LibraryNavigation.sourceInfo(SourceInfoDestination(archiveIdentifier: item.recording.identifier)),
                     onFavoriteClick: { onFavoriteClick(item) },
                     onDownloadClick: { onDownloadClick(item) }
                 )

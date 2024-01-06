@@ -99,9 +99,14 @@ public struct APIClient {
         return try await asyncGet(url: url.toURL())
     }
     
-    public func getReviews(archiveIdentifier: String) -> AnyPublisher<[APIReview], Error> {
+    public func getReviews(archiveIdentifier: String) async throws -> APIReviewsPage {
         let url = archiveReviewUrl.appendingPath(archiveIdentifier).appendingPath("reviews")
-        return get(url: url.toURL())
+        return try await asyncGet(url: url.toURL())
+    }
+    
+    public func getMetadata(archiveIdentifier: String) async throws -> APIMetadataPage {
+        let url = archiveReviewUrl.appendingPath(archiveIdentifier).appendingPath("metadata")
+        return try await asyncGet(url: url.toURL())
     }
     
     private func get<T: Decodable>(url: URL, decoder: JSONDecoder = defaultDecoder) -> AnyPublisher<T, Error> {

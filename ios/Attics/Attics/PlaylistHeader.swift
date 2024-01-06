@@ -13,13 +13,15 @@ enum DownloadProgress {
     case downloaded
 }
 
-struct PlaylistHeader: View {
+struct PlaylistHeader<NavigationType: Hashable>: View {
     let bandName: String
     let venue: String
     let date: String
     let isFavorite: Bool
     let downloadable: Bool
     let downloadProgress: DownloadProgress
+    let reviewsDestination: NavigationType
+    let sourceInfoDestination: NavigationType
     
     let onFavoriteClick: () -> Void
     let onDownloadClick: () -> Void
@@ -70,28 +72,72 @@ struct PlaylistHeader: View {
                 Spacer()
             }
         }
-        
         .contentShape(Rectangle())
         .onTapGesture {
             onDownloadClick()
         }
+        
+        ReviewsRow(navigationValue: reviewsDestination)
+        SourceInfoRow(navigationValue: sourceInfoDestination)
     }
+}
+
+fileprivate struct ReviewsRow<T: Hashable>: View {
+    let navigationValue: T
     
+    var body: some View {
+        NavigationLink(value: navigationValue) {
+            HStack(spacing: 8) {
+                Image(systemName: "star").foregroundStyle(.orange)
+                Text("Reviews")
+                Spacer()
+            }
+            .contentShape(Rectangle())
+        }
+    }
+}
+
+fileprivate struct SourceInfoRow<T: Hashable>: View {
+    let navigationValue: T
+    
+    var body: some View {
+        NavigationLink(value: navigationValue) {
+            HStack(spacing: 8) {
+                Image(systemName: "info.square")
+                Text("Source Info")
+                Spacer()
+            }
+            .contentShape(Rectangle())
+        }
+    }
 }
 
 #Preview {
     List {
         Section {
             PlaylistHeader(
-                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadable: false, downloadProgress: .downloading(50, 100, 126), onFavoriteClick: { }, onDownloadClick: { }
+                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadable: false, downloadProgress: .downloading(50, 100, 126),
+                reviewsDestination: Navigation.reviews(ReviewsDestination(archiveIdentifier: "hello")),
+                sourceInfoDestination: Navigation.sourceInfo(SourceInfoDestination(archiveIdentifier: "hello")),
+                onFavoriteClick: { }, onDownloadClick: { }
             )
-            
+        }
+        
+        Section {
             PlaylistHeader(
-                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadable: false, downloadProgress: .notDownloaded, onFavoriteClick: { }, onDownloadClick: { }
+                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: true, downloadable: false, downloadProgress: .notDownloaded,
+                reviewsDestination: Navigation.reviews(ReviewsDestination(archiveIdentifier: "hello")),
+                sourceInfoDestination: Navigation.sourceInfo(SourceInfoDestination(archiveIdentifier: "hello")),
+                onFavoriteClick: { }, onDownloadClick: { }
             )
-            
+        }
+        
+        Section {
             PlaylistHeader(
-                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: false, downloadable: false, downloadProgress: .downloaded, onFavoriteClick: { }, onDownloadClick: { }
+                bandName: "Grateful Dead", venue: "Barton Hall", date: "1977-05-08", isFavorite: false, downloadable: false, downloadProgress: .downloaded,
+                reviewsDestination: Navigation.reviews(ReviewsDestination(archiveIdentifier: "hello")),
+                sourceInfoDestination: Navigation.sourceInfo(SourceInfoDestination(archiveIdentifier: "hello")),
+                onFavoriteClick: { }, onDownloadClick: { }
             )
         }
     }

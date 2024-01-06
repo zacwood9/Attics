@@ -54,7 +54,13 @@ struct SettingsView: View {
         }
     }
     
+    var version: String? {
+        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String
+    }
+    
     var header: some View {
+        
+        
         HStack {
             Spacer()
             VStack(alignment: .center) {
@@ -63,7 +69,7 @@ struct SettingsView: View {
                     .scaledToFit()
                     .frame(maxHeight: 250)
                     .padding([.leading, .trailing], 16)
-                Text("Version 2.0.0")
+                Text("Version \(version ?? "Unknown")")
                     .font(.title)
                     .bold()
                 Text("By: Zac Wood")

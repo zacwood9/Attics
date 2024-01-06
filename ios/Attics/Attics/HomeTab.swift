@@ -26,6 +26,10 @@ struct HomeTab: View {
                         RecordingPage(recordingIdOrIdentifier: destination.recordingId)
                     case .storedRecording(let destination):
                         LibraryItemPage(recordingId: destination.recordingId)
+                    case .reviews(let destination):
+                        ReviewsPage(archiveIdentifier: destination.archiveIdentifier)
+                    case .sourceInfo(let destination):
+                        SourceInfoPage(archiveIdentifier: destination.archiveIdentifier)
                     }
                 }
         }
