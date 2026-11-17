@@ -124,11 +124,19 @@ struct AtticsNavigationBar: ViewModifier {
     let title: String?
     
     func body(content: Content) -> some View {
-        content
-            .toolbarBackground(Color.atticsBlue, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationTitle(title ?? "")
+        if #available(iOS 26, *) {
+            // iOS 26 draws a colored navigation bar background over the large title,
+            // hiding it, and Apple recommends against custom bar backgrounds on iOS 26
+            // (https://developer.apple.com/forums/thread/807331). Use the system bar.
+            content
+                .navigationTitle(title ?? "")
+        } else {
+            content
+                .toolbarBackground(Color.atticsBlue, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar)
+                .navigationTitle(title ?? "")
+        }
     }
 }
 

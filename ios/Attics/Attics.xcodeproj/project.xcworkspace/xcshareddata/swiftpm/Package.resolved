@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JohnSundell/Files.git",
       "state" : {
-        "revision" : "d273b5b7025d386feef79ef6bad7de762e106eaf",
-        "version" : "4.2.0"
+        "revision" : "e85f2b4a8dfa0f242889f45236f3867d16e40480",
+        "version" : "4.3.0"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNPopupController.git",
       "state" : {
-        "revision" : "efbc856917fc645422d23ecb2bfc47117cb4f4f9",
-        "version" : "2.17.0"
+        "revision" : "0e130bcc3e88d4b2134f0afdbf034ea93f6ab75d",
+        "version" : "4.6.2"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNPopupUI",
       "state" : {
-        "revision" : "8b460913b1d4352a7ec6aca8e2cb0f6204c28ceb",
-        "version" : "1.7.0"
+        "revision" : "fafaf6c8f506c4111cbb7ee2810122753b373b58",
+        "version" : "4.0.4"
       }
     },
     {
@@ -32,8 +32,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNSwiftUIUtils.git",
       "state" : {
-        "revision" : "954a3adadc21d5b973c24e1320bdcc3d638c6a9c",
-        "version" : "1.1.1"
+        "revision" : "181a95b992f84d99a14c562c86e8ebef3cbcdca9",
+        "version" : "1.1.5"
+      }
+    },
+    {
+      "identity" : "lnsystemmarqueelabel",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LeoNatan/LNSystemMarqueeLabel",
+      "state" : {
+        "revision" : "a87c80c36e8cc84f05a691da33c838a8e93015f6",
+        "version" : "0.1.2"
       }
     },
     {
@@ -41,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stephencelis/SQLite.swift.git",
       "state" : {
-        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
-        "version" : "0.14.1"
+        "revision" : "4114679379eeb4538638f49ec14e1854dd9cf73c",
+        "version" : "0.17.0"
       }
     },
     {
@@ -50,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/doublesymmetry/SwiftAudioEx.git",
       "state" : {
-        "revision" : "7fb762db9c60ee232223122ace798333d6add195",
-        "version" : "1.0.0"
+        "revision" : "7b506bebabd68b542256c0e1e55519fab5f4c092",
+        "version" : "1.1.0"
       }
     }
   ],

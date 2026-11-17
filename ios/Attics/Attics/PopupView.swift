@@ -130,7 +130,7 @@ struct PopupView: View {
         .popupTitle(verbatim: playlist.currentTrack.title, subtitle: playlist.currentTrack.album)
         .popupBarStyle(LNPopupBar.Style.floating)
         .popupHapticFeedbackEnabled(true)
-        .popupBarItems({
+        .popupBarButtons({
             Button(action: {
                 audioSystem.isPlaying ? audioSystem.pause() : audioSystem.resume()
                 UIDevice.vibrate(style: .select)
