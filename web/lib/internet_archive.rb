@@ -1,8 +1,6 @@
 require "rest-client"
 
 module InternetArchive
-  autoload :File, "internet_archive/file"
-
   class << self
     def files(identifier)
       url = "https://archive.org/metadata/#{identifier}/files"

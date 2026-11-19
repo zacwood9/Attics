@@ -1,4 +1,3 @@
-require "internet_archive"
 require "async"
 
 Rails.logger = Logger.new(STDOUT)

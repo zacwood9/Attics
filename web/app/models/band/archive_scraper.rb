@@ -2,9 +2,7 @@
 
 require "async"
 require "async/semaphore"
-
 require "rest-client"
-require "internet_archive"
 
 class Band::ArchiveScraper
   def initialize(band, concurrent_requests: 5)
