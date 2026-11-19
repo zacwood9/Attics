@@ -79,6 +79,19 @@ public struct APIClient {
         return try await asyncGet(url: url.toURL())
     }
 
+    public func getRandomPerformance(bandId: String) async throws -> [PerformanceWithMetadata] {
+        let url = baseUrl
+            .appendingPath("bands")
+            .appendingPath(bandId)
+            .appendingPath("random_performance.json")
+        return try await asyncGet(url: url.toURL())
+    }
+
+    public func getRandomRecording(performanceId: String) async throws -> APIRecordingPage {
+        let url = baseUrl.appendingPath("recordings").appendingPath(performanceId).appendingPath("random.json")
+        return try await asyncGet(url: url.toURL())
+    }
+
     public func getYearPerformances(bandId: String, year: String) async throws -> [PerformanceWithMetadata] {
         let url = baseUrl.appendingPath("bands").appendingPath(bandId).appendingPath("years").appendingPath("\(year).json")
         return try await asyncGet(url: url.toURL())
